@@ -3,12 +3,10 @@ package ssafy.a709.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,14 +17,21 @@ public class Feed {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int feedId;
 
-    private int userId;
-
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @NotNull
     private int emotion;
     private String content;
+    @NotNull
     private String img;
+    @NotNull
     private double lat;
+    @NotNull
     private double lng;
+    @ColumnDefault("0")
     private int like;
+    @NotNull
     private String regDate;
-
 }
