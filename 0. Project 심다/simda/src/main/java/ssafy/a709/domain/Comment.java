@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,20 +13,17 @@ import javax.validation.constraints.NotNull;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cmt_id")
     private int cmtId;
-
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
-
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "feed_id")
+    @JoinColumn(name = "feed_id", referencedColumnName = "feed_id")
     private Feed feed;
-
-    private int pCmtId;
-
-    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "p_cmt_id", referencedColumnName = "cmt_id")
+    private Comment comment;
+    @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
 }

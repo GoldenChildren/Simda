@@ -3,10 +3,8 @@ package ssafy.a709.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,23 +13,23 @@ import javax.validation.constraints.NotNull;
 public class Feed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "feed_id")
     private int feedId;
-
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
-    @NotNull
+    @Column(name = "emotion", nullable = false, columnDefinition = "int")
     private int emotion;
+    @Column(name = "content", columnDefinition = "text ")
     private String content;
-    @NotNull
+    @Column(name = "img", nullable = false, columnDefinition = "varchar(100)")
     private String img;
-    @NotNull
+    @Column(name = "lat", nullable = false, columnDefinition = "double")
     private double lat;
-    @NotNull
+    @Column(name = "lng", nullable = false, columnDefinition = "double")
     private double lng;
-    @ColumnDefault("0")
+    @Column(name = "like", nullable = false, columnDefinition = "int 0")
     private int like;
-    @NotNull
-    private String regDate;
+    @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
+    private Timestamp regDate;
 }
