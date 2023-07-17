@@ -4,22 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
 public class Chatroom {
-
     @Id
+    @GeneratedValue
+    @Column(name = "room_id")
     private int roomId;
-
-    private int user1Id;
-
-    private int user2Id;
-    @Column(name = "l_chat_id")
-    private int lChatId;
+    @ManyToOne
+    @JoinColumn(name = "user1_id", referencedColumnName = "user_id")
+    private User user1;
+    @ManyToOne
+    @JoinColumn(name = "user2_id", referencedColumnName = "user_id")
+    private User user2;
+    @OneToOne
+    @JoinColumn(name = "l_chat_id", referencedColumnName = "chat_id")
+    private Chat chat;
 }
