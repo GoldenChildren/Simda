@@ -12,15 +12,18 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 public class Follow {
+
     // Follow Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
     private int followId;
+
     // Many(From User Id) to One(User Id)
     @ManyToOne
     @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
     private User fromUser;
+
     // Many(To User Id) to One(User Id)
     @ManyToOne
     @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
