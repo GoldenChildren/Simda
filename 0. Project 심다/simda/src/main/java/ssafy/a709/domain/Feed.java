@@ -3,12 +3,8 @@ package ssafy.a709.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,16 +13,23 @@ import javax.persistence.Id;
 public class Feed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "feed_id")
     private int feedId;
-
-    private int userId;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+    @Column(name = "emotion", nullable = false, columnDefinition = "int")
     private int emotion;
+    @Column(name = "content", columnDefinition = "text ")
     private String content;
+    @Column(name = "img", nullable = false, columnDefinition = "varchar(100)")
     private String img;
+    @Column(name = "lat", nullable = false, columnDefinition = "double")
     private double lat;
+    @Column(name = "lng", nullable = false, columnDefinition = "double")
     private double lng;
+    @Column(name = "like", nullable = false, columnDefinition = "int 0")
     private int like;
-    private String regDate;
-
+    @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
+    private Timestamp regDate;
 }
