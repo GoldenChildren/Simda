@@ -1,3 +1,3 @@
 A709 금쪽이들의 GitLap~
 
-![img](/uploads/a6fff147b7be350c36f89e2b5d1ea89b/img.gif)
+![img](/uploads/e5f1f09f57dee9581bd3b75f421d6e8b/img.gif)
