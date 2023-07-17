@@ -1,4 +1,4 @@
-package com.A709.simda;
+package ssafy.a709.simda;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
