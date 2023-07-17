@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,13 +13,18 @@ import javax.persistence.Id;
 @Entity
 public class Follow {
 
-    @Id @GeneratedValue
-    @Column
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "int")
     private int followId;
 
-    @Column
-    private int fromUserId;
+    // One(userId) to Many(fromUserId)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User fromUserId;
 
-    @Column
-    private int toUserId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User toUserId;
 }
