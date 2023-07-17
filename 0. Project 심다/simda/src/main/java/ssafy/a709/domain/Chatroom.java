@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 public class Chatroom {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
     private int roomId;
     @ManyToOne

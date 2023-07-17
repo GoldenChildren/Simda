@@ -14,7 +14,7 @@ import java.util.Date;
 @Entity
 public class Chat {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_id")
     private int id;
     @Column(name = "room_id", nullable = false, columnDefinition = "int")
