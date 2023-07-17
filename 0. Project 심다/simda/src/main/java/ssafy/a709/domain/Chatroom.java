@@ -13,8 +13,8 @@ import javax.persistence.*;
 public class Chatroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "room_id")
-    private int roomId;
+    @Column(name = "chatroom_id")
+    private int chatroomId;
     @ManyToOne
     @JoinColumn(name = "user1_id", referencedColumnName = "user_id")
     private User user1;

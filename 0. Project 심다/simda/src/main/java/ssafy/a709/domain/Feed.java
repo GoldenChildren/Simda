@@ -11,12 +11,14 @@ import java.sql.Timestamp;
 @Data
 @Entity
 public class Feed {
+    // Feed Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feed_id")
     private int feedId;
+    // User Id
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "user_id")
     private User user;
     @Column(name = "emotion", nullable = false, columnDefinition = "int")
     private int emotion;

@@ -13,12 +13,16 @@ import java.util.Date;
 @Data
 @Entity
 public class Chat {
+    // Chat Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_id")
-    private int id;
-    @Column(name = "room_id", nullable = false, columnDefinition = "int")
-    private int roomId;
+    private int chatId;
+    // Many(Chatroom Id) to One(Chatroom Id)
+    @ManyToOne
+    @JoinColumn(name = "chatroom_id",nullable = false, referencedColumnName = "chatroom_id")
+    private Chatroom chatroom;
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
