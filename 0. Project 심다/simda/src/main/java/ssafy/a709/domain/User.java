@@ -1,11 +1,10 @@
 package ssafy.a709.domain;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,22 +12,35 @@ import javax.persistence.Id;
 @Entity
 public class User {
 
-    @Id @GeneratedValue
-    @Column
+    // User Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "int")
     private int userId;
 
-    @Column
+    // Social Token
+    @Column(columnDefinition = "varchar(200)", unique=true)
+    @NotNull
     private String socialToken;
 
-    @Column
+    // Social Type
+    @Column(columnDefinition = "varchar(50)")
+    @NotNull
     private String socialType;
 
-    @Column
+    // Nickname
+    @Column(columnDefinition = "varchar(50)", unique=true)
+    @NotNull
     private String nickname;
 
-    @Column
+    // Profile Img Address
+    @Column(columnDefinition = "varchar(100)")
     private String profileImg;
 
+    // userRole
     @Column
-    private UserRole useRole;
+    @Enumerated(EnumType.ORDINAL)
+    @NotNull
+    @ColumnDefault("2")
+    private UserRole userRole;
 }
