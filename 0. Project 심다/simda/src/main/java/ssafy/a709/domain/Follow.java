@@ -32,6 +32,7 @@ public class Follow {
     @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
     private User toUser;
 
+    // FollowDto를 Follow(Entity)로 변환
     public static Follow changeToFollow(FollowDto followDto) {
         return Follow.builder()
                 .followId(followDto.getFollowId())

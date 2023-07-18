@@ -20,8 +20,8 @@ public class FollowDto {
     // Many(To User Id) to One(User Id)
     private UserDto toUser;
 
+    // Follow(Entity)를 FollowDto로 변환
     public static FollowDto changeToFollowDto(Follow follow) {
-
         return FollowDto.builder()
                 .followId(follow.getFollowId())
                 .fromUser(UserDto.changeToUserDto(follow.getFromUser()))
