@@ -2,10 +2,12 @@ package ssafy.a709.domain;
 
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import ssafy.a709.dto.UserDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -38,4 +40,18 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     @Column(name ="user_role", columnDefinition = "EnumType 2")
     private UserRole userRole;
+
+    // UserDto를 User(Entity)로 변환
+    public static User changeToUser(UserDto userDto) {
+        return User.builder()
+                .userId(userDto.getUserId())
+                .socialToken(userDto.getSocialToken())
+                .socialType(userDto.getSocialType())
+                .nickname(userDto.getNickname())
+                .profileImg(userDto.getProfileImg())
+                .userRole(userDto.getUserRole())
+                .build();
+    }
+
+
 }
