@@ -1,15 +1,25 @@
 package ssafy.a709.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import ssafy.a709.domain.Chat;
+import ssafy.a709.domain.Chatroom;
 
 @Data
+@Builder
 public class ChatRoomDTO{
+
+    public static ChatRoomDTO changeToChatRoomDto(Chatroom chatRoom) {
+        return ChatRoomDTO.builder()
+                .chatRoomId(chatRoom.getChatroomId())
+                .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
+                .user2(UserDto.changeToUserDto(chatRoom.getUser2()))
+                .lChat(ChatDTO.changeToChatDto(chatRoom.getChat()))
+                .build();
+    }
     private int chatRoomId;
-    private int user1Id;
-    private String user1Nickname;
-    private int user2Id;
-    private String user2Nickname;
-    private int lChatId;
-    private String lChatContent;
-    private String lChatRegDate;
+    private UserDto user1;
+    private UserDto user2;
+    private ChatDTO lChat;
+
 }

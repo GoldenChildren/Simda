@@ -8,10 +8,13 @@ import ssafy.a709.domain.Chat;
 @Builder
 public class ChatDTO {
 
-    public ChatDTO changeToFollowDto(Chat chat) {
+    public static ChatDTO changeToChatDto(Chat chat) {
         return ChatDTO.builder()
                 .chatId(chat.getChatId())
-                //.chatRoom(chat.getChatRoom())
+                .chatRoom(ChatRoomDTO.changeToChatRoomDto(chat.getChatRoom()))
+                .user(UserDto.changeToUserDto(chat.getUser()))
+                .content(chat.getContent())
+                .regDate(chat.getRegDate())
                 .build();
     }
 
@@ -19,9 +22,8 @@ public class ChatDTO {
 
     private int chatId;
     private ChatRoomDTO chatRoom;
-    private int userId;
-    private String userNickname;
+    private UserDto user;
     private String content;
     private String regDate;
-    private boolean read;
+    private int read;
 }

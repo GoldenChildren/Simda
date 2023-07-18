@@ -13,12 +13,12 @@ import javax.persistence.*;
 @Data
 @Entity
 public class Chatroom {
-    public static Chatroom toEntity(ChatRoomDTO chatRoomDTO){
+    public static Chatroom chageToChatroom(ChatRoomDTO chatRoomDTO){
         return Chatroom.builder()
                 .chatroomId(chatRoomDTO.getChatRoomId())
-                //유저 써야뎀 .user1(chatRoomDTO.getUser1().toEntity())
-                //.content(dto.getContent())
-                //.writer(dto.getWriter())
+                .user1(User.changeToUser(chatRoomDTO.getUser1()))
+                .user2(User.changeToUser(chatRoomDTO.getUser2()))
+                .chat(Chat.chageToChat(chatRoomDTO.getLChat()))
                 .build();
     };
 
