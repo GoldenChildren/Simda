@@ -1,11 +1,16 @@
 package ssafy.a709.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ssafy.a709.dto.CommentDto;
+import ssafy.a709.dto.FeedDto;
+import ssafy.a709.dto.UserDto;
 
 import javax.persistence.*;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -36,4 +41,15 @@ public class Comment {
     // Content
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
+
+    // CommentDto를 Comment(Entity)로 변환
+    public static Comment changeToComment(CommentDto commentDto){
+        return Comment.builder()
+                .cmtId(commentDto.getCmtId())
+                .user(User.changeToUser(commentDto.getUserDto()))
+                .feed(Feed.changeToFeed(commentDto.getFeedDto()))
+                .comment(Comment.changeToComment(commentDto.getCommentDto()))
+                .content(commentDto.getContent())
+                .build();
+    }
 }

@@ -1,11 +1,16 @@
 package ssafy.a709.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ssafy.a709.dto.FeedDto;
+import ssafy.a709.dto.UserDto;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -50,4 +55,19 @@ public class Feed {
     // Regist Date
     @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
     private Timestamp regDate;
+
+    // FeedDto를 Feed(Entity)로 변환
+    public static Feed changeToFeed(FeedDto feedDto){
+        return Feed.builder()
+                .feedId(feedDto.getFeedId())
+                .user(User.changeToUser(feedDto.getUserDto()))
+                .emotion(feedDto.getEmotion())
+                .content(feedDto.getContent())
+                .img(feedDto.getImg())
+                .lat(feedDto.getLat())
+                .lng(feedDto.getLng())
+                .like(feedDto.getLike())
+                .regDate(feedDto.getRegDate())
+                .build();
+    }
 }
