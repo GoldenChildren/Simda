@@ -1,16 +1,28 @@
 package ssafy.a709.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ssafy.a709.dto.ChatRoomDTO;
 
 import javax.persistence.*;
-
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
 public class Chatroom {
+    public static Chatroom toEntity(ChatRoomDTO chatRoomDTO){
+        return Chatroom.builder()
+                .chatroomId(chatRoomDTO.getChatRoomId())
+                //유저 써야뎀 .user1(chatRoomDTO.getUser1().toEntity())
+                //.content(dto.getContent())
+                //.writer(dto.getWriter())
+                .build();
+    };
+
+
 
     // Chatroom Id
     @Id

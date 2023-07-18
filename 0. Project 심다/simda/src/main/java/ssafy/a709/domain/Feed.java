@@ -43,7 +43,7 @@ public class Feed {
     @Column(name = "lng", nullable = false, columnDefinition = "double")
     private double lng;
 
-    // Linke Point
+    // Like Point
     @Column(name = "like", nullable = false, columnDefinition = "int 0")
     private int like;
 

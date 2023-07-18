@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 
-
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,7 +23,7 @@ public class Chat {
     // Many(Chatroom Id) to One(Chatroom Id)
     @ManyToOne
     @JoinColumn(name = "chatroom_id",nullable = false, referencedColumnName = "chatroom_id")
-    private Chatroom chatroom;
+    private Chatroom chatRoom;
 
     // Many(User Id) to One(User Id)
     @ManyToOne
