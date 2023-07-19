@@ -1,12 +1,9 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Date;
-
-
 
 
 @AllArgsConstructor
@@ -40,6 +37,6 @@ public class Chat {
     private Timestamp regDate;
 
     // Read Flag
-    @Column(name = "read", nullable = false, columnDefinition = "boolean")
-    private boolean read;
+    @Column(name = "read_flag", nullable = false, columnDefinition = "boolean")
+    private boolean read_flag;
 }

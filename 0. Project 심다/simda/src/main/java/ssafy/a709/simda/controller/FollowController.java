@@ -1,9 +1,10 @@
-package ssafy.a709.controller;
+package ssafy.a709.simda.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/simda")
-public class UserController {
+public class FollowController {
+
 }

@@ -1,11 +1,10 @@
-package ssafy.a709.dto;
+package ssafy.a709.simda.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.domain.Feed;
-import ssafy.a709.domain.User;
+import ssafy.a709.simda.domain.Feed;
 
 import java.sql.Timestamp;
 
@@ -34,17 +33,17 @@ public class FeedDto {
     private Timestamp regDate;
 
     // Feed(Entity)를 FeedDto로 변환
-    public static FeedDto changeToFeedDto(Feed feed){
-        return FeedDto.builder()
-                .feedId(feed.getFeedId())
-                .userDto(UserDto.changeToUserDto(feed.getUser()))
-                .emotion(feed.getEmotion())
-                .content(feed.getContent())
-                .img(feed.getImg())
-                .lat(feed.getLat())
-                .lng(feed.getLng())
-                .like(feed.getLike())
-                .regDate(feed.getRegDate())
-                .build();
-    }
+//    public static FeedDto changeToFeedDto(Feed feed){
+//        return FeedDto.builder()
+//                .feedId(feed.getFeedId())
+////                .userDto(UserDto.changeToUserDto(feed.getUser()))
+//                .emotion(feed.getEmotion())
+//                .content(feed.getContent())
+//                .img(feed.getImg())
+//                .lat(feed.getLat())
+//                .lng(feed.getLng())
+//                .like(feed.getLike())
+//                .regDate(feed.getRegDate())
+//                .build();
+//    }
 }

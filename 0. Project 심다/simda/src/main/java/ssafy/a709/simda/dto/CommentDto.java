@@ -1,12 +1,10 @@
-package ssafy.a709.dto;
+package ssafy.a709.simda.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.domain.Comment;
-import ssafy.a709.domain.Feed;
-import ssafy.a709.domain.User;
+import ssafy.a709.simda.domain.Comment;
 
 @Builder
 @AllArgsConstructor
@@ -33,9 +31,9 @@ public class CommentDto {
     public static CommentDto changeToCommentDto(Comment comment){
         return CommentDto.builder()
                 .cmtId(comment.getCmtId())
-                .userDto(UserDto.changeToUserDto(comment.getUser()))
-                .feedDto(FeedDto.changeToFeedDto(comment.getFeed()))
-                .commentDto(CommentDto. changeToCommentDto(comment.getComment()))
+//                .userDto(UserDto.changeToUserDto(comment.getUser()))
+//                .feedDto(FeedDto.changeToFeedDto(comment.getFeed()))
+                .commentDto(CommentDto. changeToCommentDto(comment.getPComment()))
                 .content(comment.getContent())
                 .build();
     }
