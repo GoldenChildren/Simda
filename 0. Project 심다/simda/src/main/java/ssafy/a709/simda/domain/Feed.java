@@ -1,0 +1,80 @@
+package ssafy.a709.simda.domain;
+
+import lombok.*;
+import ssafy.a709.simda.dto.FeedDto;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Entity
+public class Feed {
+
+    // Feed Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "feed_id")
+    private int feedId;
+
+    // Many(User Id) to One(User Id)
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "user_id")
+    private User user;
+
+    // Emotion
+    @Column(name = "emotion", nullable = false, columnDefinition = "int")
+    private int emotion;
+
+    // Content
+    @Column(name = "content", columnDefinition = "text ")
+    private String content;
+
+    // Image Address
+    @Column(name = "img", nullable = false, columnDefinition = "varchar(100)")
+    private String img;
+
+    // Latitude
+    @Column(name = "lat", nullable = false, columnDefinition = "double")
+    private double lat;
+
+    // Longitude
+    @Column(name = "lng", nullable = false, columnDefinition = "double")
+    private double lng;
+
+    // Linke Point
+    @Column(name = "like_cnt", nullable = false, columnDefinition = "int")
+    private int likeCnt;
+
+    // Regist Date
+    @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
+    private Timestamp regDate;
+
+    // 해당 피드와 관련된 댓글목록
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+//    // FeedDto를 Feed(Entity)로 변환
+//    public static Feed changeToFeed(FeedDto feedDto){
+//        return Feed.builder()
+//                .feedId(feedDto.getFeedId())
+////                .user(User.changeToUser(feedDto.getUserDto()))
+//                .emotion(feedDto.getEmotion())
+//                .content(feedDto.getContent())
+//                .img(feedDto.getImg())
+//                .lat(feedDto.getLat())
+//                .lng(feedDto.getLng())
+//                .like(feedDto.getLike())
+//                .regDate(feedDto.getRegDate())
+//                .build();
+//    }
+    // 피드 내용 (내용, 감정, 이미지) 수정
+    public void update(FeedDto feedDto){
+        this.content = feedDto.getContent();
+        this.emotion = feedDto.getEmotion();
+        this.img = feedDto.getImg();
+    }
+}

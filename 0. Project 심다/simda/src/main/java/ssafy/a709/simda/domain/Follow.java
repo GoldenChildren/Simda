@@ -1,13 +1,12 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.dto.FollowDto;
+import ssafy.a709.simda.dto.FollowDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Builder
 @NoArgsConstructor
@@ -36,8 +35,8 @@ public class Follow {
     public static Follow changeToFollow(FollowDto followDto) {
         return Follow.builder()
                 .followId(followDto.getFollowId())
-                .fromUser(User.changeToUser(followDto.getFromUser()))
-                .toUser(User.changeToUser(followDto.getToUser()))
+//                .fromUser(User.changeToUser(followDto.getFromUser()))
+//                .toUser(User.changeToUser(followDto.getToUser()))
                 .build();
     }
 
