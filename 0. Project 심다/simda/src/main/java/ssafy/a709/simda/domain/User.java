@@ -1,17 +1,16 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import ssafy.a709.dto.UserDto;
+import ssafy.a709.simda.dto.UserDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
+@Table
 public class User {
 
     // User Id
@@ -21,24 +20,24 @@ public class User {
     private int userId;
 
     // Social Token
-    @Column(name = "social_token", nullable = false, unique=true, columnDefinition = "varchar(200)")
+    @Column(name = "social_token", nullable = false, unique = true, length = 200)
     private String socialToken;
 
     // Social Type
-    @Column(name = "social_type", nullable = false, columnDefinition = "varchar(50)")
+    @Column(name = "social_type", nullable = false, length = 50)
     private String socialType;
 
     // Nickname
-    @Column(name = "nickname", nullable = false, unique=true, columnDefinition = "varchar(50)")
+    @Column(name = "nickname", nullable = false, unique = true, length = 50)
     private String nickname;
 
     // Profile Image Address
-    @Column(name = "profile_img", nullable = false, columnDefinition = "varchar(100)")
+    @Column(name = "profile_img", nullable = false,  length = 100)
     private String profileImg;
 
     // userRole
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name ="user_role", columnDefinition = "EnumType 2")
+    @Enumerated(EnumType.STRING)
+    @Column(name ="user_role", length = 2)
     private UserRole userRole;
 
     // UserDto를 User(Entity)로 변환

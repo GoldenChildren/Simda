@@ -1,12 +1,9 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.*;
-import ssafy.a709.dto.ChatDTO;
-import ssafy.a709.dto.ChatRoomDTO;
+import ssafy.a709.simda.dto.ChatDTO;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Date;
 
 
 @Builder
@@ -14,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Entity
+@Table
 public class Chat {
 
     public static Chat chageToChat(ChatDTO chatDTO){
@@ -55,4 +53,7 @@ public class Chat {
     // Read Flag
     @Column(name = "read", nullable = false, columnDefinition = "boolean")
     private int read;
+
+
+
 }

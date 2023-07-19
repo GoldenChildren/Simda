@@ -1,4 +1,4 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
+@Table
 public class Comment {
 
     // Comment Id

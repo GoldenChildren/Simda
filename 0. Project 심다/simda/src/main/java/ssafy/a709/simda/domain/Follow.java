@@ -1,19 +1,19 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.dto.FollowDto;
+import ssafy.a709.simda.dto.FollowDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
+@Table
 public class Follow {
 
     // Follow Id

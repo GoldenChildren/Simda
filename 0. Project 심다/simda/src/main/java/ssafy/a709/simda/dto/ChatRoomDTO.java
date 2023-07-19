@@ -1,9 +1,8 @@
-package ssafy.a709.dto;
+package ssafy.a709.simda.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import ssafy.a709.domain.Chat;
-import ssafy.a709.domain.Chatroom;
+import ssafy.a709.simda.domain.Chatroom;
 
 @Data
 @Builder

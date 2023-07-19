@@ -1,10 +1,10 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.dto.ChatRoomDTO;
+import ssafy.a709.simda.dto.ChatRoomDTO;
 
 import javax.persistence.*;
 @Builder
@@ -12,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
+@Table
 public class Chatroom {
     public static Chatroom chageToChatroom(ChatRoomDTO chatRoomDTO){
         return Chatroom.builder()
@@ -44,4 +45,8 @@ public class Chatroom {
     @OneToOne
     @JoinColumn(name = "l_chat_id", referencedColumnName = "chat_id")
     private Chat chat;
+
+    public void update(Chat chat){
+        this.chat = chat;
+    }
 }

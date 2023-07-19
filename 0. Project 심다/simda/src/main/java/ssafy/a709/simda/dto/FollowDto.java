@@ -1,11 +1,10 @@
-package ssafy.a709.dto;
+package ssafy.a709.simda.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.domain.Follow;
-import ssafy.a709.dto.UserDto;
+import ssafy.a709.simda.domain.Follow;
 
 @Builder
 @AllArgsConstructor

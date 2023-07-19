@@ -1,6 +1,6 @@
-package ssafy.a709.service;
+package ssafy.a709.simda.service;
 
-import ssafy.a709.dto.ChatRoomDTO;
+import ssafy.a709.simda.dto.ChatRoomDTO;
 
 import java.util.List;
 

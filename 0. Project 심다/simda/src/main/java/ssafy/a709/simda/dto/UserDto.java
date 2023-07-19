@@ -1,13 +1,11 @@
-package ssafy.a709.dto;
+package ssafy.a709.simda.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.domain.User;
-import ssafy.a709.domain.UserRole;
-
-import javax.persistence.*;
+import ssafy.a709.simda.domain.User;
+import ssafy.a709.simda.domain.UserRole;
 
 @Builder
 @AllArgsConstructor
