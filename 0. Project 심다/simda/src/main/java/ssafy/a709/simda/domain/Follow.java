@@ -1,10 +1,10 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ssafy.a709.dto.FollowDto;
+import ssafy.a709.simda.dto.FollowDto;
 
 import javax.persistence.*;
 
@@ -22,20 +22,20 @@ public class Follow {
     private int followId;
 
     // Many(From UserId) to One(UserId)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // 지연로딩이 더 효율적(관련 정보도 다 가져오려 하기 때문에)
     @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
-    private User fromUser;
+    private User fromUserId;
 
     // Many(To UserId) to One(UserId)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // 지연로딩이 더 효율적(관련 정보도 다 가져오려 하기 때문에)
     @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
-    private User toUser;
+    private User toUserId;
 
     public static Follow changeToFollow(FollowDto followDto) {
         return Follow.builder()
                 .followId(followDto.getFollowId())
-                .fromUser(User.changeToUser(followDto.getFromUser()))
-                .toUser(User.changeToUser(followDto.getToUser()))
+                .fromUserId(User.changeToUser(followDto.getFromUser()))
+                .toUserId(User.changeToUser(followDto.getToUser()))
                 .build();
     }
 

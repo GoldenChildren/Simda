@@ -1,12 +1,9 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Date;
-
-
 
 
 @AllArgsConstructor

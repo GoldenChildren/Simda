@@ -1,9 +1,9 @@
-package ssafy.a709.repository;
+package ssafy.a709.simda.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ssafy.a709.domain.Follow;
-import ssafy.a709.domain.User;
+import ssafy.a709.simda.domain.Follow;
+import ssafy.a709.simda.domain.User;
 
 import java.util.List;
 

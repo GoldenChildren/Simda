@@ -1,12 +1,12 @@
-package ssafy.a709.service;
+package ssafy.a709.simda.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ssafy.a709.domain.Follow;
-import ssafy.a709.domain.User;
-import ssafy.a709.dto.FollowDto;
-import ssafy.a709.dto.UserDto;
-import ssafy.a709.repository.FollowRepository;
+import ssafy.a709.simda.domain.Follow;
+import ssafy.a709.simda.domain.User;
+import ssafy.a709.simda.dto.FollowDto;
+import ssafy.a709.simda.dto.UserDto;
+import ssafy.a709.simda.repository.FollowRepository;
 
 import java.util.ArrayList;
 import java.util.List;

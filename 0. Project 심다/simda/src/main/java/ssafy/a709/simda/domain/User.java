@@ -1,11 +1,9 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import ssafy.a709.dto.UserDto;
+import ssafy.a709.simda.dto.UserDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Builder
 @AllArgsConstructor

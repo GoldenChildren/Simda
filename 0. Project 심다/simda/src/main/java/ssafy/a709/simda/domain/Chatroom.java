@@ -1,4 +1,4 @@
-package ssafy.a709.domain;
+package ssafy.a709.simda.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

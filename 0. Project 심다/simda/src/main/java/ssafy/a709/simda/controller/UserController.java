@@ -1,13 +1,13 @@
-package ssafy.a709.controller;
+package ssafy.a709.simda.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ssafy.a709.dto.FollowDto;
-import ssafy.a709.dto.UserDto;
-import ssafy.a709.service.FollowService;
-import ssafy.a709.service.UserService;
+import ssafy.a709.simda.dto.FollowDto;
+import ssafy.a709.simda.dto.UserDto;
+import ssafy.a709.simda.service.FollowService;
+import ssafy.a709.simda.service.UserService;
 
 import java.util.List;
 

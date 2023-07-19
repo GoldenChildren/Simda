@@ -1,7 +1,7 @@
-package ssafy.a709.service;
+package ssafy.a709.simda.service;
 
-import ssafy.a709.dto.FollowDto;
-import ssafy.a709.dto.UserDto;
+import ssafy.a709.simda.dto.FollowDto;
+import ssafy.a709.simda.dto.UserDto;
 
 import java.util.List;
 
