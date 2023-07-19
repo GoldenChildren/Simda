@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import ssafy.a709.dto.FollowDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Builder
 @NoArgsConstructor
@@ -16,18 +15,18 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Follow {
 
-    // Follow Id
+    // FollowId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
     private int followId;
 
-    // Many(From User Id) to One(User Id)
+    // Many(From UserId) to One(UserId)
     @ManyToOne
     @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
     private User fromUser;
 
-    // Many(To User Id) to One(User Id)
+    // Many(To UserId) to One(UserId)
     @ManyToOne
     @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
     private User toUser;

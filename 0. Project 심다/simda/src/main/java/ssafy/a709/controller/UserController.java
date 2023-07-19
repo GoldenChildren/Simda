@@ -9,7 +9,6 @@ import ssafy.a709.dto.UserDto;
 import ssafy.a709.service.FollowService;
 import ssafy.a709.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,15 +31,22 @@ public class UserController {
     Follow는 다 User 화면과 관련되어 있기 때문에... 데이터를 가공하는 Service만 나눴구요
     */
 
+    // 유저 닉네임 중복 검사
+    @GetMapping("/check")
+    public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
+        // String type의 nickname을 받아와서 DB와 비교
+        if(userService.checkNickname(nickname)) {
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(FAIL, HttpStatus.NOT_ACCEPTABLE);
+    }
+
     // 유저 - 검색 keyword를 통해 1명의 유저를 검색해서 선택하는 Get요청
     @GetMapping("/search")
     public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String keyword) {
 
         // 키워드를 포함하는 닉네임을 받아올 유저들의 리스트 생성
-        List<UserDto> userDtoList = new ArrayList<>();
-
-        // 검색한 keyword를 포함하는 유저들을 가져오기
-        userDtoList = userService.selectUsers(keyword);
+        List<UserDto> userDtoList = userService.selectUsers(keyword);
 
         // 만약 userDtoList의 size가 0이라면, 검색 결과가 없는 것이므로, notFound 반환
         if(userDtoList.size() == 0) {

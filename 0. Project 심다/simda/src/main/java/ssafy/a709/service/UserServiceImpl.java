@@ -52,6 +52,14 @@ public class UserServiceImpl implements UserService {
         // User Dto Type의 List 반환
         return userDtoList;
     }
+
+    @Override
+    public boolean checkNickname(String keyword) {
+        // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
+        User user = userRepository.findByNickname(keyword);
+
+        return user == null;
+    }
     
     // User정보 수정, 실패와 성공을 반환한다
     @Override
@@ -87,9 +95,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserId(userId);
         
         // Entity를 Dto로 변환
-        UserDto userDto = UserDto.changeToUserDto(user);
 
         // User Dto 반환
-        return userDto;
+        return UserDto.changeToUserDto(user);
     }
 }

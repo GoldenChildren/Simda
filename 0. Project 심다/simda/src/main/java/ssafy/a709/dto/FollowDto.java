@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ssafy.a709.domain.Follow;
-import ssafy.a709.dto.UserDto;
 
 @Builder
 @AllArgsConstructor
@@ -15,9 +14,9 @@ public class FollowDto {
 
     // FollowId
     private int followId;
-    // Many(From User Id) to One(User Id)
+    // Many(From UserId) to One(UserId)
     private UserDto fromUser;
-    // Many(To User Id) to One(User Id)
+    // Many(To UserId) to One(UserId)
     private UserDto toUser;
 
     public static FollowDto changeToFollowDto(Follow follow) {
