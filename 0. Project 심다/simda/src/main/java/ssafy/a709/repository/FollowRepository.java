@@ -16,11 +16,15 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
 
     // 나를 팔로우하는 유저들을 유저 엔티티 리스트 형태로 반환
     // ToUser에 내 닉네임이 있을 경우, 해당 User는 나를 팔로우 하는 사람이다.
-    List<User> findByToUser(String nickname);
+    List<User> findByToUserId(int userId);
 
     // 내가 팔로우 하는 유저들을 유저 엔티티 리스트 형태로 반환
     // FromUser에 내 닉네임이 있는 경우 해당 toUser는 내가 팔로우 하는 사람이다.
-    List<User> findByFromUser(String nickname);
+    List<User> findByFromUserId(int userId);
+    
+    // FollowId를 찾아서 delete 하는 구문 실행
+    void deleteByFollowId(int userId);
+
 
 
 }

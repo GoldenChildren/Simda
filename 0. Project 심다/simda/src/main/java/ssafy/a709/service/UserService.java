@@ -14,10 +14,10 @@ public interface UserService {
     List<UserDto> selectUsers(String keyword);
 
     // 유저 정보 수정
-    UserDto modifyUser(UserDto userDto);
+    boolean modifyUser(UserDto userDto);
 
     // 유저 검색(one)
-    UserDto selectOneUser(String keyword);
+    UserDto selectOneUser(int userId);
 
 
 }
