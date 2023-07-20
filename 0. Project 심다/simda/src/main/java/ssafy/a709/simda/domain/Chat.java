@@ -51,7 +51,7 @@ public class Chat {
     private String regDate;
 
     // Read Flag
-    @Column(name = "readFlag", nullable = false, columnDefinition = "boolean")
+    @Column(name = "read_flag", nullable = false, columnDefinition = "boolean")
     private int readFlag;
 
 

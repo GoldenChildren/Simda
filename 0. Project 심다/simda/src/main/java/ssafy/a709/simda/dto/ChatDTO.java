@@ -25,5 +25,5 @@ public class ChatDTO {
     private UserDto user;
     private String content;
     private String regDate;
-    private int read;
+    private int readFlag;
 }
