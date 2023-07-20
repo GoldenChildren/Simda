@@ -21,7 +21,7 @@ public class Chat {
                 .user(User.changeToUser(chatDTO.getUser()))
                 .content(chatDTO.getContent())
                 .regDate(chatDTO.getRegDate())
-                .read(chatDTO.getRead())
+                .readFlag(chatDTO.getRead())
                 .build();
     };
 
@@ -51,8 +51,8 @@ public class Chat {
     private String regDate;
 
     // Read Flag
-    @Column(name = "read", nullable = false, columnDefinition = "boolean")
-    private int read;
+    @Column(name = "readFlag", nullable = false, columnDefinition = "boolean")
+    private int readFlag;
 
 
 
