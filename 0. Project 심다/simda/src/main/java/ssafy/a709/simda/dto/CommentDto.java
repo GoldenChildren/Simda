@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ssafy.a709.simda.domain.Comment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,26 +18,25 @@ public class CommentDto {
     // Comment Id
     private int cmtId;
 
-    // Many(User Id) to One(User Id)
-    private UserDto userDto;
+    private int userId;
 
-    // Many(Feed Id) to One(Feed Id)
-    private FeedDto feedDto;
+    private int feedId;
 
-    // Many(Parent Comment Id) to One(User Commet)
-    private CommentDto commentDto;
+    private int pCmtId;
 
     // Content
     private String content;
+    private List<CommentDto> cCommentList;
 
     // Comment(Entity)를 CommentDto로 변환
     public static CommentDto changeToCommentDto(Comment comment){
         return CommentDto.builder()
                 .cmtId(comment.getCmtId())
-//                .userDto(UserDto.changeToUserDto(comment.getUser()))
-//                .feedDto(FeedDto.changeToFeedDto(comment.getFeed()))
-                .commentDto(CommentDto. changeToCommentDto(comment.getPComment()))
+                .userId(comment.getUser().getUserId())
+                .feedId(comment.getFeed().getFeedId())
+                .pCmtId(comment.getPComment() == null ? -1 : comment.getPComment().getCmtId())
                 .content(comment.getContent())
                 .build();
     }
 }
+
