@@ -55,10 +55,6 @@ public class Feed {
     @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
     private Timestamp regDate;
 
-    // 해당 피드와 관련된 댓글목록
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-
     // 피드 내용 (내용, 감정, 이미지) 수정
     public void update(FeedDto feedDto){
         this.content = feedDto.getContent();

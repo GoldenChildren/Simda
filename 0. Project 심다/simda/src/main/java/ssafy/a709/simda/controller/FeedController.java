@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssafy.a709.simda.service.CommentService;
 import ssafy.a709.simda.service.FeedService;
 import ssafy.a709.simda.dto.FeedDto;
 
@@ -16,6 +17,8 @@ public class FeedController {
     private static final String FAIL = "fail";
     @Autowired
     private FeedService feedService;
+    @Autowired
+    private CommentService commentService;
     @PostMapping("/")
     public ResponseEntity<String> writeFeed(@RequestBody FeedDto feedDto) {
         if (feedService.writeFeed(feedDto)) {
@@ -57,7 +60,8 @@ public class FeedController {
     }
     @DeleteMapping("/")
     public ResponseEntity<String> deleteFeed(@RequestHeader("feedId") int feedId) {
-        if (feedService.deleteFeed(feedId)) {
+
+        if (commentService.deleteCommentByFeedId(feedId) && feedService.deleteFeed(feedId)) {
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
         return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
