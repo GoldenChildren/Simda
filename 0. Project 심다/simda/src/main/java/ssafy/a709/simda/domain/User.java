@@ -38,16 +38,16 @@ public class User {
     // userRole
     @Column(name ="user_role", columnDefinition = "Integer")
     private int userRole;
-//
-//    // UserDto를 User(Entity)로 변환
-//    public static User changeToUser(UserDto userDto) {
-//        return User.builder()
-//                .userId(userDto.getUserId())
-//                .socialToken(userDto.getSocialToken())
-//                .socialType(userDto.getSocialType())
-//                .nickname(userDto.getNickname())
-//                .profileImg(userDto.getProfileImg())
-//                .userRole(userDto.getUserRole())
-//                .build();
-//    }
+
+    // UserDto를 User(Entity)로 변환
+    public static User changeToUser(UserDto userDto) {
+        return User.builder()
+                .userId(userDto.getUserId())
+                .socialToken(userDto.getSocialToken())
+                .socialType(userDto.getSocialType())
+                .nickname(userDto.getNickname())
+                .profileImg(userDto.getProfileImg())
+                .userRole(userDto.getUserRole())
+                .build();
+    }
 }
