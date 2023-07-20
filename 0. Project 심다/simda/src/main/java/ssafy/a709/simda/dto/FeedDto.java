@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ssafy.a709.simda.domain.Comment;
 import ssafy.a709.simda.domain.Feed;
 import ssafy.a709.simda.domain.User;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -32,7 +34,8 @@ public class FeedDto {
     private int likeCnt;
     // Regist Date
     private Timestamp regDate;
-
+    // 대댓글 리스트
+    private List<Comment> underComment;
     // Feed(Entity)를 FeedDto로 변환
     public static FeedDto changeToFeedDto(Feed feed, User user){
         return FeedDto.builder()

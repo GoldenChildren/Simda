@@ -39,17 +39,13 @@ public class Comment {
     @JoinColumn(name = "p_cmt_id", referencedColumnName = "cmt_id")
     private Comment pComment;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "pComment", orphanRemoval = true)
-    private List<Comment> cComments = new ArrayList<>();
-
     // CommentDto를 Comment(Entity)로 변환
-    public static Comment changeToComment(CommentDto commentDto){
+    public static Comment changeToComment(CommentDto commentDto, User user, Feed feed, Comment pComment){
         return Comment.builder()
                 .cmtId(commentDto.getCmtId())
-//                .user(User.changeToUser(commentDto.getUserDto()))
-//                .feed(Feed.changeToFeed(commentDto.getFeedDto()))
-                .pComment(Comment.changeToComment(commentDto.getCommentDto()))
+                .user(user)
+                .feed(feed)
+                .pComment(pComment)
                 .content(commentDto.getContent())
                 .build();
     }
