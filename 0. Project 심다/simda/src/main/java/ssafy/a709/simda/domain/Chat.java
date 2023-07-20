@@ -37,6 +37,6 @@ public class Chat {
     private Timestamp regDate;
 
     // Read Flag
-    @Column(name = "read", nullable = false, columnDefinition = "boolean")
-    private boolean read;
+    @Column(name = "read_flag", nullable = false, columnDefinition = "boolean")
+    private boolean read_flag;
 }

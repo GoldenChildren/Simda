@@ -15,27 +15,28 @@ import javax.persistence.*;
 @Entity
 public class Follow {
 
-    // FollowId
+    // Follow Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "follow_id")
     private int followId;
 
-    // Many(From UserId) to One(UserId)
-    @ManyToOne(fetch = FetchType.LAZY) // 지연로딩이 더 효율적(관련 정보도 다 가져오려 하기 때문에)
+    // Many(From User Id) to One(User Id)
+    @ManyToOne
     @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
-    private User fromUserId;
+    private User fromUser;
 
-    // Many(To UserId) to One(UserId)
-    @ManyToOne(fetch = FetchType.LAZY) // 지연로딩이 더 효율적(관련 정보도 다 가져오려 하기 때문에)
+    // Many(To User Id) to One(User Id)
+    @ManyToOne
     @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
-    private User toUserId;
+    private User toUser;
 
+    // FollowDto를 Follow(Entity)로 변환
     public static Follow changeToFollow(FollowDto followDto) {
         return Follow.builder()
                 .followId(followDto.getFollowId())
-                .fromUserId(User.changeToUser(followDto.getFromUser()))
-                .toUserId(User.changeToUser(followDto.getToUser()))
+//                .fromUser(User.changeToUser(followDto.getFromUser()))
+//                .toUser(User.changeToUser(followDto.getToUser()))
                 .build();
     }
 

@@ -1,14 +1,16 @@
 package ssafy.a709.simda.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import ssafy.a709.simda.dto.FeedDto;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 @Entity
 public class Feed {
 
@@ -19,7 +21,7 @@ public class Feed {
     private int feedId;
 
     // Many(User Id) to One(User Id)
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "user_id")
     private User user;
 
@@ -43,11 +45,36 @@ public class Feed {
     @Column(name = "lng", nullable = false, columnDefinition = "double")
     private double lng;
 
-    // Like Point
-    @Column(name = "like", nullable = false, columnDefinition = "int 0")
-    private int like;
+    // Linke Point
+    @Column(name = "like_cnt", nullable = false, columnDefinition = "int")
+    private int likeCnt;
 
     // Regist Date
     @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
     private Timestamp regDate;
+
+    // 해당 피드와 관련된 댓글목록
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+//    // FeedDto를 Feed(Entity)로 변환
+//    public static Feed changeToFeed(FeedDto feedDto){
+//        return Feed.builder()
+//                .feedId(feedDto.getFeedId())
+////                .user(User.changeToUser(feedDto.getUserDto()))
+//                .emotion(feedDto.getEmotion())
+//                .content(feedDto.getContent())
+//                .img(feedDto.getImg())
+//                .lat(feedDto.getLat())
+//                .lng(feedDto.getLng())
+//                .like(feedDto.getLike())
+//                .regDate(feedDto.getRegDate())
+//                .build();
+//    }
+    // 피드 내용 (내용, 감정, 이미지) 수정
+    public void update(FeedDto feedDto){
+        this.content = feedDto.getContent();
+        this.emotion = feedDto.getEmotion();
+        this.img = feedDto.getImg();
+    }
 }
