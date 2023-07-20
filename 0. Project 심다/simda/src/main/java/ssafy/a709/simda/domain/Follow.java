@@ -24,12 +24,12 @@ public class Follow {
     // Many(From User Id) to One(User Id)
     @ManyToOne
     @JoinColumn(name = "from_user_id", referencedColumnName = "user_id")
-    private User fromUser;
+    private User fromUserId;
 
     // Many(To User Id) to One(User Id)
     @ManyToOne
     @JoinColumn(name = "to_user_id", referencedColumnName = "user_id")
-    private User toUser;
+    private User toUserId;
 
     // FollowDto를 Follow(Entity)로 변환
     public static Follow changeToFollow(FollowDto followDto) {

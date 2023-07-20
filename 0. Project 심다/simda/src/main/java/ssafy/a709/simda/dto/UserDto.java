@@ -27,7 +27,7 @@ public class UserDto {
     private String profileImg;
 
     // userRole
-    private UserRole userRole;
+    private int userRole;
 
     // User(Entity)를 UserDto로 변환
     public static UserDto changeToUserDto(User user) {
