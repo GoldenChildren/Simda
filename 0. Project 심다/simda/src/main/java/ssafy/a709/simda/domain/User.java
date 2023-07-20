@@ -37,7 +37,7 @@ public class User {
     private String profileImg;
 
     // userRole
-    @Column(name ="user_role", nullable = false, columnDefinition = "Integer default '1'")
+    @Column(name ="user_role", nullable = false, columnDefinition = "integer default 1")
     private int userRole;
 
     // UserDto를 User(Entity)로 변환
