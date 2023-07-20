@@ -1,16 +1,30 @@
 package ssafy.a709.simda.domain;
 
 import lombok.*;
+import ssafy.a709.simda.dto.ChatDTO;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
+@Table
 public class Chat {
+
+    public static Chat chageToChat(ChatDTO chatDTO){
+        return Chat.builder()
+                .chatId(chatDTO.getChatId())
+                .chatRoom(Chatroom.chageToChatroom(chatDTO.getChatRoom()))
+                .user(User.changeToUser(chatDTO.getUser()))
+                .content(chatDTO.getContent())
+                .regDate(chatDTO.getRegDate())
+                .readFlag(chatDTO.getReadFlag())
+                .build();
+    };
+
 
     // Chat Id
     @Id
@@ -21,7 +35,7 @@ public class Chat {
     // Many(Chatroom Id) to One(Chatroom Id)
     @ManyToOne
     @JoinColumn(name = "chatroom_id",nullable = false, referencedColumnName = "chatroom_id")
-    private Chatroom chatroom;
+    private Chatroom chatRoom;
 
     // Many(User Id) to One(User Id)
     @ManyToOne
@@ -34,9 +48,12 @@ public class Chat {
 
     // Regist Date
     @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
-    private Timestamp regDate;
+    private String regDate;
 
     // Read Flag
     @Column(name = "read_flag", nullable = false, columnDefinition = "boolean")
-    private boolean read_flag;
+    private int readFlag;
+
+
+
 }

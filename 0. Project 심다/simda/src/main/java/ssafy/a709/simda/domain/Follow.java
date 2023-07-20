@@ -13,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Data
 @Entity
+@Table
 public class Follow {
 
     // Follow Id
