@@ -36,8 +36,8 @@ public class Follow {
     public static Follow changeToFollow(FollowDto followDto) {
         return Follow.builder()
                 .followId(followDto.getFollowId())
-//                .fromUser(User.changeToUser(followDto.getFromUser()))
-//                .toUser(User.changeToUser(followDto.getToUser()))
+                .fromUserId(User.changeToUser(followDto.getFromUserId()))
+                .toUserId(User.changeToUser(followDto.getToUserId()))
                 .build();
     }
 
