@@ -21,7 +21,7 @@ public class Chat {
                 .user(User.changeToUser(chatDTO.getUser()))
                 .content(chatDTO.getContent())
                 .regDate(chatDTO.getRegDate())
-                .readFlag(chatDTO.getRead())
+                .readFlag(chatDTO.getReadFlag())
                 .build();
     };
 
