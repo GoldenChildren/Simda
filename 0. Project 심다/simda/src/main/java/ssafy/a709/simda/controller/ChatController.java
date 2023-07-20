@@ -33,14 +33,17 @@ public class ChatController {
     //채팅 보내는거 (채팅 생성)
     @PostMapping("/chat")
     public ResponseEntity<?> createChat(@RequestBody ChatDTO chatDTO){
+//        System.out.println(chatDTO);
         int result = chatService.chatTransfer(chatDTO);
 
         if (result==0){
             String msg="채팅 전송 실패";
             return new ResponseEntity<String>(msg, HttpStatus.NO_CONTENT);
+        }else{
+            String msg = "채팅 전송 성공";
+            return new ResponseEntity<String>(msg, HttpStatus.OK);
+
         }
-        String msg = "채팅 전송 성공";
-       return new ResponseEntity<String>(msg, HttpStatus.OK);
 
 
     }

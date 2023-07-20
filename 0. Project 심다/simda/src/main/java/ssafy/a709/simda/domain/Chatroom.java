@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table
+
 public class Chatroom {
     public static Chatroom chageToChatroom(ChatRoomDTO chatRoomDTO){
         return Chatroom.builder()
@@ -20,6 +21,13 @@ public class Chatroom {
                 .user1(User.changeToUser(chatRoomDTO.getUser1()))
                 .user2(User.changeToUser(chatRoomDTO.getUser2()))
                 .chat(Chat.chageToChat(chatRoomDTO.getLChat()))
+                .build();
+    };
+    public static Chatroom chageToChatroomForTrans(ChatRoomDTO chatRoomDTO){
+        return Chatroom.builder()
+                .chatroomId(chatRoomDTO.getChatRoomId())
+                .user1(User.changeToUser(chatRoomDTO.getUser1()))
+                .user2(User.changeToUser(chatRoomDTO.getUser2()))
                 .build();
     };
 
@@ -43,7 +51,7 @@ public class Chatroom {
 
     // One(Last Chat Id) to One(Chat Id)
     @OneToOne
-    @JoinColumn(name = "l_chat_id", referencedColumnName = "chat_id")
+    @JoinColumn(name = "l_chat_id", nullable = true, referencedColumnName = "chat_id")
     private Chat chat;
 
     public void update(Chat chat){
