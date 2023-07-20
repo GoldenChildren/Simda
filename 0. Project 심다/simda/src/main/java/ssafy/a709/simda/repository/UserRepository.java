@@ -19,4 +19,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // 닉네임으로 단 한명의 유저를 가져오기
     User findByNickname(String nickname);
 
+    // 유저 아이디로 유저를 가져오기
+    User findByUserId(int id);
+
+
+
+
 }

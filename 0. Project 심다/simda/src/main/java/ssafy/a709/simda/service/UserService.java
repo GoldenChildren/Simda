@@ -12,11 +12,14 @@ public interface UserService {
     // 유저 검색(동일 이름들)
     List<UserDto> selectUsers(String keyword);
 
+    // 닉네임 중복 체크
+    boolean checkNickname(String keyword);
+
     // 유저 정보 수정
-    UserDto modifyUser(UserDto userDto);
+    boolean modifyUser(UserDto userDto);
 
     // 유저 검색(one)
-    UserDto selectOneUser(String keyword);
+    UserDto selectOneUser(int userId);
 
 
 }

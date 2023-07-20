@@ -14,17 +14,17 @@ public class FollowDto {
 
     // FollowId
     private int followId;
-    // Many(From User Id) to One(User Id)
+    // Many(From UserId) to One(UserId)
     private UserDto fromUser;
-    // Many(To User Id) to One(User Id)
+    // Many(To UserId) to One(UserId)
     private UserDto toUser;
 
-    // Follow(Entity)를 FollowDto로 변환
     public static FollowDto changeToFollowDto(Follow follow) {
+
         return FollowDto.builder()
                 .followId(follow.getFollowId())
-//                .fromUser(UserDto.changeToUserDto(follow.getFromUser()))
-//                .toUser(UserDto.changeToUserDto(follow.getToUser()))
+                .fromUser(UserDto.changeToUserDto(follow.getFromUserId()))
+                .toUser(UserDto.changeToUserDto(follow.getToUserId()))
                 .build();
     }
 
