@@ -35,7 +35,7 @@ public class UserController {
     @GetMapping("/check")
     public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
         // String type의 nickname을 받아와서 DB와 비교
-        if(userService.checkNickname(nickname)) {
+        if (userService.checkNickname(nickname)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
         return new ResponseEntity<>(FAIL, HttpStatus.NOT_ACCEPTABLE);
@@ -49,7 +49,7 @@ public class UserController {
         List<UserDto> userDtoList = userService.selectUsers(keyword);
 
         // 만약 userDtoList의 size가 0이라면, 검색 결과가 없는 것이므로, notFound 반환
-        if(userDtoList.size() == 0) {
+        if (userDtoList.size() == 0) {
             return ResponseEntity.notFound().build();
         }
 
@@ -61,7 +61,7 @@ public class UserController {
     @PutMapping("/")
     public ResponseEntity<String> updateUser(@RequestBody UserDto userDto) {
 
-        if(userService.modifyUser(userDto)) {
+        if (userService.modifyUser(userDto)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
 
@@ -74,7 +74,7 @@ public class UserController {
         // fromUserId와 toUserId를 받기 위해 FollowDto 객체를 RequestBody로 받아온다
 
         // 그럼 FollowService에서는 FollowDto를 Entity로 저장해준다
-        if(followService.follow(followDto)) {
+        if (followService.follow(followDto)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
 
@@ -86,7 +86,7 @@ public class UserController {
     public ResponseEntity<String> unFollowUser(@RequestBody FollowDto followDto) {
         // 내가 다른 유저를 unfollow 할 경우,
         // fromUserId와 내가 일치하는 것만 삭제하면 된다!
-        if(followService.unfollow(followDto)) {
+        if (followService.unfollow(followDto)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
 
@@ -102,7 +102,7 @@ public class UserController {
         UserDto userDto = userService.selectOneUser(userId);
 
         // 만약 user가 null이라면, notFound 반환
-        if(userDto == null) {
+        if (userDto == null) {
             return ResponseEntity.notFound().build();
         }
 
@@ -117,7 +117,7 @@ public class UserController {
         List<UserDto> userList = followService.searchFollow(userId);
 
         // UserList의 size가 0이라면?
-        if(userList.size() == 0) {
+        if (userList.size() == 0) {
             System.out.println("비어있습니다");
             return ResponseEntity.notFound().build();
         }
@@ -132,13 +132,14 @@ public class UserController {
         // userId를 통해서 해당 유저가 팔로우 하는 followers 목록을 가져옵니다
         List<UserDto> userList = followService.searchFollower(userId);
 
-        if(userList.size() == 0) {
+        if (userList.size() == 0) {
             System.out.println("비어있습니다.");
             return ResponseEntity.notFound().build();
         }
 
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
+
 
 
 }
