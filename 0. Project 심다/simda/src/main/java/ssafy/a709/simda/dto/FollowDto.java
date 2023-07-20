@@ -15,16 +15,16 @@ public class FollowDto {
     // FollowId
     private int followId;
     // Many(From UserId) to One(UserId)
-    private UserDto fromUser;
+    private UserDto fromUserId;
     // Many(To UserId) to One(UserId)
-    private UserDto toUser;
+    private UserDto toUserId;
 
     public static FollowDto changeToFollowDto(Follow follow) {
 
         return FollowDto.builder()
                 .followId(follow.getFollowId())
-                .fromUser(UserDto.changeToUserDto(follow.getFromUserId()))
-                .toUser(UserDto.changeToUserDto(follow.getToUserId()))
+                .fromUserId(UserDto.changeToUserDto(follow.getFromUserId()))
+                .toUserId(UserDto.changeToUserDto(follow.getToUserId()))
                 .build();
     }
 
