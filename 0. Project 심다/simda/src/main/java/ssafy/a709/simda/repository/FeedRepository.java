@@ -13,7 +13,7 @@ public interface FeedRepository extends JpaRepository<Feed, Integer> {
     @Query("select f from Feed f where ((f.lat - :lat) * (f.lat - :lat) + (f.lng - :lng) * (f.lng - :lng)) between -1 and 1")
     List<Feed> getListAround(@Param("lat") double lat, @Param("lng") double lng);
 
-    @Query("select distinct f from Feed f join Follow w on f.user.userId = w.toUserId.userId join User u on w.fromUserId.userId = w.fromUserId.userId where w.fromUserId.userId = :userId")
+    @Query("select distinct f from Feed f join Follow w on f.user.userId = w.toUser.userId join User u on w.fromUser.userId = u.userId where w.fromUser.userId = :userId")
     List<Feed> getListByMyId(@Param("userId")int userId);
     List<Feed> findAllByUser_UserId(int userId);
 

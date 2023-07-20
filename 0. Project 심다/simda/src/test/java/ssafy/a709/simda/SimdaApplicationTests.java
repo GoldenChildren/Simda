@@ -39,24 +39,24 @@ class SimdaApplicationTests {
 	}
 	@Test
 	void writeFeed(){
-		User user = userRepository.findByUserId(1);
-		User user2 = userRepository.findByUserId(1);
+		User user = userRepository.findByUserId(4);
+		User user2 = userRepository.findByUserId(4);
 		Feed feed = Feed.builder()
 				.user(user)
-				.img("이미지3")
-				.emotion(3)
-				.content("내용3")
-				.lat(128.11111)
-				.lng(37.83334)
+				.img("이미지11")
+				.emotion(1)
+				.content("내용11")
+				.lat(129.11111)
+				.lng(38.83334)
 				.likeCnt(0)
 				.build();
 		Feed feed2 = Feed.builder()
 				.user(user2)
-				.img("이미지4")
+				.img("이미지12")
 				.emotion(2)
-				.content("내용4")
-				.lat(128.11111)
-				.lng(37.83334)
+				.content("내용12")
+				.lat(129.11111)
+				.lng(38.83334)
 				.likeCnt(0)
 				.build();
 		feedRepository.save(feed);

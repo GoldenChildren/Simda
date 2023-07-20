@@ -27,18 +27,18 @@ public class UserDto {
     private String profileImg;
 
     // userRole
-    private UserRole userRole;
+    private int userRole;
 
     // User(Entity)를 UserDto로 변환
-//    public static UserDto changeToUserDto(User user) {
-//        return UserDto.builder()
-//                .userId(user.getUserId())
-//                .socialToken(user.getSocialToken())
-//                .socialType(user.getSocialType())
-//                .nickname(user.getNickname())
-//                .profileImg(user.getProfileImg())
-//                .userRole(user.getUserRole())
-//                .build();
-//    }
+    public static UserDto changeToUserDto(User user) {
+        return UserDto.builder()
+                .userId(user.getUserId())
+                .socialToken(user.getSocialToken())
+                .socialType(user.getSocialType())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .userRole(user.getUserRole())
+                .build();
+    }
 
 }
