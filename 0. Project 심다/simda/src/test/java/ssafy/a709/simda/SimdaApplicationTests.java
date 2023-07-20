@@ -21,7 +21,11 @@ class SimdaApplicationTests {
 	CommentRepository commentRepository;
 	@Test
 	void contextLoads() {
-		User user = User.builder().build();
+		User user = User.builder()
+				.nickname("SSAFY")
+				.socialToken("1234")
+				.socialType("KAKAO")
+		.build();
 		System.out.println(user.toString());
 		userRepository.save(user);
 	}
