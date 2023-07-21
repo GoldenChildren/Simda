@@ -39,7 +39,10 @@ dependencies {
 	// Springboot-Starter Security
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	// oauth2-client 라이브러리
-	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
