@@ -2,15 +2,19 @@ package ssafy.a709.simda.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ssafy.a709.simda.dao.UserDao;
 import ssafy.a709.simda.domain.User;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.repository.UserRepository;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    // test
+    @Autowired
+    UserDao userDao;
 
     // Entity를 가져오기 위해서 Repo 불러오기
     @Autowired
@@ -32,6 +36,12 @@ public class UserServiceImpl implements UserService {
 
         // User Dto Type의 List 반환
         return userDtoList;
+    }
+
+    @Override
+    public List<UserDto> testUser() throws ExecutionException, InterruptedException{
+
+        return userDao.getUsers();
     }
 
     // 검색한 닉네임이 포함되는 유저들을 조회한다
@@ -99,4 +109,5 @@ public class UserServiceImpl implements UserService {
         // User Dto 반환
         return UserDto.changeToUserDto(user);
     }
+
 }

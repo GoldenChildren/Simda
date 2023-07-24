@@ -3,6 +3,7 @@ package ssafy.a709.simda.service;
 import ssafy.a709.simda.dto.UserDto;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public interface UserService {
 
@@ -21,5 +22,5 @@ public interface UserService {
     // 유저 검색(one)
     UserDto selectOneUser(int userId);
 
-
+    List<UserDto> testUser() throws ExecutionException, InterruptedException;
 }

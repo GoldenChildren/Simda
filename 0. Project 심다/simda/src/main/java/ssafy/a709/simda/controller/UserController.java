@@ -10,6 +10,9 @@ import ssafy.a709.simda.service.FollowService;
 import ssafy.a709.simda.service.UserService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/user")
@@ -136,10 +139,22 @@ public class UserController {
             System.out.println("비어있습니다.");
             return ResponseEntity.notFound().build();
         }
-
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
+    // 유저 정보를 가져오는 testCode
+    @GetMapping("/users")
+    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
+        List<UserDto> list = userService.testUser();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 
+    // 유저를 등록하는 controller
+//    @PostMapping("/")
+//    public ResponseEntity<Object> registUser() {
+//        FireBase
+//
+//
+//    }
 
 }
