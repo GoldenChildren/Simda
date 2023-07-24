@@ -12,20 +12,15 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: const MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            body: Column(
-              children: [
-                Expanded(child: ListViewBuilder()),
-              ],
-            ),
-          )),
-    );
+    return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Column(
+            children: [
+              Expanded(child: ListViewBuilder()),
+            ],
+          ),
+        ));
   }
 }
 
@@ -73,9 +68,8 @@ class ListViewBuilder extends StatefulWidget {
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
-  List<bool> isVisible = List.filled(arr.length, false);
-  List<bool> writeComment = List.filled(arr.length, false);
-  List<int> likes = List.filled(arr.length, 0);
+  bool isVisible = false;
+  bool writeComment = false;
 
   @override
   Widget build(BuildContext context) {
@@ -121,20 +115,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         ),
                       ],
                     ),
-                    Row(
+                    const Row(
                       children: [
-                        Text(likes[index].toString(), style: const TextStyle(fontSize: 20)),
-                        const SizedBox(width: 5),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              likes[index]++;
-                            });},
-                          child: const Image(
-                              image:
-                                  AssetImage('assets/images/flower-purple.png'),
-                              height: 30),
-                        ),
+                        Text('13', style: TextStyle(fontSize: 20)),
+                        SizedBox(width: 5),
+                        Image(
+                            image:
+                                AssetImage('assets/images/flower-purple.png'),
+                            height: 30),
                       ],
                     ),
                   ],
@@ -168,19 +156,19 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     child: TextButton(
                       onPressed: () => {
                         setState(() {
-                          isVisible[index] = !isVisible[index];
+                          isVisible = !isVisible;
                         })
                       },
                       style: TextButton.styleFrom(
                         minimumSize: Size.zero,
                         padding: const EdgeInsets.all(0),
                       ),
-                      child: Text(isVisible[index] ? "댓글 2개 닫기" : "댓글 2개 보기",
+                      child: Text(isVisible ? "댓글 2개 닫기" : "댓글 2개 보기",
                           style: const TextStyle(color: Colors.black45)),
                     ),
                   ),
                   Visibility(
-                    visible: isVisible[index],
+                    visible: isVisible,
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Column(
@@ -201,24 +189,11 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Row(
-                                        children: [
-                                          Text(
-                                            '유리',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            '10시간 전',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black45,
-                                            )
-                                          ),
-                                        ],
+                                      const Text(
+                                        '유리',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       const Text(
                                         '짱구가 기분이 좋구나',
@@ -228,7 +203,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       TextButton(
                                         onPressed: () => {
                                           setState(() {
-                                            writeComment[index] = !writeComment[index];
+                                            writeComment = !writeComment;
                                           })
                                         },
                                         style: TextButton.styleFrom(
@@ -245,121 +220,71 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         ),
                                       ),
                                       const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          const CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                'assets/images/shin.jpg'),
-                                            radius: 25,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                const Row(
-                                                  children: [
-                                                    Text(
-                                                      '김짱구',
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.bold),
-                                                    ),
-                                                    SizedBox(width: 10),
-                                                    Text(
-                                                        '9시간 전',
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.black45,
-                                                        )
-                                                    )
-                                                  ],
-                                                ),
-                                                const Text(
-                                                  '응 좋아 좋아',
-                                                  style: TextStyle(fontSize: 14),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () => {
-                                                    setState(() {
-                                                      writeComment[index] = !writeComment[index];
-                                                    })
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    minimumSize: Size.zero,
-                                                    padding: EdgeInsets.zero,
-                                                    tapTargetSize:
-                                                    MaterialTapTargetSize.shrinkWrap,
-                                                  ),
-                                                  child: const Text(
-                                                    '답글 달기',
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.black45),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 10),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
+
+                                      // Visibility(
+                                      //     visible: writeComment,
+                                      //     child: Container(
+                                      //       padding: const EdgeInsets.fromLTRB(
+                                      //           0, 0, 20, 0),
+                                      //       color: Colors.red,
+                                      //       child: const Row(
+                                      //         children: [
+                                      //           CircleAvatar(
+                                      //             backgroundImage: AssetImage(
+                                      //                 'assets/images/shin.jpg'),
+                                      //             radius: 15,
+                                      //           ),
+                                      //         ],
+                                      //       ),
+                                      //     )),
                                     ],
                                   ),
                                 ),
                               ]),
                           Visibility(
-                            visible: writeComment[index],
+                            visible: writeComment,
                             child: const TextField(
                               style: TextStyle(fontSize: 14.0),
                               cursorColor: Colors.black12,
                               cursorWidth: 1.0,
                               decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 suffixIcon:
-                                    Icon(Icons.send, color: Colors.black54),
-                                prefixText: '@유리 ',
+                                Icon(Icons.send, color: Colors.black54),
+                                hintText: '@유리',
+                                prefix
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 filled: true,
                                 fillColor: Colors.black12,
                               ),
                             ),
                           ),
                           Visibility(
-                            visible: !writeComment[index],
-                            child: TextField(
-                              style: const TextStyle(fontSize: 14.0),
+                            visible: !writeComment,
+                            child: const TextField(
+                              style: TextStyle(fontSize: 14.0),
                               cursorColor: Colors.black12,
                               cursorWidth: 1.0,
                               decoration: InputDecoration(
-                                contentPadding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                suffixIcon: IconButton(
-                                    icon: const Icon(Icons.send),
-                                    color: Colors.black54,
-                                    onPressed: () {}),
+                                contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                suffixIcon:
+                                    Icon(Icons.send, color: Colors.black54),
                                 hintText: '신짱구(으)로 댓글 달기...',
-                                enabledBorder: const OutlineInputBorder(
+                                enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
-                                focusedBorder: const OutlineInputBorder(
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
+                                focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                   color: Colors.black12,
                                   width: 0.0,
