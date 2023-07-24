@@ -1,9 +1,11 @@
 package ssafy.a709.simda.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.service.FollowService;
@@ -149,12 +151,111 @@ public class UserController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    // 유저를 등록하는 controller
-//    @PostMapping("/")
-//    public ResponseEntity<Object> registUser() {
-//        FireBase
-//
-//
-//    }
+    @GetMapping("/login/kakao")
+    public ResponseEntity<String> kakaoLoginRequest(@RequestParam String code){
+        if(code != null) {
+            System.out.println("success");
+            System.out.println(code);
+            String REST_API_KEY = "30d74a942efad9645af5361e53efcc21";
+            String REDIRECT_URI = "http://localhost:9090/user/login/kakao";
+            String AUTHORIZE_CODE = code;
+            String CLIENT_SECRET = "CBNVGiZ2aKKVtedmHFC5BFIG9P97TCkb";
+
+            // Create the Spring RestTemplate
+            RestTemplate restTemplate = new RestTemplate();
+
+            // Prepare request headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Accept", "application/json");
+
+            // Prepare request parameters
+            MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+            parameters.add("grant_type", "authorization_code");
+            parameters.add("client_id", REST_API_KEY);
+            parameters.add("redirect_uri", REDIRECT_URI);
+            parameters.add("code", AUTHORIZE_CODE);
+            parameters.add("client_secret", CLIENT_SECRET);
+
+            // Create the request entity with headers and parameters
+            HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
+
+            // Set the API endpoint URL
+            String url = "https://kauth.kakao.com/oauth/token";
+
+            // Make the POST request
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, requestEntity, String.class);
+
+            System.out.println(responseEntity.toString());
+
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+        System.out.println("Fail");
+
+        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+    }
+
+    // 카카오 로그아웃
+    @GetMapping("/logout/kakao")
+    public ResponseEntity<String> kakaoLogout(@RequestParam String token){
+        // Create the Spring RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Prepare request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(token);
+        headers.add("Accept", "application/json");
+
+        // Prepare request parameters
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+
+        // Create the request entity with headers and parameters
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        // Set the API endpoint URL
+        String url = "https://kapi.kakao.com/v1/user/unlink";
+
+        // Make the POST request
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, requestEntity, String.class);
+
+        System.out.println("logout success");
+        System.out.println(responseEntity.toString());
+
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
+
+    // 카카오 회원 정보 받아오기
+    @GetMapping("/info/kakao")
+    public ResponseEntity<String> kakaoGetInfo(@RequestParam String token){
+        // Create the Spring RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Prepare request headers
+        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(token);
+        headers.add("Accept", "application/json");
+
+        // Prepare request parameters
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+
+        // Create the request entity with headers and parameters
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        // Set the API endpoint URL
+        String url = "https://kapi.kakao.com/v1/oidc/userinfo";
+
+        // Make the POST request
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+
+        System.out.println("info success");
+        System.out.println(responseEntity.getBody());
+        System.out.println(responseEntity.toString());
+
+//        JSONObject
+
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
 
 }

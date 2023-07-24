@@ -1,8 +1,12 @@
 package ssafy.a709.simda.service;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ssafy.a709.simda.dao.UserDao;
 import ssafy.a709.simda.domain.User;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.repository.UserRepository;
@@ -11,10 +15,6 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    // test
-    @Autowired
-    UserDao userDao;
 
     // Entity를 가져오기 위해서 Repo 불러오기
     @Autowired
@@ -40,8 +40,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> testUser() throws ExecutionException, InterruptedException{
+        final String COLLECTION_NAME = "users";
 
-        return userDao.getUsers();
+        List<UserDto> list = new ArrayList<>();
+        Firestore db = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        for (QueryDocumentSnapshot document : documents) {
+            list.add(document.toObject(UserDto.class));
+
+        }
+
+        return list;
     }
 
     // 검색한 닉네임이 포함되는 유저들을 조회한다

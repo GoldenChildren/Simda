@@ -17,7 +17,7 @@ public class UserDto {
     // Social Token
     private String socialToken;
 
-    // Social Type
+    // Social Type -> 이메일로 변경
     private String socialType;
 
     // Nickname
