@@ -1,8 +1,14 @@
 package ssafy.a709.simda;
 
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import ssafy.a709.simda.controller.FeedController;
 import ssafy.a709.simda.domain.*;
@@ -16,6 +22,12 @@ import ssafy.a709.simda.service.CommentService;
 import ssafy.a709.simda.service.FeedService;
 import ssafy.a709.simda.service.FollowService;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +50,8 @@ class SimdaApplicationTests {
 	@Test
 	void contextLoads() {
 		User user = User.builder()
-				.nickname("SSAFY")
-				.socialToken("1234")
+				.nickname("LJM")
+				.socialToken("77777")
 				.socialType("KAKAO")
 		.build();
 		System.out.println(user.toString());
@@ -135,6 +147,24 @@ class SimdaApplicationTests {
 		//Delete
 //		commentService.deleteComment(1);
 	}
+	@Test
+	void LoginTest() throws FirebaseAuthException {
+		String uid = "L3nWeUbcXghB8uFTepumAXKAQIx2";
+		UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
+		// 사용자 정보를 가져와서 처리합니다.
+		String displayName = userRecord.getDisplayName();
+		String email = userRecord.getEmail();
+		String phoneNumber = userRecord.getPhoneNumber();
+		// 여기서 uid와 email을 이용하여 사용자 정보를 가져와서 처리합니다.
+		// 예를 들어, 사용자 정보를 로그에 출력하여 확인합니다.
+		System.out.println("User ID: " + uid);
+		System.out.println("Email: " + email);
+		System.out.println(displayName);
+		System.out.println(phoneNumber);
+
+	}
+
+
 }
 
 
