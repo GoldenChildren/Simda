@@ -71,6 +71,7 @@ public class UserController {
     // 팔로우 요청
     @PostMapping("/followers")
     public ResponseEntity<String> followUser(@RequestBody FollowDto followDto) {
+        System.out.println(1);
         // fromUserId와 toUserId를 받기 위해 FollowDto 객체를 RequestBody로 받아온다
 
         // 그럼 FollowService에서는 FollowDto를 Entity로 저장해준다

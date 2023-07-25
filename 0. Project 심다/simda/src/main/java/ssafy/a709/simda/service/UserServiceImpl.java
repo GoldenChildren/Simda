@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> selectUsers(String keyword) {
 
         // 이름이 포함되는 유저를 검색해 온 User Entity 리스트 생성
-        List<User> userList = userRepository.findByNicknameLike(keyword);
+        List<User> userList = userRepository.findAllByNicknameContaining(keyword);
 
         // Dto Type의 List 생성
         List<UserDto> userDtoList = new ArrayList<>();

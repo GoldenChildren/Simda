@@ -43,6 +43,7 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-test'
+	implementation 'com.google.firebase:firebase-admin:8.1.0'
 }
 
 tasks.named('test') {
