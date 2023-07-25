@@ -6,7 +6,7 @@ import 'package:kakao_login/main_view_model.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(
-      nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b'
+      nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b',
   );
   runApp(const MyApp());
 }
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // style: const ButtonStyle(backgroundColor: Colors.transparent,),
               child: SizedBox(
                 width: 250,
-                child: Image.asset('images/kakao_login_large_wide.png')),
+                child: Image.asset('assets/images/kakaologin.png')),
             ),
             ElevatedButton(
               onPressed: () async {
