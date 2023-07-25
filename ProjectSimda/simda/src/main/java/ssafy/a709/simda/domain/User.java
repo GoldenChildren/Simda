@@ -21,12 +21,14 @@ public class User {
     private int userId;
 
     // Social Token
-    @Column(name = "social_token", nullable = false, unique=true, columnDefinition = "varchar(200)")
-    private String socialToken;
+//    @Column(name = "social_token", nullable = false, unique=true, columnDefinition = "varchar(200)")
+//    private String socialToken;
 
     // Social Type
-    @Column(name = "social_type", nullable = false, columnDefinition = "varchar(50)")
-    private String socialType;
+//    @Column(name = "social_type", nullable = false, columnDefinition = "varchar(50)")
+//    private String socialType;
+    @Column(name = "email", nullable = false, columnDefinition = "varchar(50)")
+    private String email;
 
     // Nickname
     @Column(name = "nickname", nullable = false, unique=true, columnDefinition = "varchar(50)")
@@ -44,8 +46,9 @@ public class User {
     public static User changeToUser(UserDto userDto) {
         return User.builder()
                 .userId(userDto.getUserId())
-                .socialToken(userDto.getSocialToken())
-                .socialType(userDto.getSocialType())
+//                .socialToken(userDto.getSocialToken())
+//                .socialType(userDto.getSocialType())
+                .email(userDto.getEmail())
                 .nickname(userDto.getNickname())
                 .profileImg(userDto.getProfileImg())
                 .userRole(userDto.getUserRole())

@@ -16,6 +16,9 @@ public interface UserService {
     // 닉네임 중복 체크
     boolean checkNickname(String keyword);
 
+    // Email 중복 체크
+    public boolean checkEmail(String keyword);
+
     // 유저 정보 수정
     boolean modifyUser(UserDto userDto);
 

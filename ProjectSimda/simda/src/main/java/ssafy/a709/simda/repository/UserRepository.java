@@ -22,6 +22,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // 유저 아이디로 유저를 가져오기
     User findByUserId(int id);
 
+    // 이메일로 가져오기
+    User findByEmail(String email);
+
 
 
 

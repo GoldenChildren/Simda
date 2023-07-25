@@ -12,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import ssafy.a709.simda.dto.FollowDto;
+import ssafy.a709.simda.dto.TokenDto;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.service.FollowService;
 import ssafy.a709.simda.service.UserService;
@@ -157,19 +158,19 @@ public class UserController {
 //    }
 
     @PostMapping("/test")
-    public ResponseEntity<String> registUser(@RequestBody UserDto userDto) throws Exception {
+    public ResponseEntity<String> registUser(@RequestBody TokenDto tokenDto) throws Exception {
 
         RestTemplate restTemplate = new RestTemplate();
 
         // Prepare request headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBearerAuth(userDto.getSocialToken());
+        headers.setBearerAuth(tokenDto.getAccessToken());
         headers.add("Accept", "application/json");
 
         // Prepare request parameters
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        parameters.add("property_keys", "[kakao_account.email]");
+//        parameters.add("property_keys", "[kakao_account.email]");
 
         // Create the request entity with headers and parameters
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
@@ -185,11 +186,19 @@ public class UserController {
             System.out.println(responseEntity);
             JsonNode newNode = mapper.readTree(responseEntity.getBody());
             ObjectNode node = ((ObjectNode) newNode).put("Authentication", "Successful");
-            System.out.println(node.get("kakao_account").get("email").toString().replaceAll("\"",""));
+            String email = node.get("kakao_account").get("email").toString().replaceAll("\"","");
+            System.out.println(email);
 
-            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+
+            // DB에 email 비교해서 가입했는지, 안했는지 확인
+            if(userService.checkEmail(email)){
+                System.out.println("로그인 성공!");
+                return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+            }else{
+                System.out.println("회원가입으로!");
+                return new ResponseEntity<>(SUCCESS, HttpStatus.NOT_FOUND);
+            }
         }
-
         return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
     }
 }

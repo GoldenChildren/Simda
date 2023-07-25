@@ -79,6 +79,7 @@ public class UserServiceImpl implements UserService {
         return userDtoList;
     }
 
+    // 닉네임 중복검사
     @Override
     public boolean checkNickname(String keyword) {
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
@@ -86,7 +87,18 @@ public class UserServiceImpl implements UserService {
 
         return user == null;
     }
-    
+
+    // 로그인시 DB에 Email check
+    @Override
+    public boolean checkEmail(String keyword) {
+        // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
+        System.out.println("repo "+ keyword);
+        User user = userRepository.findByEmail(keyword);
+        System.out.println(user);
+        if(user == null) return false;
+        return true;
+    }
+
     // User정보 수정, 실패와 성공을 반환한다
     @Override
     public boolean modifyUser(UserDto userDto) {
