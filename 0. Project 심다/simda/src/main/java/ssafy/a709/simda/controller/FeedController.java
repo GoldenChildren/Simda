@@ -19,7 +19,7 @@ public class FeedController {
     private FeedService feedService;
     @Autowired
     private CommentService commentService;
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<String> writeFeed(@RequestBody FeedDto feedDto) {
         if (feedService.writeFeed(feedDto)) {
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -39,9 +39,9 @@ public class FeedController {
         return new ResponseEntity<List<FeedDto>>(feedService.getListFollow(userId), HttpStatus.OK);
     }
 
-    // 내 Id로 내 피드목록 가져오기
+    // 유저 Id로 내 피드목록 가져오기
     @GetMapping("/{userId}")
-    public ResponseEntity<List<FeedDto>> getArticleInfo(@PathVariable("userId") int userId){
+    public ResponseEntity<List<FeedDto>> getUserArticleList(@PathVariable("userId") int userId){
         return new ResponseEntity<List<FeedDto>>(feedService.getMyFeedList(userId), HttpStatus.OK);
     }
     @PutMapping("/like")

@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAll();
 
     // 검색 닉네임이 포함된 유저들을 모두 가져오기
-    List<User> findByNicknameLike(String nickname);
+    List<User> findAllByNicknameContaining(String nickname);
 
     // 닉네임으로 단 한명의 유저를 가져오기
     User findByNickname(String nickname);

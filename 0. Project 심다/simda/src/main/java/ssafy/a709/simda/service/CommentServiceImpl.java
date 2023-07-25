@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService{
             Feed nowFeed = feedRepository.findById(commentDto.getFeedId()).get();
             User nowUser = userRepository.findById(commentDto.getUserId()).get();
             Optional<Comment> opComment = commentRepository.findById(commentDto.getPCmtId());
-            Comment pComment = opComment.isPresent() ? null : opComment.get();
+            Comment pComment = opComment.isPresent() ? opComment.get() : null;
             Comment newComment = Comment.changeToComment(commentDto, nowUser, nowFeed, pComment);
             commentRepository.save(newComment);
         }catch (Exception e){
@@ -64,7 +64,7 @@ public class CommentServiceImpl implements CommentService{
         }catch (Exception e){
             return false;
         }
-        return false;
+        return true;
     }
 
     @Override

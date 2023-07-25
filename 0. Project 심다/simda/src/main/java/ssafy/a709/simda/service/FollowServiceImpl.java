@@ -40,7 +40,7 @@ public class FollowServiceImpl implements FollowService{
         // Repo로 보내서 id가 일치하는 녀석을 Delete 해준다
         try {
             // followId를 통해 entity 삭제
-            followRepository.deleteByFollowId(followDto.getFollowId());
+            followRepository.deleteById(followDto.getFollowId());
         } catch(Exception e) {
             System.out.println("실패");
             return false;
@@ -82,12 +82,13 @@ public class FollowServiceImpl implements FollowService{
         try {
             // User Type Entity에서 userId와 toUserId를 통해서 User List 가져오기
             List<User> userList = followRepository.findByToUserId(userId);
-
+            System.out.println(userList.size());
             // Entity를 Dto Type으로 변환
             for(User u : userList) {
                 userDtoList.add(UserDto.changeToUserDto(u));
             }
         } catch(Exception e) {
+            System.out.println(e);
             System.out.println("실패");
         }
 

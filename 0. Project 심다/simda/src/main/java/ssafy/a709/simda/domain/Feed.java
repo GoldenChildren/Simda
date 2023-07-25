@@ -26,6 +26,10 @@ public class Feed {
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "user_id")
     private User user;
 
+    // Title
+    @Column(name = "title", nullable = false, columnDefinition = "varchar(50)")
+    private String title;
+
     // Emotion
     @Column(name = "emotion", nullable = false, columnDefinition = "int")
     private int emotion;
@@ -52,11 +56,12 @@ public class Feed {
 
     // Regist Date
     @CreationTimestamp
-    @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp")
+    @Column(name = "reg_date", nullable = false, columnDefinition = "timestamp DEFAULT CURRENT_TIMESTAMP")
     private Timestamp regDate;
 
     // 피드 내용 (내용, 감정, 이미지) 수정
     public void update(FeedDto feedDto){
+        this.title = feedDto.getTitle();
         this.content = feedDto.getContent();
         this.emotion = feedDto.getEmotion();
         this.img = feedDto.getImg();
@@ -66,13 +71,13 @@ public class Feed {
         return Feed.builder()
                 .feedId(feedDto.getFeedId())
                 .user(User.changeToUser(feedDto.getUserDto()))
+                .title(feedDto.getTitle())
                 .emotion(feedDto.getEmotion())
                 .content(feedDto.getContent())
                 .img(feedDto.getImg())
                 .lat(feedDto.getLat())
                 .lng(feedDto.getLng())
                 .likeCnt(feedDto.getLikeCnt())
-                .regDate(feedDto.getRegDate())
                 .build();
     }
 }
