@@ -22,5 +22,7 @@ public interface UserService {
     // 유저 검색(one)
     UserDto selectOneUser(int userId);
 
-    List<UserDto> testUser() throws ExecutionException, InterruptedException;
+//    List<UserDto> testUser() throws ExecutionException, InterruptedException;
+
+
 }

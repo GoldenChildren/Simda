@@ -5,11 +5,17 @@ import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.User;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.repository.UserRepository;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -38,21 +44,21 @@ public class UserServiceImpl implements UserService {
         return userDtoList;
     }
 
-    @Override
-    public List<UserDto> testUser() throws ExecutionException, InterruptedException{
-        final String COLLECTION_NAME = "users";
-
-        List<UserDto> list = new ArrayList<>();
-        Firestore db = FirestoreClient.getFirestore();
-        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
-        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-        for (QueryDocumentSnapshot document : documents) {
-            list.add(document.toObject(UserDto.class));
-
-        }
-
-        return list;
-    }
+//    @Override
+//    public List<UserDto> testUser() throws ExecutionException, InterruptedException{
+//        final String COLLECTION_NAME = "users";
+//
+//        List<UserDto> list = new ArrayList<>();
+//        Firestore db = FirestoreClient.getFirestore();
+//        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
+//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+//        for (QueryDocumentSnapshot document : documents) {
+//            list.add(document.toObject(UserDto.class));
+//
+//        }
+//
+//        return list;
+//    }
 
     // 검색한 닉네임이 포함되는 유저들을 조회한다
     @Override
@@ -119,5 +125,6 @@ public class UserServiceImpl implements UserService {
         // User Dto 반환
         return UserDto.changeToUserDto(user);
     }
+
 
 }

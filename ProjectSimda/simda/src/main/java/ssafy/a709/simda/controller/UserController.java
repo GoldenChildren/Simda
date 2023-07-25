@@ -1,9 +1,16 @@
 package ssafy.a709.simda.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.api.client.json.Json;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.service.FollowService;
@@ -11,6 +18,7 @@ import ssafy.a709.simda.service.UserService;
 
 import java.util.List;
 
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -142,18 +150,46 @@ public class UserController {
     }
 
     // 유저 정보를 가져오는 testCode
-    @GetMapping("/users")
-    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
-        List<UserDto> list = userService.testUser();
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
+//    @GetMapping("/users")
+//    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
+//        List<UserDto> list = userService.testUser();
+//        return new ResponseEntity<>(list, HttpStatus.OK);
+//    }
 
     @PostMapping("/test")
-    public ResponseEntity<String> registUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> registUser(@RequestBody UserDto userDto) throws Exception {
 
-        System.out.println(userDto.toString());
+        RestTemplate restTemplate = new RestTemplate();
 
-//        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+        // Prepare request headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBearerAuth(userDto.getSocialToken());
+        headers.add("Accept", "application/json");
+
+        // Prepare request parameters
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        parameters.add("property_keys", "[kakao_account.email]");
+
+        // Create the request entity with headers and parameters
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
+
+        // Set the API endpoint URL
+        String url = "https://kapi.kakao.com/v2/user/me";
+
+        // Make the POST request
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+
+        if (responseEntity != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            System.out.println(responseEntity);
+            JsonNode newNode = mapper.readTree(responseEntity.getBody());
+            ObjectNode node = ((ObjectNode) newNode).put("Authentication", "Successful");
+            System.out.println(node.get("kakao_account").get("email").toString().replaceAll("\"",""));
+
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
     }
 }
