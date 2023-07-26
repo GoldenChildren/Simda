@@ -39,8 +39,9 @@ public class UserDto {
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
-                .userRole(user.getUserRole())
+//                .userRole(user.getUserRole())
                 .build();
     }
+
 
 }

@@ -25,6 +25,9 @@ public interface UserService {
     // 유저 검색(one)
     UserDto selectOneUser(int userId);
 
+    // 유저 회원가입
+    void createUser(UserDto userDto);
+
 //    List<UserDto> testUser() throws ExecutionException, InterruptedException;
 
 

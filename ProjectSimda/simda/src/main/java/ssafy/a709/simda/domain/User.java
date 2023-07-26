@@ -7,6 +7,7 @@ import ssafy.a709.simda.dto.UserDto;
 
 import javax.persistence.*;
 
+@DynamicInsert
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,7 +40,7 @@ public class User {
     private String profileImg;
 
     // userRole
-    @Column(name ="user_role", nullable = false, columnDefinition = "integer default 1")
+    @Column(name ="user_role", nullable = false, columnDefinition = "int default '1'")
     private int userRole;
 
     // UserDto를 User(Entity)로 변환
@@ -51,7 +52,7 @@ public class User {
                 .email(userDto.getEmail())
                 .nickname(userDto.getNickname())
                 .profileImg(userDto.getProfileImg())
-                .userRole(userDto.getUserRole())
+//                .userRole(userDto.getUserRole())
                 .build();
     }
 }

@@ -138,5 +138,11 @@ public class UserServiceImpl implements UserService {
         return UserDto.changeToUserDto(user);
     }
 
+    @Override
+    public void createUser(UserDto userDto) {
+        User user = User.changeToUser(userDto);
+
+        userRepository.save(user);
+    }
 
 }

@@ -157,8 +157,8 @@ public class UserController {
 //        return new ResponseEntity<>(list, HttpStatus.OK);
 //    }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> registUser(@RequestBody TokenDto tokenDto) throws Exception {
+    @PostMapping("/login/kakao")
+    public ResponseEntity<String> loginUser(@RequestBody TokenDto tokenDto) throws Exception {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -196,9 +196,21 @@ public class UserController {
                 return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             }else{
                 System.out.println("회원가입으로!");
-                return new ResponseEntity<>(SUCCESS, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(email, HttpStatus.NOT_FOUND);
             }
         }
         return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/")
+    public ResponseEntity<String> registUser(@RequestBody UserDto userDto) throws Exception {
+        System.out.println(userDto);
+
+        userService.createUser(userDto);
+
+        System.out.println("회원가입 성공!");
+
+        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
+
 }
