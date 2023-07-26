@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ssafy.a709.simda.domain.Comment;
 import ssafy.a709.simda.domain.Feed;
+import ssafy.a709.simda.domain.User;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -28,22 +31,23 @@ public class FeedDto {
     // Longitude
     private double lng;
     // Linke Point
-    private int like;
+    private int likeCnt;
     // Regist Date
     private Timestamp regDate;
-
+    // 대댓글 리스트
+    private List<Comment> underComment;
     // Feed(Entity)를 FeedDto로 변환
-//    public static FeedDto changeToFeedDto(Feed feed){
-//        return FeedDto.builder()
-//                .feedId(feed.getFeedId())
-////                .userDto(UserDto.changeToUserDto(feed.getUser()))
-//                .emotion(feed.getEmotion())
-//                .content(feed.getContent())
-//                .img(feed.getImg())
-//                .lat(feed.getLat())
-//                .lng(feed.getLng())
-//                .like(feed.getLike())
-//                .regDate(feed.getRegDate())
-//                .build();
-//    }
+    public static FeedDto changeToFeedDto(Feed feed, User user){
+        return FeedDto.builder()
+                .feedId(feed.getFeedId())
+                .userDto(UserDto.changeToUserDto(user))
+                .emotion(feed.getEmotion())
+                .content(feed.getContent())
+                .img(feed.getImg())
+                .lat(feed.getLat())
+                .lng(feed.getLng())
+                .likeCnt(feed.getLikeCnt())
+                .regDate(feed.getRegDate())
+                .build();
+    }
 }

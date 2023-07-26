@@ -15,6 +15,7 @@ import javax.persistence.*;
 public class Chat {
 
     public static Chat chageToChat(ChatDTO chatDTO){
+        System.out.println("chageToChat 시작");
         return Chat.builder()
                 .chatId(chatDTO.getChatId())
                 .chatRoom(Chatroom.chageToChatroom(chatDTO.getChatRoom()))
@@ -24,6 +25,18 @@ public class Chat {
                 .readFlag(chatDTO.getReadFlag())
                 .build();
     };
+    public static Chat chageToChatForTrans(ChatDTO chatDTO){
+        System.out.println("chageToChat 시작");
+        return Chat.builder()
+                .chatId(chatDTO.getChatId())
+                .chatRoom(Chatroom.chageToChatroomForTrans(chatDTO.getChatRoom()))
+                .user(User.changeToUser(chatDTO.getUser()))
+                .content(chatDTO.getContent())
+                .regDate(chatDTO.getRegDate())
+                .readFlag(chatDTO.getReadFlag())
+                .build();
+    };
+
 
 
     // Chat Id
@@ -33,7 +46,7 @@ public class Chat {
     private int chatId;
 
     // Many(Chatroom Id) to One(Chatroom Id)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatroom_id",nullable = false, referencedColumnName = "chatroom_id")
     private Chatroom chatRoom;
 
