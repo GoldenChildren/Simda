@@ -14,21 +14,18 @@ public interface UserService {
     List<UserDto> selectUsers(String keyword);
 
     // 닉네임 중복 체크
-    boolean checkNickname(String keyword);
+    boolean selectUserByNickname(String keyword);
 
     // Email 중복 체크
-    public boolean checkEmail(String keyword);
+    public boolean selectUserByEmail(String keyword);
 
     // 유저 정보 수정
-    boolean modifyUser(UserDto userDto);
+    boolean updateUser(UserDto userDto);
 
     // 유저 검색(one)
     UserDto selectOneUser(int userId);
 
     // 유저 회원가입
     void createUser(UserDto userDto);
-
-//    List<UserDto> testUser() throws ExecutionException, InterruptedException;
-
 
 }

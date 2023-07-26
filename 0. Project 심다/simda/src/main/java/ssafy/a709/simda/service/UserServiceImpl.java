@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
     // 닉네임 중복검사
     @Override
-    public boolean checkNickname(String keyword) {
+    public boolean selectUserByNickname(String keyword) {
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
         User user = userRepository.findByNickname(keyword);
 
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     // 로그인시 DB에 Email check
     @Override
-    public boolean checkEmail(String keyword) {
+    public boolean selectUserByEmail(String keyword) {
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
         System.out.println("repo "+ keyword);
         User user = userRepository.findByEmail(keyword);
@@ -101,13 +101,9 @@ public class UserServiceImpl implements UserService {
 
     // User정보 수정, 실패와 성공을 반환한다
     @Override
-    public boolean modifyUser(UserDto userDto) {
-
+    public boolean updateUser(UserDto userDto) {
         try {
-            // 현재 받아온 userDto의 Id값을 조회하는 변수
-            // int nowUserId = userDto.getUserId();
-
-            // User Repo에서 id를 통해 해당 User의 Entity를 가져왔다
+            // User Repo에서 id를 통해 해당 User의 Entity를 가져오기
             User nowUser = userRepository.findByUserId(userDto.getUserId());
 
             // 닉네임, 프로필 사진 두 개만 변경이 가능하다

@@ -9,16 +9,16 @@ public interface FollowService {
 
     // 팔로우 요청
     // 성공할 경우 true값 반환
-    boolean follow(FollowDto followDto);
+    boolean createFollow(FollowDto followDto);
 
     // 팔로우 취소
     // 언팔 성공할 경우 true값 반환
-    boolean unfollow(FollowDto followDto);
+    boolean deleteFollow(FollowDto followDto);
 
     // 팔로우 목록 보기
-    List<UserDto> searchFollow(int userId);
+    List<UserDto> selectFollowList(int userId);
 
     // 팔로워 목록 보기
-    List<UserDto> searchFollower(int userId);
+    List<UserDto> selectFollowerList(int userId);
 
 }

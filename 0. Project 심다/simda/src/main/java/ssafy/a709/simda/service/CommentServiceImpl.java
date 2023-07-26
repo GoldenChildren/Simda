@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService{
+
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -23,7 +24,7 @@ public class CommentServiceImpl implements CommentService{
     @Autowired
     private CommentRepository commentRepository;
     @Override
-    public boolean writeComment(CommentDto commentDto) {
+    public boolean createComment(CommentDto commentDto) {
         try {
             Feed nowFeed = feedRepository.findById(commentDto.getFeedId()).get();
             User nowUser = userRepository.findById(commentDto.getUserId()).get();
@@ -38,7 +39,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<CommentDto> getCommentList(int feedId) {
+    public List<CommentDto> selectCommentList(int feedId) {
         List<Comment> list = commentRepository.findByFeed_FeedIdAndByComment_PCntIdIsNull(feedId);
         List<CommentDto> reslist = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {

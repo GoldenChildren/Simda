@@ -46,15 +46,15 @@ public class UserController {
     @GetMapping("/check")
     public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
         // String type의 nickname을 받아와서 DB와 비교
-        if (userService.checkNickname(nickname)) {
+        if (userService.selectUserByNickname(nickname)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
         return new ResponseEntity<>(FAIL, HttpStatus.NOT_ACCEPTABLE);
     }
 
-    // 유저 - 검색 keyword를 통해 1명의 유저를 검색해서 선택하는 Get요청
+    // 유저 - 검색 keyword를 통해 닉네임을 포함하는 유저를 전체 반환
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String keyword) {
+    public ResponseEntity<List<UserDto>> getUsers(@RequestParam String keyword) {
 
         // 키워드를 포함하는 닉네임을 받아올 유저들의 리스트 생성
         List<UserDto> userDtoList = userService.selectUsers(keyword);
@@ -70,9 +70,9 @@ public class UserController {
 
     // 유저 정보 수정하는 Post 요청
     @PutMapping("/")
-    public ResponseEntity<String> updateUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> modifyUser(@RequestBody UserDto userDto) {
 
-        if (userService.modifyUser(userDto)) {
+        if (userService.updateUser(userDto)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
 
@@ -81,11 +81,11 @@ public class UserController {
 
     // 팔로우 요청
     @PostMapping("/followers")
-    public ResponseEntity<String> followUser(@RequestBody FollowDto followDto) {
+    public ResponseEntity<String> addFollowUser(@RequestBody FollowDto followDto) {
         // fromUserId와 toUserId를 받기 위해 FollowDto 객체를 RequestBody로 받아온다
 
         // 그럼 FollowService에서는 FollowDto를 Entity로 저장해준다
-        if (followService.follow(followDto)) {
+        if (followService.createFollow(followDto)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
 
@@ -94,10 +94,10 @@ public class UserController {
 
     // 언팔로우
     @DeleteMapping("/followers")
-    public ResponseEntity<String> unFollowUser(@RequestBody FollowDto followDto) {
+    public ResponseEntity<String> removeFollowUser(@RequestBody FollowDto followDto) {
         // 내가 다른 유저를 unfollow 할 경우,
         // fromUserId와 내가 일치하는 것만 삭제하면 된다!
-        if (followService.unfollow(followDto)) {
+        if (followService.deleteFollow(followDto)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
 
@@ -107,7 +107,7 @@ public class UserController {
 
     // 유저 프로필 보기 -> 한 명의 유저를 선택하는 API
     @GetMapping("/profile")
-    public ResponseEntity<UserDto> searchUser(@RequestParam int userId) {
+    public ResponseEntity<UserDto> getUser(@RequestParam int userId) {
 
         // 검색한 userId를 바탕으로 유저 하나 가져오기
         UserDto userDto = userService.selectOneUser(userId);
@@ -123,9 +123,9 @@ public class UserController {
 
     // 팔로잉 목록 보기(내가 팔로우 하는)
     @GetMapping("/followings")
-    public ResponseEntity<List<UserDto>> searchFollowings(@RequestParam int userId) {
+    public ResponseEntity<List<UserDto>> getFollowings(@RequestParam int userId) {
         // userId를 통해서 해당 유저가 팔로우 하는 following 목록을 가져옵니다
-        List<UserDto> userList = followService.searchFollow(userId);
+        List<UserDto> userList = followService.selectFollowList(userId);
 
         // UserList의 size가 0이라면?
         if (userList.size() == 0) {
@@ -139,9 +139,9 @@ public class UserController {
 
     // 팔로워 목록 보기(나를 팔로우 하는)
     @GetMapping("/followers")
-    public ResponseEntity<List<UserDto>> searchFollowers(@RequestParam int userId) {
+    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam int userId) {
         // userId를 통해서 해당 유저가 팔로우 하는 followers 목록을 가져옵니다
-        List<UserDto> userList = followService.searchFollower(userId);
+        List<UserDto> userList = followService.selectFollowerList(userId);
 
         if (userList.size() == 0) {
             System.out.println("비어있습니다.");
@@ -191,7 +191,7 @@ public class UserController {
 
 
             // DB에 email 비교해서 가입했는지, 안했는지 확인
-            if(userService.checkEmail(email)){
+            if(userService.selectUserByEmail(email)){
                 System.out.println("로그인 성공!");
                 return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             }else{

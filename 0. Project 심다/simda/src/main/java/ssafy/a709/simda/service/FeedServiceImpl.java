@@ -19,7 +19,7 @@ public class FeedServiceImpl implements FeedService{
     private UserRepository userRepository;
 
     @Override
-    public boolean writeFeed(FeedDto feedDto) {
+    public boolean createFeed(FeedDto feedDto) {
         if(feedDto.getImg() == null )
             return false;
         feedRepository.save(Feed.changeToFeed(feedDto));
@@ -27,7 +27,7 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
-    public List<FeedDto> getListAround(double lat, double lng) {
+    public List<FeedDto> selectAroundList(double lat, double lng) {
         List<Feed> list = feedRepository.getListAround(lat, lng);
         List<FeedDto> resList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -37,7 +37,7 @@ public class FeedServiceImpl implements FeedService{
         return resList;
     }
     @Override
-    public List<FeedDto> getListFollow(int userId) {
+    public List<FeedDto> selectFollowList(int userId) {
         List<FeedDto> resList = new ArrayList<>();
         List<Feed> list = feedRepository.getListByMyId(userId);
         for (int j = 0; j < list.size(); j++) {
@@ -47,7 +47,7 @@ public class FeedServiceImpl implements FeedService{
         return resList;
     }
     @Override
-    public List<FeedDto> getMyFeedList(int userId) {
+    public List<FeedDto> selectMyFeedList(int userId) {
         List<FeedDto> resList = new ArrayList<>();
         List<Feed> list = feedRepository.findAllByUser_UserId(userId);
         for (int j = 0; j < list.size(); j++) {
@@ -67,7 +67,7 @@ public class FeedServiceImpl implements FeedService{
         return true;
     }
     @Override
-    public boolean modifyFeed(FeedDto feedDto) {
+    public boolean updateFeed(FeedDto feedDto) {
         try{
             Feed feed = feedRepository.findById(feedDto.getFeedId()).get();
             feed.update(feedDto);

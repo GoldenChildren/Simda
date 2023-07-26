@@ -1,7 +1,7 @@
 package ssafy.a709.simda.domain;
 
 import lombok.*;
-import ssafy.a709.simda.dto.ChatDTO;
+import ssafy.a709.simda.dto.ChatDto;
 
 import javax.persistence.*;
 
@@ -14,26 +14,26 @@ import javax.persistence.*;
 @Table
 public class Chat {
 
-    public static Chat chageToChat(ChatDTO chatDTO){
+    public static Chat chageToChat(ChatDto chatDto){
         System.out.println("chageToChat 시작");
         return Chat.builder()
-                .chatId(chatDTO.getChatId())
-                .chatRoom(Chatroom.chageToChatroom(chatDTO.getChatRoom()))
-                .user(User.changeToUser(chatDTO.getUser()))
-                .content(chatDTO.getContent())
-                .regDate(chatDTO.getRegDate())
-                .readFlag(chatDTO.getReadFlag())
+                .chatId(chatDto.getChatId())
+                .chatRoom(Chatroom.chageToChatroom(chatDto.getChatRoom()))
+                .user(User.changeToUser(chatDto.getUser()))
+                .content(chatDto.getContent())
+                .regDate(chatDto.getRegDate())
+                .readFlag(chatDto.getReadFlag())
                 .build();
     };
-    public static Chat chageToChatForTrans(ChatDTO chatDTO){
+    public static Chat chageToChatForTrans(ChatDto chatDto){
         System.out.println("chageToChat 시작");
         return Chat.builder()
-                .chatId(chatDTO.getChatId())
-                .chatRoom(Chatroom.chageToChatroomForTrans(chatDTO.getChatRoom()))
-                .user(User.changeToUser(chatDTO.getUser()))
-                .content(chatDTO.getContent())
-                .regDate(chatDTO.getRegDate())
-                .readFlag(chatDTO.getReadFlag())
+                .chatId(chatDto.getChatId())
+                .chatRoom(Chatroom.chageToChatroomForTrans(chatDto.getChatRoom()))
+                .user(User.changeToUser(chatDto.getUser()))
+                .content(chatDto.getContent())
+                .regDate(chatDto.getRegDate())
+                .readFlag(chatDto.getReadFlag())
                 .build();
     };
 
