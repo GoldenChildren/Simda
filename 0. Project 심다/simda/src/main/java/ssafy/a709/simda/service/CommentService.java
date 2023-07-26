@@ -6,9 +6,9 @@ import ssafy.a709.simda.dto.FeedDto;
 import java.util.List;
 
 public interface CommentService {
-    boolean writeComment(CommentDto commentDto);
+    boolean createComment(CommentDto commentDto);
 
-    List<CommentDto> getCommentList(int feedId);
+    List<CommentDto> selectCommentList(int feedId);
 
     boolean deleteComment(int commentId);
 

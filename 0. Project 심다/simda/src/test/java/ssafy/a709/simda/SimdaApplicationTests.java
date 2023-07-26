@@ -86,7 +86,7 @@ class SimdaApplicationTests {
 	void selectTest(){
 //		List<FeedDto> list = feedService.getListAround(128.1, 37.8);
 //		List<FeedDto> list = feedService.getMyFeedList(2);
-		List<FeedDto> list = feedService.getListFollow(4);
+		List<FeedDto> list = feedService.selectFollowList(4);
 		for (int i = 0; i < list.size(); i++) {
 			System.out.println(list.get(i));
 		}
@@ -109,7 +109,7 @@ class SimdaApplicationTests {
 				.lat(218)
 				.lng(18)
 				.build();
-		feedService.modifyFeed(fd);
+		feedService.updateFeed(fd);
 	}
 	@Test
 	void Delete(){

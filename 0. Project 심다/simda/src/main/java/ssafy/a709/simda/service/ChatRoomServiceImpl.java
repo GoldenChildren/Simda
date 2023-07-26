@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.Chatroom;
 import ssafy.a709.simda.domain.User;
-import ssafy.a709.simda.dto.ChatRoomDTO;
+import ssafy.a709.simda.dto.ChatRoomDto;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.repository.ChatRoomRepository;
 
@@ -15,15 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatRoomServiceImpl implements ChatRoomService{
 
-
-
     private final ChatRoomRepository chatRoomRepository;
-
 
     //채팅방 목록가져오기
     @Override
-    public List<ChatRoomDTO> allChatRoomList(int userId) {
-        List<ChatRoomDTO> responseList = new ArrayList<>();
+    public List<ChatRoomDto> selectAllChatRoomList(int userId) {
+        List<ChatRoomDto> responseList = new ArrayList<>();
 //        List<Chatroom> resultList = chatRoomRepository.findByUser1IdOrUser2Id(userId, userId);
 //        for (Chatroom chatRoom:resultList) {
 //            responseList.add(ChatRoomDTO.changeToChatRoomDto(chatRoom));

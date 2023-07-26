@@ -20,7 +20,7 @@ public class FollowServiceImpl implements FollowService{
 
     // follow 신청하기
     @Override
-    public boolean follow(FollowDto followDto) {
+    public boolean createFollow(FollowDto followDto) {
         try {
             // Dto Type의 객체를 Entity화 해주기
             Follow follow = Follow.changeToFollow(followDto);
@@ -35,7 +35,7 @@ public class FollowServiceImpl implements FollowService{
 
     // follow 끊기
     @Override
-    public boolean unfollow(FollowDto followDto) {
+    public boolean deleteFollow(FollowDto followDto) {
         // 받아온 FollowDto에서 int형의 follow Id를 가져와서
         // Repo로 보내서 id가 일치하는 녀석을 Delete 해준다
         try {
@@ -50,7 +50,7 @@ public class FollowServiceImpl implements FollowService{
 
     // '내가' Follow하는 사람들 검색
     @Override
-    public List<UserDto> searchFollow(int userId) {
+    public List<UserDto> selectFollowList(int userId) {
         // 받아온 int형의 userId를 통해서 fromUserId와 비교해서
         // 일치하는 사람들의 객체 Entity를 가져온다
         // UserDto의 List형태로 변환하여 반환한다
@@ -59,7 +59,7 @@ public class FollowServiceImpl implements FollowService{
         try {
             // User Type Entity에서 userId와 FromUserId를 통해 User List 가져오기
             List<User> userList = followRepository.findByFromUserId(userId);
-            // Entity를 Dto Type으로 변환
+
             // Entity를 Dto Type으로 변환
             for(User u : userList) {
                 userDtoList.add(UserDto.changeToUserDto(u));
@@ -73,7 +73,7 @@ public class FollowServiceImpl implements FollowService{
 
     // '나를' Follow하는 사람들 검색
     @Override
-    public List<UserDto> searchFollower(int userId) {
+    public List<UserDto> selectFollowerList(int userId) {
         // 받아온 int형의 id를 통해서 toUserId와 비교
         // 일치하는 사람들의 Entity를 가져온다
         // UserDto의 List 형태로 변환하여 반환한다

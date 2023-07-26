@@ -6,19 +6,19 @@ import ssafy.a709.simda.domain.Chatroom;
 
 @Data
 @Builder
-public class ChatRoomDTO{
+public class ChatRoomDto{
 
-    public static ChatRoomDTO changeToChatRoomDto(Chatroom chatRoom) {
-        return ChatRoomDTO.builder()
+    public static ChatRoomDto changeToChatRoomDto(Chatroom chatRoom) {
+        return ChatRoomDto.builder()
                 .chatRoomId(chatRoom.getChatroomId())
                 .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
                 .user2(UserDto.changeToUserDto(chatRoom.getUser2()))
-                .lChat(ChatDTO.changeToChatDto(chatRoom.getChat()))
+                .lChat(ChatDto.changeToChatDto(chatRoom.getChat()))
                 .build();
     }
     private int chatRoomId;
     private UserDto user1;
     private UserDto user2;
-    private ChatDTO lChat;
+    private ChatDto lChat;
 
 }

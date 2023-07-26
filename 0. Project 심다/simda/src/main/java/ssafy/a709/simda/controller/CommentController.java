@@ -19,18 +19,18 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
     @PostMapping("/")
-    public ResponseEntity<String> writeComment(@RequestBody CommentDto commentDto) {
-        if (commentService.writeComment(commentDto)) {
+    public ResponseEntity<String> addComment(@RequestBody CommentDto commentDto) {
+        if (commentService.createComment(commentDto)) {
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
         return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
     }
     @GetMapping("/")
     public ResponseEntity<List<CommentDto>> getCommentListByMyAround(@RequestParam("feedId") int feedId) {
-        return new ResponseEntity<List<CommentDto>>(commentService.getCommentList(feedId), HttpStatus.OK);
+        return new ResponseEntity<List<CommentDto>>(commentService.selectCommentList(feedId), HttpStatus.OK);
     }
     @DeleteMapping("/")
-    public ResponseEntity<String> deleteComment(@RequestHeader("commentId") int commentId) {
+    public ResponseEntity<String> removeComment(@RequestHeader("commentId") int commentId) {
         if (commentService.deleteComment(commentId)) {
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
