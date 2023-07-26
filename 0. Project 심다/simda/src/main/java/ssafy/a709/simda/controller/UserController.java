@@ -176,7 +176,7 @@ public class UserController {
         // Create the request entity with headers and parameters
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
 
-        // Set the API endpoint URL
+        // Set the API endpoint URLg
         String url = "https://kapi.kakao.com/v2/user/me";
 
         // Make the POST request
