@@ -40,8 +40,9 @@ public class User {
     private String profileImg;
 
     // userRole
-    @Column(name ="user_role", nullable = false, columnDefinition = "int default '1'")
-    private int userRole;
+    @Builder.Default
+    @Column(name ="user_role", nullable = false, columnDefinition = "int default 1")
+    private int userRole = 1;
 
     // UserDto를 User(Entity)로 변환
     public static User changeToUser(UserDto userDto) {
