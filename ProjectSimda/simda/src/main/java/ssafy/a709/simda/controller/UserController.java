@@ -54,10 +54,10 @@ public class UserController {
 
     // 유저 - 검색 keyword를 통해 닉네임을 포함하는 유저를 전체 반환
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> getUsers(@RequestParam String keyword) {
+    public ResponseEntity<List<UserDto>> getUsers(@RequestParam String nickname) {
 
         // 키워드를 포함하는 닉네임을 받아올 유저들의 리스트 생성
-        List<UserDto> userDtoList = userService.selectUsers(keyword);
+        List<UserDto> userDtoList = userService.selectUsers(nickname);
 
         // 만약 userDtoList의 size가 0이라면, 검색 결과가 없는 것이므로, notFound 반환
         if (userDtoList.size() == 0) {

@@ -62,10 +62,10 @@ public class UserServiceImpl implements UserService {
 
     // 검색한 닉네임이 포함되는 유저들을 조회한다
     @Override
-    public List<UserDto> selectUsers(String keyword) {
+    public List<UserDto> selectUsers(String nickname) {
 
         // 이름이 포함되는 유저를 검색해 온 User Entity 리스트 생성
-        List<User> userList = userRepository.findAllByNicknameContaining(keyword);
+        List<User> userList = userRepository.findAllByNicknameContaining(nickname);
 
         // Dto Type의 List 생성
         List<UserDto> userDtoList = new ArrayList<>();
@@ -81,19 +81,19 @@ public class UserServiceImpl implements UserService {
 
     // 닉네임 중복검사
     @Override
-    public boolean selectUserByNickname(String keyword) {
+    public boolean selectUserByNickname(String nickname) {
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
-        User user = userRepository.findByNickname(keyword);
+        User user = userRepository.findByNickname(nickname);
 
         return user == null;
     }
 
     // 로그인시 DB에 Email check
     @Override
-    public boolean selectUserByEmail(String keyword) {
+    public boolean selectUserByEmail(String email) {
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
-        System.out.println("repo "+ keyword);
-        User user = userRepository.findByEmail(keyword);
+        System.out.println("repo "+ email);
+        User user = userRepository.findByEmail(email);
         System.out.println(user);
         if(user == null) return false;
         return true;
@@ -124,9 +124,9 @@ public class UserServiceImpl implements UserService {
 
     // 닉네임이 일치하는 한 명의 유저를 조회한다
     @Override
-    public UserDto selectOneUser(int userId) {
+    public UserDto selectOneUser(int nickname) {
         // UserRepo에서 동일한 nickname으로 찾아오기
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findByUserId(nickname);
         
         // Entity를 Dto로 변환
 
