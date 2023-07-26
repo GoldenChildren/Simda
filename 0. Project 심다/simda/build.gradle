@@ -44,6 +44,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-test'
 	implementation 'com.google.firebase:firebase-admin:8.1.0'
+//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	// JWT(Json Web Token) 관련한 권한을 안전하게 전송하기 위한 프레임워크(JWT의 암/복호화 및 일정한 기능 제공)
+//	implementation 'org.springframework.security:spring-security-oauth2-jose'
+	// Gson
+	implementation group: 'com.google.code.gson', name: 'gson'
 }
 
 tasks.named('test') {

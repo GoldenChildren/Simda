@@ -15,10 +15,11 @@ public class UserDto {
     private int userId;
 
     // Social Token
-    private String socialToken;
+//    private String socialToken;
 
-    // Social Type
-    private String socialType;
+    // Social Type -> 이메일로 변경
+//    private String socialType;
+    private String email;
 
     // Nickname
     private String nickname;
@@ -33,12 +34,14 @@ public class UserDto {
     public static UserDto changeToUserDto(User user) {
         return UserDto.builder()
                 .userId(user.getUserId())
-                .socialToken(user.getSocialToken())
-                .socialType(user.getSocialType())
+//                .socialToken(user.getSocialToken())
+//                .socialType(user.getSocialType())
+                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
-                .userRole(user.getUserRole())
+//                .userRole(user.getUserRole())
                 .build();
     }
+
 
 }

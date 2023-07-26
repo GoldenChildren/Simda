@@ -1,13 +1,23 @@
 package ssafy.a709.simda.service;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.firebase.cloud.FirestoreClient;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.User;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,6 +44,22 @@ public class UserServiceImpl implements UserService {
         return userDtoList;
     }
 
+//    @Override
+//    public List<UserDto> testUser() throws ExecutionException, InterruptedException{
+//        final String COLLECTION_NAME = "users";
+//
+//        List<UserDto> list = new ArrayList<>();
+//        Firestore db = FirestoreClient.getFirestore();
+//        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
+//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+//        for (QueryDocumentSnapshot document : documents) {
+//            list.add(document.toObject(UserDto.class));
+//
+//        }
+//
+//        return list;
+//    }
+
     // 검색한 닉네임이 포함되는 유저들을 조회한다
     @Override
     public List<UserDto> selectUsers(String keyword) {
@@ -53,6 +79,7 @@ public class UserServiceImpl implements UserService {
         return userDtoList;
     }
 
+    // 닉네임 중복검사
     @Override
     public boolean checkNickname(String keyword) {
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
@@ -60,7 +87,18 @@ public class UserServiceImpl implements UserService {
 
         return user == null;
     }
-    
+
+    // 로그인시 DB에 Email check
+    @Override
+    public boolean checkEmail(String keyword) {
+        // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
+        System.out.println("repo "+ keyword);
+        User user = userRepository.findByEmail(keyword);
+        System.out.println(user);
+        if(user == null) return false;
+        return true;
+    }
+
     // User정보 수정, 실패와 성공을 반환한다
     @Override
     public boolean modifyUser(UserDto userDto) {
@@ -99,4 +137,12 @@ public class UserServiceImpl implements UserService {
         // User Dto 반환
         return UserDto.changeToUserDto(user);
     }
+
+    @Override
+    public void createUser(UserDto userDto) {
+        User user = User.changeToUser(userDto);
+
+        userRepository.save(user);
+    }
+
 }

@@ -3,6 +3,7 @@ package ssafy.a709.simda.service;
 import ssafy.a709.simda.dto.UserDto;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public interface UserService {
 
@@ -15,11 +16,19 @@ public interface UserService {
     // 닉네임 중복 체크
     boolean checkNickname(String keyword);
 
+    // Email 중복 체크
+    public boolean checkEmail(String keyword);
+
     // 유저 정보 수정
     boolean modifyUser(UserDto userDto);
 
     // 유저 검색(one)
     UserDto selectOneUser(int userId);
+
+    // 유저 회원가입
+    void createUser(UserDto userDto);
+
+//    List<UserDto> testUser() throws ExecutionException, InterruptedException;
 
 
 }

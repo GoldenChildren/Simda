@@ -7,6 +7,7 @@ import ssafy.a709.simda.dto.UserDto;
 
 import javax.persistence.*;
 
+@DynamicInsert
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,12 +22,14 @@ public class User {
     private int userId;
 
     // Social Token
-    @Column(name = "social_token", nullable = false, unique=true, columnDefinition = "varchar(200)")
-    private String socialToken;
+//    @Column(name = "social_token", nullable = false, unique=true, columnDefinition = "varchar(200)")
+//    private String socialToken;
 
     // Social Type
-    @Column(name = "social_type", nullable = false, columnDefinition = "varchar(50)")
-    private String socialType;
+//    @Column(name = "social_type", nullable = false, columnDefinition = "varchar(50)")
+//    private String socialType;
+    @Column(name = "email", nullable = false, columnDefinition = "varchar(50)")
+    private String email;
 
     // Nickname
     @Column(name = "nickname", nullable = false, unique=true, columnDefinition = "varchar(50)")
@@ -37,18 +40,20 @@ public class User {
     private String profileImg;
 
     // userRole
-    @Column(name ="user_role", nullable = false, columnDefinition = "integer default 1")
-    private int userRole;
+    @Builder.Default
+    @Column(name ="user_role", nullable = false, columnDefinition = "int default 1")
+    private int userRole = 1;
 
     // UserDto를 User(Entity)로 변환
     public static User changeToUser(UserDto userDto) {
         return User.builder()
                 .userId(userDto.getUserId())
-                .socialToken(userDto.getSocialToken())
-                .socialType(userDto.getSocialType())
+//                .socialToken(userDto.getSocialToken())
+//                .socialType(userDto.getSocialType())
+                .email(userDto.getEmail())
                 .nickname(userDto.getNickname())
                 .profileImg(userDto.getProfileImg())
-                .userRole(userDto.getUserRole())
+//                .userRole(userDto.getUserRole())
                 .build();
     }
 }
