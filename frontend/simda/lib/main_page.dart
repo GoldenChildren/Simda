@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 
+import 'main.dart';
 import 'map_page.dart';
 import 'feed_page.dart';
 import 'chatting_page.dart';
@@ -49,7 +50,7 @@ class MainPage extends StatelessWidget {
 }
 
 class BottomNavigationBar extends StatefulWidget {
-  const BottomNavigationBar({super.key, required this.title });
+  const BottomNavigationBar({super.key, required this.title});
 
   final String title;
 
@@ -58,7 +59,6 @@ class BottomNavigationBar extends StatefulWidget {
 }
 
 class _BottomNavigationBarState extends State<BottomNavigationBar> {
-
   int visit = 0;
 
   @override
@@ -67,34 +67,35 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           body: _page[visit],
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
+          bottomNavigationBar: Visibility(
+            visible: isVisible,
+            child: Container(
+              decoration: BoxDecoration(boxShadow: <BoxShadow>[
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.6),
                   blurRadius: 10.0,
                 )
-              ]
-            ),
-            child: BottomBarBackground(
-              items: items,
-              backgroundColor: Colors.white,
-              color: Colors.black54,
-              colorSelected: Colors.deepPurpleAccent,
-              indexSelected: visit,
-              paddingVertical: 20,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.7),
-                  blurRadius: 5.0,
-                  spreadRadius: 0.0,
-                  offset: const Offset(0, 7),
-                )
-              ],
-              onTap: (int index) => setState(() {
-                visit = index;
-              }),
-              backgroundSelected: Colors.black12,
+              ]),
+              child: BottomBarBackground(
+                items: items,
+                backgroundColor: Colors.white,
+                color: Colors.black54,
+                colorSelected: Colors.deepPurpleAccent,
+                indexSelected: visit,
+                paddingVertical: 20,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.7),
+                    blurRadius: 5.0,
+                    spreadRadius: 0.0,
+                    offset: const Offset(0, 7),
+                  )
+                ],
+                onTap: (int index) => setState(() {
+                  visit = index;
+                }),
+                backgroundSelected: Colors.black12,
+              ),
             ),
           ),
         ));

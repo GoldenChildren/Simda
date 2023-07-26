@@ -12,19 +12,12 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: const MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: Scaffold(
-            body: Column(
-              children: [
-                Expanded(child: ListViewBuilder()),
-              ],
-            ),
-          )),
+    return const Scaffold(
+      body: Column(
+        children: [
+          Expanded(child: ListViewBuilder()),
+        ],
+      ),
     );
   }
 }
@@ -123,13 +116,15 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                     Row(
                       children: [
-                        Text(likes[index].toString(), style: const TextStyle(fontSize: 20)),
+                        Text(likes[index].toString(),
+                            style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
                             setState(() {
                               likes[index]++;
-                            });},
+                            });
+                          },
                           child: const Image(
                               image:
                                   AssetImage('assets/images/flower-purple.png'),
@@ -210,14 +205,12 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           SizedBox(width: 10),
-                                          Text(
-                                            '10시간 전',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black45,
-                                            )
-                                          ),
+                                          Text('10시간 전',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black45,
+                                              )),
                                         ],
                                       ),
                                       const Text(
@@ -228,7 +221,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       TextButton(
                                         onPressed: () => {
                                           setState(() {
-                                            writeComment[index] = !writeComment[index];
+                                            writeComment[index] =
+                                                !writeComment[index];
                                           })
                                         },
                                         style: TextButton.styleFrom(
@@ -254,11 +248,11 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                           ),
                                           const SizedBox(width: 10),
                                           Container(
-                                            padding:
-                                            const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 20, 0),
                                             child: Column(
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 const Row(
                                                   children: [
@@ -266,34 +260,37 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                       '김짱구',
                                                       style: TextStyle(
                                                           fontSize: 14,
-                                                          fontWeight: FontWeight.bold),
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                     ),
                                                     SizedBox(width: 10),
-                                                    Text(
-                                                        '9시간 전',
+                                                    Text('9시간 전',
                                                         style: TextStyle(
                                                           fontSize: 12,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           color: Colors.black45,
-                                                        )
-                                                    )
+                                                        ))
                                                   ],
                                                 ),
                                                 const Text(
                                                   '응 좋아 좋아',
-                                                  style: TextStyle(fontSize: 14),
+                                                  style:
+                                                      TextStyle(fontSize: 14),
                                                 ),
                                                 TextButton(
                                                   onPressed: () => {
                                                     setState(() {
-                                                      writeComment[index] = !writeComment[index];
+                                                      writeComment[index] =
+                                                          !writeComment[index];
                                                     })
                                                   },
                                                   style: TextButton.styleFrom(
                                                     minimumSize: Size.zero,
                                                     padding: EdgeInsets.zero,
                                                     tapTargetSize:
-                                                    MaterialTapTargetSize.shrinkWrap,
+                                                        MaterialTapTargetSize
+                                                            .shrinkWrap,
                                                   ),
                                                   child: const Text(
                                                     '답글 달기',

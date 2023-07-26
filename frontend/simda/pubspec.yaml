@@ -42,6 +42,8 @@ dependencies:
   geocoding: ^2.1.0
   location: ^5.0.0
   html:
+  image_picker: ^1.0.1
+  image_cropper: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +55,18 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+  flutter_native_splash: ^2.3.1
+
+# Run commands to generate splash screen
+# 1) flutter clean
+# 2) flutter pub get
+# 3) flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  color: "#ffbe96"
+  image: assets/images/1152.png
+  # branding 속성을 사용하면 시작 화면에서 브랜딩으로 사용할 이미지를 지정할 수 있습니다.
+  #branding: assets/dart.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +86,7 @@ flutter:
     - assets/images/think.png
     - assets/images/yuri.jpg
     - assets/images/shin.jpg
+    - assets/images/1152.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
