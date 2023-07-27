@@ -79,32 +79,6 @@ public class UserController {
         return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
     }
 
-    // 팔로우 요청
-    @PostMapping("/followers")
-    public ResponseEntity<String> addFollowUser(@RequestBody FollowDto followDto) {
-        // fromUserId와 toUserId를 받기 위해 FollowDto 객체를 RequestBody로 받아온다
-
-        // 그럼 FollowService에서는 FollowDto를 Entity로 저장해준다
-        if (followService.createFollow(followDto)) {
-            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
-    }
-
-    // 언팔로우
-    @DeleteMapping("/followers")
-    public ResponseEntity<String> removeFollowUser(@RequestBody FollowDto followDto) {
-        // 내가 다른 유저를 unfollow 할 경우,
-        // fromUserId와 내가 일치하는 것만 삭제하면 된다!
-        if (followService.deleteFollow(followDto)) {
-            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
-    }
-
-
     // 유저 프로필 보기 -> 한 명의 유저를 선택하는 API
     @GetMapping("/profile")
     public ResponseEntity<UserDto> getUser(@RequestParam int userId) {
@@ -119,35 +93,6 @@ public class UserController {
 
         // 정보가 있다면 user 반환
         return new ResponseEntity<>(userDto, HttpStatus.OK);
-    }
-
-    // 팔로잉 목록 보기(내가 팔로우 하는)
-    @GetMapping("/followings")
-    public ResponseEntity<List<UserDto>> getFollowings(@RequestParam int userId) {
-        // userId를 통해서 해당 유저가 팔로우 하는 following 목록을 가져옵니다
-        List<UserDto> userList = followService.selectFollowList(userId);
-
-        // UserList의 size가 0이라면?
-        if (userList.size() == 0) {
-            System.out.println("비어있습니다");
-            return ResponseEntity.notFound().build();
-        }
-
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-
-    }
-
-    // 팔로워 목록 보기(나를 팔로우 하는)
-    @GetMapping("/followers")
-    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam int userId) {
-        // userId를 통해서 해당 유저가 팔로우 하는 followers 목록을 가져옵니다
-        List<UserDto> userList = followService.selectFollowerList(userId);
-
-        if (userList.size() == 0) {
-            System.out.println("비어있습니다.");
-            return ResponseEntity.notFound().build();
-        }
-        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     // 사용자 kakao Login 처리
@@ -239,6 +184,61 @@ public class UserController {
             return  new ResponseEntity<>(FAIL, HttpStatus.NOT_ACCEPTABLE);
         }
 
+    }
+
+    // -------------- 팔로우 기능 ----------------
+    // 팔로우 요청
+    @PostMapping("/followers")
+    public ResponseEntity<String> addFollowUser(@RequestBody FollowDto followDto) {
+        // fromUserId와 toUserId를 받기 위해 FollowDto 객체를 RequestBody로 받아온다
+
+        // 그럼 FollowService에서는 FollowDto를 Entity로 저장해준다
+        if (followService.createFollow(followDto)) {
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+    }
+
+    // 언팔로우
+    @DeleteMapping("/followers")
+    public ResponseEntity<String> removeFollowUser(@RequestBody FollowDto followDto) {
+        // 내가 다른 유저를 unfollow 할 경우,
+        // fromUserId와 내가 일치하는 것만 삭제하면 된다!
+        if (followService.deleteFollow(followDto)) {
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+    }
+
+    // 팔로잉 목록 보기(내가 팔로우 하는)
+    @GetMapping("/followings")
+    public ResponseEntity<List<UserDto>> getFollowings(@RequestParam int userId) {
+        // userId를 통해서 해당 유저가 팔로우 하는 following 목록을 가져옵니다
+        List<UserDto> userList = followService.selectFollowList(userId);
+
+        // UserList의 size가 0이라면?
+        if (userList.size() == 0) {
+            System.out.println("비어있습니다");
+            return ResponseEntity.notFound().build();
+        }
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+
+    }
+
+    // 팔로워 목록 보기(나를 팔로우 하는)
+    @GetMapping("/followers")
+    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam int userId) {
+        // userId를 통해서 해당 유저가 팔로우 하는 followers 목록을 가져옵니다
+        List<UserDto> userList = followService.selectFollowerList(userId);
+
+        if (userList.size() == 0) {
+            System.out.println("비어있습니다.");
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
 }
