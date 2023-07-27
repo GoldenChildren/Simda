@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'main_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  KakaoSdk.init(
+    nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b',
+  );
   runApp(const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyApp()));

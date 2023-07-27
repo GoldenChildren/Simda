@@ -12,11 +12,13 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Column(
-        children: [
-          Expanded(child: ListViewBuilder()),
-        ],
+    return const SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: [
+            Expanded(child: ListViewBuilder()),
+          ],
+        ),
       ),
     );
   }
@@ -98,6 +100,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 5),
                         const Row(
                           children: [
                             Text(
@@ -149,7 +152,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   SizedBox(width: 20),
                   Expanded(
                     child: Text(
-                        '이곳에 글의 내용이 들어갈 예정입니다. 글이 길어지면 어떻게 되는지 보기 위해 긴 글을 작성하고 있습니다. 이 곳은 글이 들어갈 자리입니다.'),
+                        '이곳에 글의 내용이 들어갈 예정입니다. 글이 길어지면 어떻게 되는지 보기 위해 긴 글을 작성하고 있습니다. 이 곳은 글이 들어갈 자리입니다.',
+                    style: TextStyle(height: 1.5),),
                   ),
                   SizedBox(width: 20),
                 ],
@@ -183,15 +187,21 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage('assets/images/yuri.jpg'),
-                                  radius: 25,
+                                const Column(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage:
+                                          AssetImage('assets/images/yuri.jpg'),
+                                      radius: 25,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    )
+                                  ],
                                 ),
                                 const SizedBox(width: 10),
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                Flexible(
+                                  flex: 1,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -214,10 +224,11 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         ],
                                       ),
                                       const Text(
-                                        '짱구가 기분이 좋구나',
-                                        // '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
+                                        // '짱구가 기분이 좋구나',
+                                        '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
                                         style: TextStyle(fontSize: 14),
                                       ),
+                                      const SizedBox(width: 20),
                                       TextButton(
                                         onPressed: () => {
                                           setState(() {
@@ -239,22 +250,22 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         ),
                                       ),
                                       const SizedBox(height: 10),
-                                      Row(
+                                      const Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const CircleAvatar(
+                                          CircleAvatar(
                                             backgroundImage: AssetImage(
                                                 'assets/images/shin.jpg'),
                                             radius: 25,
                                           ),
-                                          const SizedBox(width: 10),
-                                          Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                0, 0, 20, 0),
+                                          SizedBox(width: 10),
+                                          Flexible(
+                                            flex: 1,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                const Row(
+                                                Row(
                                                   children: [
                                                     Text(
                                                       '김짱구',
@@ -273,33 +284,13 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                         ))
                                                   ],
                                                 ),
-                                                const Text(
-                                                  '응 좋아 좋아',
+                                                Text(
+                                                  // '응 좋아 좋아',
+                                                  '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
                                                   style:
                                                       TextStyle(fontSize: 14),
                                                 ),
-                                                TextButton(
-                                                  onPressed: () => {
-                                                    setState(() {
-                                                      writeComment[index] =
-                                                          !writeComment[index];
-                                                    })
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    minimumSize: Size.zero,
-                                                    padding: EdgeInsets.zero,
-                                                    tapTargetSize:
-                                                        MaterialTapTargetSize
-                                                            .shrinkWrap,
-                                                  ),
-                                                  child: const Text(
-                                                    '답글 달기',
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.black45),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 10),
+                                                SizedBox(height: 10),
                                               ],
                                             ),
                                           ),

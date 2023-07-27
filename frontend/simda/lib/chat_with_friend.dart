@@ -40,27 +40,30 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
           ),
           Container(height: 2, color: Colors.purple),
           Expanded(child: ListViewBuilder(widget.idx)),
-          const TextField(
-            style: TextStyle(fontSize: 14.0),
-            cursorColor: Colors.black12,
-            cursorWidth: 1.0,
-            decoration: InputDecoration(
-              contentPadding:
-              EdgeInsets.fromLTRB(20, 0, 10, 0),
-              suffixIcon:
-              Icon(Icons.send, color: Colors.black54),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black12,
-                    width: 0.0,
-                  )),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.black12,
-                    width: 0.0,
-                  )),
-              filled: true,
-              fillColor: Colors.black12,
+          Container(
+            color: Colors.black12,
+            child: const TextField(
+              style: TextStyle(fontSize: 14.0),
+              cursorColor: Colors.black12,
+              cursorWidth: 1.0,
+              decoration: InputDecoration(
+                contentPadding:
+                EdgeInsets.fromLTRB(20, 0, 10, 0),
+                suffixIcon:
+                Icon(Icons.send, color: Colors.black54),
+                enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 0.0,
+                    )),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.transparent,
+                      width: 0.0,
+                    )),
+                filled: true,
+                fillColor: Colors.transparent,
+              ),
             ),
           ),
         ]),

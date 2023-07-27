@@ -38,8 +38,8 @@ dependencies:
   awesome_bottom_bar: ^1.2.3
   kakao_flutter_sdk: ^1.5.0
   google_maps_flutter: ^2.3.1
-  geolocator: ^9.0.2
-  geocoding: ^2.1.0
+#  geolocator: ^9.0.2
+#  geocoding: ^2.1.0
   location: ^5.0.0
   html:
   image_picker: ^1.0.1
@@ -65,6 +65,8 @@ dev_dependencies:
 flutter_native_splash:
   color: "#ffbe96"
   image: assets/images/1152.png
+  fullscreen: true
+  branding: assets/images/simda.png
   # branding 속성을 사용하면 시작 화면에서 브랜딩으로 사용할 이미지를 지정할 수 있습니다.
   #branding: assets/dart.png
 
@@ -82,11 +84,18 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/images/flower-yellow.png
     - assets/images/flower-purple.png
+    - assets/images/flower-blue.png
+    - assets/images/flower-green.png
+    - assets/images/flower-pink.png
     - assets/images/think.png
     - assets/images/yuri.jpg
+    - assets/images/zzanga.png
     - assets/images/shin.jpg
     - assets/images/1152.png
+    - assets/images/simda.png
+    - assets/images/promap.PNG
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

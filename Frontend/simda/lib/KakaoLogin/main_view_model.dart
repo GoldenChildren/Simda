@@ -1,5 +1,5 @@
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:simda/widget/SocialLogin/KakaoLogin/social_login.dart';
+import 'package:simda/KakaoLogin/social_login.dart';
 
 class MainViewModel {
   final SocialLogin _socialLogin;
@@ -19,5 +19,9 @@ class MainViewModel {
     await _socialLogin.logout();
     isLoggedIn = false;
     user = null;
+  }
+
+  Future signup(String path, String nickname) async {
+    await _socialLogin.signup(path, nickname);
   }
 }

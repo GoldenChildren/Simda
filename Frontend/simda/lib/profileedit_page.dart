@@ -17,7 +17,7 @@ class ProfileEditPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ProfileEditPageState createState() => _ProfileEditPageState();
+  State<ProfileEditPage> createState() => _ProfileEditPageState();
 }
 
 class _ProfileEditPageState extends State<ProfileEditPage> {
@@ -41,6 +41,40 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       child: Scaffold(
         body: Column(
           children: [
+            Row(
+              children: [
+                const SizedBox(width: 10),
+                SizedBox(
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    iconSize: 28,
+                  ),
+                ),
+                const Text(
+                  '프로필 수정',
+                  style:
+                  TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 180),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(
+                      context,
+                      {
+                        'nickname': _nickname,
+                        'bio': _bio,
+                        'pickedFile': _pickedFile,
+                      },
+                    );
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            ),
+            Container(height: 2, color: Colors.purple),
             const SizedBox(
               height: 20,
             ),
@@ -76,33 +110,46 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 ),
               ),
             ),
-            TextField(
-              onChanged: (value) {
-                _nickname = value;
-              },
-              decoration: const InputDecoration(labelText: 'Nickname'),
-              controller: TextEditingController(text: _nickname),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                onChanged: (value) {
+                  _nickname = value;
+                },
+                decoration: const InputDecoration(
+                    labelText: '닉네임',
+                    // helperText: '닉네임을 입력해주세요',
+                  border: UnderlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+
+                  fillColor: Colors.lightGreen,
+                  filled: true,
+                ),
+                controller: TextEditingController(text: _nickname),
+              ),
             ),
-            TextField(
-              onChanged: (value) {
-                _bio = value;
-              },
-              decoration: const InputDecoration(labelText: 'Bio'),
-              controller: TextEditingController(text: _bio),
+            Padding(
+              padding: const EdgeInsets.all(16.10),
+              child: TextField(
+                onChanged: (value) {
+                  _bio = value;
+                },
+                decoration: const InputDecoration(
+                    labelText: '소개',
+                  border: UnderlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderSide: BorderSide(color: Colors.transparent),
+                    ),
+
+                    fillColor: Colors.lightGreen,
+                    filled: true,
+                ),
+                controller: TextEditingController(text: _bio),
+              ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(
-                  context,
-                  {
-                    'nickname': _nickname,
-                    'bio': _bio,
-                    'pickedFile': _pickedFile,
-                  },
-                );
-              },
-              child: const Text('Save'),
-            ),
+
           ],
         ),
       ),

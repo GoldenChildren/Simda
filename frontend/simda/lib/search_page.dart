@@ -15,6 +15,7 @@ class _SearchPageState extends State<SearchPage> {
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: const Column(
           children: [
+            SizedBox(height: 20),
             TextField(
               style: TextStyle(fontSize: 14.0),
               cursorColor: Colors.black12,

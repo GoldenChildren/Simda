@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'profileedit_page.dart'; // Replace this import with the correct path to profileedit_page.dart
+import 'followers_list.dart';
+import 'following_list.dart';
+import 'package:simda/profileedit_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -12,8 +13,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String _nickname = "John Doe";
-  String _bio = "Hello, I'm using Flutter!";
+  String _nickname = "신짱구";
+  String _bio = "노는게 제일 좋아";
   String? _pickedFile;
 
   @override
@@ -23,68 +24,132 @@ class _ProfilePageState extends State<ProfilePage> {
     return SafeArea(
       child: Scaffold(
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 30, 20, 30),
-              child: GestureDetector(
-                onTap: () {
-                  _navigateToProfileEditPage(context);
-                },
-                child: Container(
-                  constraints: BoxConstraints(
-                    minHeight: imageSize,
-                    minWidth: imageSize,
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    '신짱구',
+                    style:
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  child: _pickedFile == null
-                      ? Center(
-                    child: Icon(
-                      Icons.account_circle,
-                      size: imageSize,
+                  IconButton(onPressed: () {},
+                    icon: const Icon(Icons.menu), iconSize: 28,
+                  ),
+                ],
+              ),
+            ),
+            Container(height: 2, color: Colors.purple),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _navigateToProfileEditPage(context);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    constraints: BoxConstraints(
+                      minHeight: imageSize,
+                      minWidth: imageSize,
                     ),
-                  )
-                      : Center(
-                    child: Container(
-                      width: imageSize,
-                      height: imageSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            width: 2,
-                            color: Theme.of(context).colorScheme.primary),
-                        image: DecorationImage(
-                          image: FileImage(File(_pickedFile!)),
-                          fit: BoxFit.cover,
+                    child: _pickedFile == null
+                        ? Center(
+                            child: Icon(
+                              Icons.account_circle,
+                              size: imageSize,
+                            ),
+                          )
+                        : Center(
+                            child: Container(
+                              width: imageSize,
+                              height: imageSize,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  width: 2,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                image: DecorationImage(
+                                  image: FileImage(File(_pickedFile!)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _navigateToFollowingListPage(
+                                  context); // 팔로잉 숫자를 누르면 팔로잉 목록 페이지로 이동
+                            },
+                            child: createColumns('following', 1120),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _navigateToFollowersListPage(
+                                  context); // 팔로워 숫자를 누르면 팔로워 목록 페이지로 이동
+                            },
+                            child: createColumns('followers', 12000),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Row(
+                    children: [
+                      Text(
+                        _nickname,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
+                      IconButton(
+                        onPressed: () {
+                          _navigateToProfileEditPage(context);
+                        },
+                        icon: const Icon(Icons.edit),
+                      ),
+                    ],
                   ),
                 ),
-              ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: IconButton(
-                onPressed: () {
-                  _navigateToProfileEditPage(context);
-                },
-                icon: const Icon(Icons.edit),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Text(
-                _nickname,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                _bio,
+                style: const TextStyle(fontSize: 16),
               ),
             ),
-            Text(
-              _bio,
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(
+              height: 20,
             ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              alignment: Alignment.center,
+              child: const Image(image: AssetImage('assets/images/promap.PNG')),
+            )
           ],
         ),
       ),
@@ -110,5 +175,49 @@ class _ProfilePageState extends State<ProfilePage> {
         _pickedFile = updatedData['pickedFile'];
       });
     }
+  }
+
+  void _navigateToFollowingListPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
+      ),
+    );
+  }
+
+  void _navigateToFollowersListPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
+      ),
+    );
+  }
+
+  Column createColumns(String title, int count) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          '$count',
+          style: const TextStyle(
+              fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 5),
+          child: Text(
+            title,
+            style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black45,
+                fontWeight: FontWeight.w400),
+          ),
+        )
+      ],
+    );
   }
 }

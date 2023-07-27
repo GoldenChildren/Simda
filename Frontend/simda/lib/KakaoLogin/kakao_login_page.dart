@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:simda/widget/SocialLogin/KakaoLogin//kakao_login.dart';
-import 'package:simda/widget/SocialLogin/KakaoLogin/main_view_model.dart';
+import 'package:simda/KakaoLogin//kakao_login.dart';
+import 'package:simda/KakaoLogin/main_view_model.dart';
 
 class KakaoLoginPage extends StatefulWidget {
   const KakaoLoginPage({Key? key, required this.title}) : super(key: key);

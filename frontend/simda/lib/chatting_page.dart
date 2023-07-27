@@ -24,7 +24,7 @@ class _ChattingPageState extends State<ChattingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -38,7 +38,6 @@ class _ChattingPageState extends State<ChattingPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 Container(height: 2, color: Colors.purple),
                 const Expanded(
                     child: ListViewBuilder()),
