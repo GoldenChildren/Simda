@@ -62,10 +62,10 @@ public class UserServiceImpl implements UserService {
 
     // 검색한 닉네임이 포함되는 유저들을 조회한다
     @Override
-    public List<UserDto> selectUsers(String keyword) {
+    public List<UserDto> selectUsers(String nickname) {
 
         // 이름이 포함되는 유저를 검색해 온 User Entity 리스트 생성
-        List<User> userList = userRepository.findAllByNicknameContaining(keyword);
+        List<User> userList = userRepository.findAllByNicknameContaining(nickname);
 
         // Dto Type의 List 생성
         List<UserDto> userDtoList = new ArrayList<>();
@@ -81,22 +81,27 @@ public class UserServiceImpl implements UserService {
 
     // 닉네임 중복검사
     @Override
-    public boolean selectUserByNickname(String keyword) {
+    public boolean selectUserByNickname(String nickname) {
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
-        User user = userRepository.findByNickname(keyword);
+        User user = userRepository.findByNickname(nickname);
 
         return user == null;
     }
 
-    // 로그인시 DB에 Email check
+    // 로그인시 DB에 Email check과 함께 DB에 저장된 정보를 반환
     @Override
-    public boolean selectUserByEmail(String keyword) {
+    public UserDto selectUserByEmail(String email) {
+
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
-        System.out.println("repo "+ keyword);
-        User user = userRepository.findByEmail(keyword);
-        System.out.println(user);
-        if(user == null) return false;
-        return true;
+        System.out.println("repo "+ email);
+        User user = userRepository.findByEmail(email);
+
+        if(user == null) {
+            return null;
+        }
+
+        // user값을 찾아서, Dto형태로 반환
+        return UserDto.changeToUserDto(user);
     }
 
     // User정보 수정, 실패와 성공을 반환한다
@@ -109,6 +114,7 @@ public class UserServiceImpl implements UserService {
             // 닉네임, 프로필 사진 두 개만 변경이 가능하다
             nowUser.setProfileImg(userDto.getProfileImg());
             nowUser.setNickname(userDto.getNickname());
+            nowUser.setUserRole(userDto.getUserRole());
 
             // userRepo에서 변경된 부분을 저장한다.
             userRepository.save(nowUser);

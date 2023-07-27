@@ -29,7 +29,7 @@ class KakaoLogin implements SocialLogin {
           print(actoken);
           print(retoken);
 
-          final url = Uri.parse("http://70.12.247.165:9090/user/test");
+          final url = Uri.parse("http://70.12.247.165:9090/user/login/kakao");
           final response = await http.post(url,
               headers: {"Content-Type": "application/json"},
               body:json.encode({

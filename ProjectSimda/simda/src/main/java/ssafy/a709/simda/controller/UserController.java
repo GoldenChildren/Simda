@@ -54,10 +54,10 @@ public class UserController {
 
     // 유저 - 검색 keyword를 통해 닉네임을 포함하는 유저를 전체 반환
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> getUsers(@RequestParam String keyword) {
+    public ResponseEntity<List<UserDto>> getUsers(@RequestParam String nickname) {
 
         // 키워드를 포함하는 닉네임을 받아올 유저들의 리스트 생성
-        List<UserDto> userDtoList = userService.selectUsers(keyword);
+        List<UserDto> userDtoList = userService.selectUsers(nickname);
 
         // 만약 userDtoList의 size가 0이라면, 검색 결과가 없는 것이므로, notFound 반환
         if (userDtoList.size() == 0) {
@@ -150,13 +150,7 @@ public class UserController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-    // 유저 정보를 가져오는 testCode
-//    @GetMapping("/users")
-//    public ResponseEntity<Object> getUsers() throws ExecutionException, InterruptedException {
-//        List<UserDto> list = userService.testUser();
-//        return new ResponseEntity<>(list, HttpStatus.OK);
-//    }
-
+    // 사용자 kakao Login 처리
     @PostMapping("/login/kakao")
     public ResponseEntity<String> loginUser(@RequestBody TokenDto tokenDto) throws Exception {
 
@@ -170,7 +164,7 @@ public class UserController {
 
         // Prepare request parameters
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-//        parameters.add("property_keys", "[kakao_account.email]");
+        // parameters.add("property_keys", "[kakao_account.email]");
 
         // Create the request entity with headers and parameters
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
@@ -189,9 +183,11 @@ public class UserController {
             String email = node.get("kakao_account").get("email").toString().replaceAll("\"","");
             System.out.println(email);
 
+            UserDto loginUser = userService.selectUserByEmail(email);
+            System.out.println(loginUser);
 
             // DB에 email 비교해서 가입했는지, 안했는지 확인
-            if(userService.selectUserByEmail(email)){
+            if(loginUser != null && loginUser.getUserRole() != 2){
                 System.out.println("로그인 성공!");
                 return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             }else{
@@ -202,6 +198,7 @@ public class UserController {
         return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
     }
 
+    // 사용자 가입 처리
     @PostMapping("/")
     public ResponseEntity<String> registUser(@RequestBody UserDto userDto) throws Exception {
         System.out.println(userDto);
@@ -211,6 +208,37 @@ public class UserController {
         System.out.println("회원가입 성공!");
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+    }
+
+    // 사용자의 탈퇴 처리 - 수정과 유사하다
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> removeUser(@PathVariable("userId") int userId) {
+
+        // 현재 사용자의 고유 id값을 기준으로 userId 가져오기
+        UserDto nowUser = userService.selectOneUser(userId);
+
+        // userId로 DB에서 정보를 가져오지 못한 경우
+        if(nowUser == null) {
+            // 실패 출력
+            return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+        }
+
+        // 현재 유저의 user_role을 변경
+        nowUser.setUserRole(2);
+        System.out.println(nowUser.getUserRole());
+
+        // 현재 유저의 상태를 변경하여 저장
+        if(userService.updateUser(nowUser)) {
+
+            // 성공하면 OK 반환
+            System.out.println(userService.selectOneUser(userId).getNickname());
+            System.out.println(userService.selectOneUser(userId).getUserRole());
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        } else {
+            // 실패하면 NOT_ACCEPTABLE 반환
+            return  new ResponseEntity<>(FAIL, HttpStatus.NOT_ACCEPTABLE);
+        }
+
     }
 
 }

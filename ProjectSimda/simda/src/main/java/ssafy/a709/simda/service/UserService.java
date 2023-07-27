@@ -3,6 +3,7 @@ package ssafy.a709.simda.service;
 import ssafy.a709.simda.dto.UserDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public interface UserService {
@@ -11,18 +12,18 @@ public interface UserService {
     List<UserDto> selectAllUser();
 
     // 유저 검색(동일 이름들)
-    List<UserDto> selectUsers(String keyword);
+    List<UserDto> selectUsers(String nickname);
 
     // 닉네임 중복 체크
-    boolean selectUserByNickname(String keyword);
+    boolean selectUserByNickname(String nickname);
 
     // Email 중복 체크
-    public boolean selectUserByEmail(String keyword);
+    public UserDto selectUserByEmail(String email);
 
     // 유저 정보 수정
     boolean updateUser(UserDto userDto);
 
-    // 유저 검색(one)
+    // 유저 검색(id로)
     UserDto selectOneUser(int userId);
 
     // 유저 회원가입
