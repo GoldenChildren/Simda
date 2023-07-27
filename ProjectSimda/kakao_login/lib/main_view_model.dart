@@ -20,4 +20,8 @@ class MainViewModel {
     isLoggedIn = false;
     user = null;
   }
+
+  Future signup(String path, String nickname) async {
+    await _socialLogin.signup(path, nickname);
+  }
 }

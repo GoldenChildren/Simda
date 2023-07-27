@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_login/kakao_login.dart';
 import 'package:kakao_login/main_view_model.dart';
+import 'package:kakao_login/sign_up.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +60,15 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () async {
                 await viewModel.login();
                 setState(() {});
+                // 화면 이동
+
+                if(!viewModel.isLoggedIn) {
+                  print('회원가입 화면으로 이동합니다.');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUp()),
+                  );
+                }
               },
               // style: const ButtonStyle(backgroundColor: Colors.transparent,),
               child: SizedBox(

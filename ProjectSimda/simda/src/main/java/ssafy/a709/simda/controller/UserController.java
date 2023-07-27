@@ -11,12 +11,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.TokenDto;
 import ssafy.a709.simda.dto.UserDto;
+import ssafy.a709.simda.service.FileService;
 import ssafy.a709.simda.service.FollowService;
 import ssafy.a709.simda.service.UserService;
 
+import java.io.File;
 import java.util.List;
 
 import java.util.Map;
@@ -34,6 +37,9 @@ public class UserController {
 
     @Autowired
     FollowService followService;
+
+    @Autowired
+    FileService fileService;
 
     /*
     Follow Controller를 따로 만드는 대신
@@ -145,8 +151,42 @@ public class UserController {
 
     // 사용자 가입 처리
     @PostMapping("/")
-    public ResponseEntity<String> registUser(@RequestBody UserDto userDto) throws Exception {
-        System.out.println(userDto);
+    public ResponseEntity<String> registUser(
+            @RequestParam("profileImg") MultipartFile profileImg,
+            @RequestParam("nickname") String nickname,
+            @RequestParam("email") String email
+    ) throws Exception {
+        System.out.println(profileImg);
+        System.out.println(nickname);
+        System.out.println(email);
+
+
+        String fileName = "";
+        // profile img 를 경로에 저장해준다.
+        if(!profileImg.isEmpty()){
+            // 저장할 디렉토리 생성
+            String uploadDir = "C:/Users/SSAFY/Desktop/Project/S09P12A709/ProjectSimda/simda/src/main/resources/static/img/profile";
+
+            // 업로드 디렉토리가 없으면 생성
+            File directory = new File(uploadDir);
+            if(!directory.exists()){
+                directory.mkdirs();
+            }
+
+            // 파일명 설정 (예시: 프로필 이미지 파일명에 유저 아이디 또는 랜덤한 값을 사용하는 것이 일반적)
+            fileName = nickname + "_" + profileImg.getOriginalFilename();
+
+            // 파일을 업로드 디렉토리로 저장
+            File destFile = new File(uploadDir, fileName);
+            profileImg.transferTo(destFile);
+        }
+
+        // 유저 DTO에 nickname, email, profile img path를 넣어준다
+        UserDto userDto = new UserDto();
+
+        userDto.setNickname(nickname);
+        userDto.setEmail(email);
+        userDto.setProfileImg(fileName);
 
         userService.createUser(userDto);
 
@@ -154,6 +194,7 @@ public class UserController {
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
+
 
     // 사용자의 탈퇴 처리 - 수정과 유사하다
     @PutMapping("/{userId}")

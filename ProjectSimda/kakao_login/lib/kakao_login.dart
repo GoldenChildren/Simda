@@ -3,8 +3,11 @@ import 'dart:convert';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_login/social_login.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class KakaoLogin implements SocialLogin {
+  static String email = "";
+  static String ip = "70.12.247.165";
   @override
   Future<bool> login() async {
     try {
@@ -29,7 +32,7 @@ class KakaoLogin implements SocialLogin {
           print(actoken);
           print(retoken);
 
-          final url = Uri.parse("http://70.12.247.165:9090/user/login/kakao");
+          final url = Uri.parse("http://"+ip+":9090/user/login/kakao");
           final response = await http.post(url,
               headers: {"Content-Type": "application/json"},
               body:json.encode({
@@ -37,12 +40,14 @@ class KakaoLogin implements SocialLogin {
                 // 'socialType' : retoken,
               }));
 
-          print(response.statusCode);
+          print(response);
           if(response.statusCode == 200) {
             print("로그인 성공!");
             return true;
           } else if(response.statusCode == 404) {
-            print("회원가입으로 이동!");
+            print("회원가입 필요!");
+            email = response.body;
+            print(email);
             return true;
           }
 
@@ -58,10 +63,44 @@ class KakaoLogin implements SocialLogin {
     }
   }
 
+
+
   @override
   Future<bool> logout() async {
     try {
       await UserApi.instance.unlink();
+      return true;
+    } catch(error) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> signup(String path, String nickname) async {
+    print('회원가입');
+    try {
+      Dio dio = Dio();
+      var url = "http://"+ip+":9090/user/";
+
+      FormData formData = FormData.fromMap({
+        'profileImg': await MultipartFile.fromFile(path, filename: 'profile_img.jpg'),
+        'nickname': nickname,
+        'email': email,
+      });
+
+      Response response = await dio.post(
+        url,
+        data: formData
+      );
+
+      print(response.data);
+      // await http.post(url,
+      //     headers: {"Content-Type": "application/json"},
+      //     body:json.encode({
+      //       'nickname': nickname,
+      //       'email': email,
+      //     }));
+      print('회원가입 성공!');
       return true;
     } catch(error) {
       return false;
