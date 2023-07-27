@@ -88,15 +88,20 @@ public class UserServiceImpl implements UserService {
         return user == null;
     }
 
-    // 로그인시 DB에 Email check
+    // 로그인시 DB에 Email check과 함께 DB에 저장된 정보를 반환
     @Override
-    public boolean selectUserByEmail(String email) {
+    public UserDto selectUserByEmail(String email) {
+
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
         System.out.println("repo "+ email);
         User user = userRepository.findByEmail(email);
-        System.out.println(user);
-        if(user == null) return false;
-        return true;
+
+        if(user == null) {
+            return null;
+        }
+
+        // user값을 찾아서, Dto형태로 반환
+        return UserDto.changeToUserDto(user);
     }
 
     // User정보 수정, 실패와 성공을 반환한다
@@ -109,6 +114,7 @@ public class UserServiceImpl implements UserService {
             // 닉네임, 프로필 사진 두 개만 변경이 가능하다
             nowUser.setProfileImg(userDto.getProfileImg());
             nowUser.setNickname(userDto.getNickname());
+            nowUser.setUserRole(userDto.getUserRole());
 
             // userRepo에서 변경된 부분을 저장한다.
             userRepository.save(nowUser);
@@ -124,9 +130,9 @@ public class UserServiceImpl implements UserService {
 
     // 닉네임이 일치하는 한 명의 유저를 조회한다
     @Override
-    public UserDto selectOneUser(int nickname) {
+    public UserDto selectOneUser(int userId) {
         // UserRepo에서 동일한 nickname으로 찾아오기
-        User user = userRepository.findByUserId(nickname);
+        User user = userRepository.findByUserId(userId);
         
         // Entity를 Dto로 변환
 
