@@ -130,7 +130,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           },
                           child: const Image(
                               image:
-                                  AssetImage('assets/images/flower-purple.png'),
+                                  AssetImage('assets/images/flowerPurple.png'),
                               height: 30),
                         ),
                       ],

@@ -136,9 +136,11 @@ final List<String> arr = <String>[
 ];
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      reverse: true,
         itemCount: arr.length,
         itemBuilder: (BuildContext context, int index) {
           return Container(
@@ -178,7 +180,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                               bottomRight: Radius.circular(10)),
                         ),
                         child: Text(
-                          arr[index],
+                          arr[arr.length - index - 1],
                           style: const TextStyle(fontSize: 15),
                         ),
                       ),

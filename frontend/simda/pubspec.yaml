@@ -44,6 +44,7 @@ dependencies:
   html:
   image_picker: ^1.0.1
   image_cropper: ^5.0.0
+  google_maps_cluster_manager: ^3.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -84,11 +85,11 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/images/flower-yellow.png
-    - assets/images/flower-purple.png
-    - assets/images/flower-blue.png
-    - assets/images/flower-green.png
-    - assets/images/flower-pink.png
+    - assets/images/flowerYellow.png
+    - assets/images/flowerPurple.png
+    - assets/images/flowerBlue.png
+    - assets/images/flowerGreen.png
+    - assets/images/flowerPink.png
     - assets/images/think.png
     - assets/images/yuri.jpg
     - assets/images/zzanga.png

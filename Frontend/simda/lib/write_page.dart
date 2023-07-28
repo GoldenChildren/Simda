@@ -79,7 +79,7 @@ class _WritePageState extends State<WritePage> {
                                             children: [
                                               Image(
                                                   image: AssetImage(
-                                                      'assets/images/flower-yellow.png')),
+                                                      'assets/images/flowerYellow.png')),
                                               SizedBox(height: 5),
                                               Text('신남')
                                             ],
@@ -110,7 +110,7 @@ class _WritePageState extends State<WritePage> {
                                             children: [
                                               Image(
                                                   image: AssetImage(
-                                                      'assets/images/flower-purple.png')),
+                                                      'assets/images/flowerPurple.png')),
                                               SizedBox(height: 5),
                                               Text('평온')
                                             ],
@@ -140,7 +140,7 @@ class _WritePageState extends State<WritePage> {
                                             children: [
                                               Image(
                                                   image: AssetImage(
-                                                      'assets/images/flower-blue.png')),
+                                                      'assets/images/flowerBlue.png')),
                                               SizedBox(height: 5),
                                               Text('슬픔')
                                             ],
@@ -175,7 +175,7 @@ class _WritePageState extends State<WritePage> {
                                             children: [
                                               Image(
                                                   image: AssetImage(
-                                                      'assets/images/flower-green.png')),
+                                                      'assets/images/flowerGreen.png')),
                                               SizedBox(height: 5),
                                               Text('행복')
                                             ],
@@ -205,7 +205,7 @@ class _WritePageState extends State<WritePage> {
                                             children: [
                                               Image(
                                                   image: AssetImage(
-                                                      'assets/images/flower-pink.png')),
+                                                      'assets/images/flowerPink.png')),
                                               SizedBox(height: 5),
                                               Text('화남')
                                             ],

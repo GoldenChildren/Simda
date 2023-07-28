@@ -55,8 +55,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 ),
                 const Text(
                   '프로필 수정',
-                  style:
-                  TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 180),
                 ElevatedButton(
@@ -87,27 +86,27 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 ),
                 child: _pickedFile == null
                     ? Center(
-                  child: Icon(
-                    Icons.account_circle,
-                    size: imageSize,
-                  ),
-                )
+                        child: Icon(
+                          Icons.account_circle,
+                          size: imageSize,
+                        ),
+                      )
                     : Center(
-                  child: Container(
-                    width: imageSize,
-                    height: imageSize,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                          width: 2,
-                          color: Theme.of(context).colorScheme.primary),
-                      image: DecorationImage(
-                        image: FileImage(File(_pickedFile!)),
-                        fit: BoxFit.cover,
+                        child: Container(
+                          width: imageSize,
+                          height: imageSize,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                width: 2,
+                                color: Theme.of(context).colorScheme.primary),
+                            image: DecorationImage(
+                              image: FileImage(File(_pickedFile!)),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ),
             ),
             Padding(
@@ -116,9 +115,21 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 onChanged: (value) {
                   _nickname = value;
                 },
+                cursorColor: Colors.black45,
                 decoration: const InputDecoration(
-                    labelText: '닉네임',
-                    // helperText: '닉네임을 입력해주세요',
+                  enabledBorder: UnderlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  labelText: '닉네임',
+                  labelStyle: TextStyle(
+                    color: Colors.black45,
+                  ),
+                  // hintText: '닉네임을 입력해주세요',
                   border: UnderlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                     borderSide: BorderSide(color: Colors.transparent),
@@ -127,7 +138,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   fillColor: Colors.lightGreen,
                   filled: true,
                 ),
-                controller: TextEditingController(text: _nickname),
+                controller: TextEditingController(text: _nickname)
+                  ..selection = TextSelection.fromPosition(
+                      TextPosition(offset: _nickname.length)),
               ),
             ),
             Padding(
@@ -136,20 +149,32 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 onChanged: (value) {
                   _bio = value;
                 },
+                cursorColor: Colors.black45,
                 decoration: const InputDecoration(
-                    labelText: '소개',
+                  enabledBorder: UnderlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  labelText: '소개',
+                  labelStyle: TextStyle(
+                    color: Colors.black45,
+                  ),
                   border: UnderlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-
-                    fillColor: Colors.lightGreen,
-                    filled: true,
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  fillColor: Colors.lightGreen,
+                  filled: true,
                 ),
-                controller: TextEditingController(text: _bio),
+                controller: TextEditingController(text: _bio)
+                  ..selection = TextSelection.fromPosition(
+                      TextPosition(offset: _bio.length)),
               ),
             ),
-
           ],
         ),
       ),
@@ -157,7 +182,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   Future<void> _selectImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
