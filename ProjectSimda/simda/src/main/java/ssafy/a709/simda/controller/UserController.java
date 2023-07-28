@@ -11,12 +11,15 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.TokenDto;
 import ssafy.a709.simda.dto.UserDto;
+import ssafy.a709.simda.service.FileService;
 import ssafy.a709.simda.service.FollowService;
 import ssafy.a709.simda.service.UserService;
 
+import java.io.File;
 import java.util.List;
 
 import java.util.Map;
@@ -34,6 +37,9 @@ public class UserController {
 
     @Autowired
     FollowService followService;
+
+    @Autowired
+    FileService fileService;
 
     /*
     Follow Controller를 따로 만드는 대신
@@ -79,32 +85,6 @@ public class UserController {
         return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
     }
 
-    // 팔로우 요청
-    @PostMapping("/followers")
-    public ResponseEntity<String> addFollowUser(@RequestBody FollowDto followDto) {
-        // fromUserId와 toUserId를 받기 위해 FollowDto 객체를 RequestBody로 받아온다
-
-        // 그럼 FollowService에서는 FollowDto를 Entity로 저장해준다
-        if (followService.createFollow(followDto)) {
-            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
-    }
-
-    // 언팔로우
-    @DeleteMapping("/followers")
-    public ResponseEntity<String> removeFollowUser(@RequestBody FollowDto followDto) {
-        // 내가 다른 유저를 unfollow 할 경우,
-        // fromUserId와 내가 일치하는 것만 삭제하면 된다!
-        if (followService.deleteFollow(followDto)) {
-            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
-    }
-
-
     // 유저 프로필 보기 -> 한 명의 유저를 선택하는 API
     @GetMapping("/profile")
     public ResponseEntity<UserDto> getUser(@RequestParam int userId) {
@@ -119,35 +99,6 @@ public class UserController {
 
         // 정보가 있다면 user 반환
         return new ResponseEntity<>(userDto, HttpStatus.OK);
-    }
-
-    // 팔로잉 목록 보기(내가 팔로우 하는)
-    @GetMapping("/followings")
-    public ResponseEntity<List<UserDto>> getFollowings(@RequestParam int userId) {
-        // userId를 통해서 해당 유저가 팔로우 하는 following 목록을 가져옵니다
-        List<UserDto> userList = followService.selectFollowList(userId);
-
-        // UserList의 size가 0이라면?
-        if (userList.size() == 0) {
-            System.out.println("비어있습니다");
-            return ResponseEntity.notFound().build();
-        }
-
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-
-    }
-
-    // 팔로워 목록 보기(나를 팔로우 하는)
-    @GetMapping("/followers")
-    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam int userId) {
-        // userId를 통해서 해당 유저가 팔로우 하는 followers 목록을 가져옵니다
-        List<UserDto> userList = followService.selectFollowerList(userId);
-
-        if (userList.size() == 0) {
-            System.out.println("비어있습니다.");
-            return ResponseEntity.notFound().build();
-        }
-        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     // 사용자 kakao Login 처리
@@ -192,16 +143,50 @@ public class UserController {
                 return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             }else{
                 System.out.println("회원가입으로!");
-                return new ResponseEntity<>(email, HttpStatus.NOT_FOUND);
+                System.out.println(email);
+                return new ResponseEntity<>(email, HttpStatus.ACCEPTED);
             }
         }
-        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(FAIL, HttpStatus.NOT_FOUND);
     }
 
     // 사용자 가입 처리
     @PostMapping("/")
-    public ResponseEntity<String> registUser(@RequestBody UserDto userDto) throws Exception {
-        System.out.println(userDto);
+    public ResponseEntity<String> registUser(
+            @RequestParam("profileImg") MultipartFile profileImg,
+            @RequestParam("nickname") String nickname,
+            @RequestParam("email") String email
+    ) throws Exception {
+        System.out.println(profileImg);
+        System.out.println(nickname);
+        System.out.println(email);
+
+        String fileName = "";
+        // profile img 를 경로에 저장해준다.
+        if(!profileImg.isEmpty()){
+            // 저장할 디렉토리 생성
+            String uploadDir = "C:/Users/SSAFY/Desktop/Project/S09P12A709/ProjectSimda/simda/src/main/resources/static/img/profile";
+
+            // 업로드 디렉토리가 없으면 생성
+            File directory = new File(uploadDir);
+            if(!directory.exists()){
+                directory.mkdirs();
+            }
+
+            // 파일명 설정 (예시: 프로필 이미지 파일명에 유저 아이디 또는 랜덤한 값을 사용하는 것이 일반적)
+            fileName = nickname + "_" + profileImg.getOriginalFilename();
+
+            // 파일을 업로드 디렉토리로 저장
+            File destFile = new File(uploadDir, fileName);
+            profileImg.transferTo(destFile);
+        }
+
+        // 유저 DTO에 nickname, email, profile img path를 넣어준다
+        UserDto userDto = new UserDto();
+
+        userDto.setNickname(nickname);
+        userDto.setEmail(email);
+        userDto.setProfileImg(fileName);
 
         userService.createUser(userDto);
 
@@ -209,6 +194,7 @@ public class UserController {
 
         return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
     }
+
 
     // 사용자의 탈퇴 처리 - 수정과 유사하다
     @PutMapping("/{userId}")
@@ -223,7 +209,7 @@ public class UserController {
             return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
         }
 
-        // 현재 유저의 user_role을 변경
+        // 현재 유저의 user_role을 2로 변경
         nowUser.setUserRole(2);
         System.out.println(nowUser.getUserRole());
 
@@ -239,6 +225,61 @@ public class UserController {
             return  new ResponseEntity<>(FAIL, HttpStatus.NOT_ACCEPTABLE);
         }
 
+    }
+
+    // -------------- 팔로우 기능 ----------------
+    // 팔로우 요청
+    @PostMapping("/followers")
+    public ResponseEntity<String> addFollowUser(@RequestBody FollowDto followDto) {
+        // fromUserId와 toUserId를 받기 위해 FollowDto 객체를 RequestBody로 받아온다
+
+        // 그럼 FollowService에서는 FollowDto를 Entity로 저장해준다
+        if (followService.createFollow(followDto)) {
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+    }
+
+    // 언팔로우
+    @DeleteMapping("/followers")
+    public ResponseEntity<String> removeFollowUser(@RequestBody FollowDto followDto) {
+        // 내가 다른 유저를 unfollow 할 경우,
+        // fromUserId와 내가 일치하는 것만 삭제하면 된다!
+        if (followService.deleteFollow(followDto)) {
+            return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+    }
+
+    // 팔로잉 목록 보기(내가 팔로우 하는)
+    @GetMapping("/followings")
+    public ResponseEntity<List<UserDto>> getFollowings(@RequestParam int userId) {
+        // userId를 통해서 해당 유저가 팔로우 하는 following 목록을 가져옵니다
+        List<UserDto> userList = followService.selectFollowList(userId);
+
+        // UserList의 size가 0이라면?
+        if (userList.size() == 0) {
+            System.out.println("비어있습니다");
+            return ResponseEntity.notFound().build();
+        }
+
+        return new ResponseEntity<>(userList, HttpStatus.OK);
+
+    }
+
+    // 팔로워 목록 보기(나를 팔로우 하는)
+    @GetMapping("/followers")
+    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam int userId) {
+        // userId를 통해서 해당 유저가 팔로우 하는 followers 목록을 가져옵니다
+        List<UserDto> userList = followService.selectFollowerList(userId);
+
+        if (userList.size() == 0) {
+            System.out.println("비어있습니다.");
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
 }

@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_secure_storage: ^5.0.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -38,6 +40,8 @@ dependencies:
   kakao_flutter_sdk: ^1.4.1
   kakao_flutter_sdk_user: ^1.4.1 # 카카오 로그인
   http: ^0.13.4
+  image_picker: ^0.8.5+3
+  image_cropper: ^1.0.0
 
 dev_dependencies:
   flutter_test:
