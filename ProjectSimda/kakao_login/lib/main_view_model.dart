@@ -3,21 +3,21 @@ import 'package:kakao_login/social_login.dart';
 
 class MainViewModel {
   final SocialLogin _socialLogin;
-  bool isLoggedIn = false;
+  int isLoggedIn = -1;
   User? user;
 
   MainViewModel(this._socialLogin);
 
   Future login() async {
     isLoggedIn = await _socialLogin.login();
-    if(isLoggedIn) {
+    if (isLoggedIn == 1) {
       user = await UserApi.instance.me();
     }
   }
 
   Future logout() async {
     await _socialLogin.logout();
-    isLoggedIn = false;
+    isLoggedIn = -1;
     user = null;
   }
 
