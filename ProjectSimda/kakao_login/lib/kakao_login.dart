@@ -40,11 +40,11 @@ class KakaoLogin implements SocialLogin {
                 // 'socialType' : retoken,
               }));
 
-          print(response);
+          print(response.statusCode);
           if(response.statusCode == 200) {
             print("로그인 성공!");
             return true;
-          } else if(response.statusCode == 404) {
+          } else if(response.statusCode == 202) {
             print("회원가입 필요!");
             email = response.body;
             print(email);
