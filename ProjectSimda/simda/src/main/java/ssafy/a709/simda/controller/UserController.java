@@ -143,10 +143,11 @@ public class UserController {
                 return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
             }else{
                 System.out.println("회원가입으로!");
-                return new ResponseEntity<>(email, HttpStatus.NOT_FOUND);
+                System.out.println(email);
+                return new ResponseEntity<>(email, HttpStatus.ACCEPTED);
             }
         }
-        return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(FAIL, HttpStatus.NOT_FOUND);
     }
 
     // 사용자 가입 처리
@@ -159,7 +160,6 @@ public class UserController {
         System.out.println(profileImg);
         System.out.println(nickname);
         System.out.println(email);
-
 
         String fileName = "";
         // profile img 를 경로에 저장해준다.
@@ -209,7 +209,7 @@ public class UserController {
             return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
         }
 
-        // 현재 유저의 user_role을 변경
+        // 현재 유저의 user_role을 2로 변경
         nowUser.setUserRole(2);
         System.out.println(nowUser.getUserRole());
 
