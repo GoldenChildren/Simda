@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: '심다 Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+          primarySwatch: Colors.blue,
+          canvasColor: Colors.transparent,
         ),
         home: const MainPage(),
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'friend_profile.dart';
-import 'main.dart';
 
 class FollowingListPage extends StatelessWidget {
   const FollowingListPage({Key? key});
