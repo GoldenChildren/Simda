@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.TokenDto;
 import ssafy.a709.simda.dto.UserDto;
+import ssafy.a709.simda.service.ApiService;
 import ssafy.a709.simda.service.FileService;
 import ssafy.a709.simda.service.FollowService;
 import ssafy.a709.simda.service.UserService;
@@ -37,6 +38,9 @@ public class UserController {
 
     @Autowired
     FollowService followService;
+
+    @Autowired
+    ApiService apiService;
 
     @Autowired
     FileService fileService;
@@ -103,56 +107,27 @@ public class UserController {
 
     // 사용자 kakao Login 처리
     @PostMapping("/login/kakao")
-    public ResponseEntity<String> loginUser(@RequestBody TokenDto tokenDto) throws Exception {
+    public ResponseEntity<UserDto> loginUser(@RequestBody TokenDto tokenDto) throws Exception {
+        String email = apiService.getEmailByAccessToken(tokenDto);
 
-        RestTemplate restTemplate = new RestTemplate();
+        UserDto userDto = userService.selectUserByEmail(email);
 
-        // Prepare request headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBearerAuth(tokenDto.getAccessToken());
-        headers.add("Accept", "application/json");
-
-        // Prepare request parameters
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        // parameters.add("property_keys", "[kakao_account.email]");
-
-        // Create the request entity with headers and parameters
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
-
-        // Set the API endpoint URL
-        String url = "https://kapi.kakao.com/v2/user/me";
-
-        // Make the POST request
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
-
-        if (responseEntity != null) {
-            ObjectMapper mapper = new ObjectMapper();
-            System.out.println(responseEntity);
-            JsonNode newNode = mapper.readTree(responseEntity.getBody());
-            ObjectNode node = ((ObjectNode) newNode).put("Authentication", "Successful");
-            String email = node.get("kakao_account").get("email").toString().replaceAll("\"","");
+        // DB에 email 비교해서 가입했는지, 안했는지 확인
+        if(userDto != null && userDto.getUserRole() != 2){
+            System.out.println("로그인 성공!");
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }else{
+            System.out.println("회원가입으로!");
             System.out.println(email);
-
-            UserDto loginUser = userService.selectUserByEmail(email);
-            System.out.println(loginUser);
-
-            // DB에 email 비교해서 가입했는지, 안했는지 확인
-            if(loginUser != null && loginUser.getUserRole() != 2){
-                System.out.println("로그인 성공!");
-                return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
-            }else{
-                System.out.println("회원가입으로!");
-                System.out.println(email);
-                return new ResponseEntity<>(email, HttpStatus.ACCEPTED);
-            }
+            userDto = new UserDto();
+            userDto.setEmail(email);
+            return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<>(FAIL, HttpStatus.NOT_FOUND);
     }
 
     // 사용자 가입 처리
     @PostMapping("/")
-    public ResponseEntity<String> registUser(
+    public ResponseEntity<UserDto> registUser(
             @RequestParam("profileImg") MultipartFile profileImg,
             @RequestParam("nickname") String nickname,
             @RequestParam("email") String email
@@ -161,25 +136,7 @@ public class UserController {
         System.out.println(nickname);
         System.out.println(email);
 
-        String fileName = "";
-        // profile img 를 경로에 저장해준다.
-        if(!profileImg.isEmpty()){
-            // 저장할 디렉토리 생성
-            String uploadDir = "C:/Users/SSAFY/Desktop/Project/S09P12A709/ProjectSimda/simda/src/main/resources/static/img/profile";
-
-            // 업로드 디렉토리가 없으면 생성
-            File directory = new File(uploadDir);
-            if(!directory.exists()){
-                directory.mkdirs();
-            }
-
-            // 파일명 설정 (예시: 프로필 이미지 파일명에 유저 아이디 또는 랜덤한 값을 사용하는 것이 일반적)
-            fileName = nickname + "_" + profileImg.getOriginalFilename();
-
-            // 파일을 업로드 디렉토리로 저장
-            File destFile = new File(uploadDir, fileName);
-            profileImg.transferTo(destFile);
-        }
+        String fileName = fileService.createFile(profileImg);
 
         // 유저 DTO에 nickname, email, profile img path를 넣어준다
         UserDto userDto = new UserDto();
@@ -192,7 +149,7 @@ public class UserController {
 
         System.out.println("회원가입 성공!");
 
-        return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
 
