@@ -51,8 +51,8 @@ class SimdaApplicationTests {
 	void contextLoads() {
 		User user = User.builder()
 				.nickname("LJM")
-				.socialToken("77777")
-				.socialType("KAKAO")
+//				.socialToken("77777")
+//				.socialType("KAKAO")
 		.build();
 		System.out.println(user.toString());
 		userRepository.save(user);
