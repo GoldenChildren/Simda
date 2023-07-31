@@ -61,18 +61,6 @@ class KakaoLogin implements SocialLogin {
                 'accessToken': actoken,
               }));
           saveStorage(response.body);
-          // Map<String, dynamic> map = jsonDecode(response.body);
-          // print(map);
-          // print("정보받아보자 : " + map["email"]);
-          //
-          // map.forEach((key, value) {
-          //   if (value is String) {
-          //     storage.write(key: key, value: value);
-          //   } else {
-          //     String stringValue = json.encode(value);
-          //     storage.write(key: key, value: stringValue);
-          //   }
-          // });
 
           print(response);
           if (response.statusCode == 200) {
