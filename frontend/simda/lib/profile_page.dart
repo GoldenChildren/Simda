@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:simda/profileedit_page.dart';
 import 'followers_list.dart';
 import 'following_list.dart';
-import 'package:simda/profileedit_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -17,11 +17,14 @@ class _ProfilePageState extends State<ProfilePage> {
   String _bio = "노는게 제일 좋아";
   String? _pickedFile;
 
+
   @override
   Widget build(BuildContext context) {
     final imageSize = MediaQuery.of(context).size.width / 4;
 
     return SafeArea(
+      child: DefaultTabController(
+        length: 3,
       child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,28 +60,28 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: _pickedFile == null
                         ? Center(
-                            child: Icon(
-                              Icons.account_circle,
-                              size: imageSize,
-                            ),
-                          )
+                      child: Icon(
+                        Icons.account_circle,
+                        size: imageSize,
+                      ),
+                    )
                         : Center(
-                            child: Container(
-                              width: imageSize,
-                              height: imageSize,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  width: 2,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                image: DecorationImage(
-                                  image: FileImage(File(_pickedFile!)),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
+                      child: Container(
+                        width: imageSize,
+                        height: imageSize,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: 2,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
+                          image: DecorationImage(
+                            image: FileImage(File(_pickedFile!)),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -145,14 +148,88 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 20,
             ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              alignment: Alignment.center,
-              child: const Image(image: AssetImage('assets/images/promap.PNG')),
-            )
+            // Container(
+            //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            //   alignment: Alignment.center,
+            //   child: const Image(image: AssetImage('assets/images/promap.PNG')),
+            // )
+            const TabBar(indicatorColor: Colors.purple,
+                labelColor: Colors.purple,
+                labelStyle: TextStyle(
+                    // color: Colors.purple,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+                indicatorWeight: 3,
+                tabs: [
+                  Tab(
+                    text: '달력',
+                    height: 50,
+                  ),
+                  Tab(
+                    text: '피드',
+                    height: 50,
+                  ),
+                  Tab(
+                    text: '지도',
+                    height: 50,
+                  ),
+                ]),
+             Expanded(
+                 child: TabBarView(
+              children: [
+                Container(
+                width: 10,
+                color: const Color.fromRGBO(91, 91, 91, 1),
+                child: const Center(
+                  child: Text(
+                    '달력',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 56,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+                ListView.builder(
+                    key: const PageStorageKey("피드"),
+                    itemCount: 1000,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Text(
+                            "List View $index",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.accents[index % 15],
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      );
+                    }),
+
+                Container(
+                  width: 10,
+                  color: const Color.fromRGBO(91, 91, 91, 1),
+                  child: const Center(
+                    child: Text(
+                      '지도',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 56,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ))
           ],
         ),
+
+
       ),
+    ),
     );
   }
 
@@ -182,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
+        const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
       ),
     );
   }
@@ -192,7 +269,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
+        const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
       ),
     );
   }
@@ -221,3 +298,4 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+

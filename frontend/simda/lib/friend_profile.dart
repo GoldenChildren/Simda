@@ -30,6 +30,8 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
     final imageSize = MediaQuery.of(context).size.width / 4;
 
     return SafeArea(
+        child: DefaultTabController(
+        length: 3,
       child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +109,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        Row(
+                          Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
@@ -148,6 +150,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                         ),
                       ],
                     ),
+
                   ),
                 ],
               ),
@@ -183,14 +186,86 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
             const SizedBox(
               height: 20,
             ),
+            // Container(
+            //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            //   alignment: Alignment.center,
+            //   child: const Image(image: AssetImage('assets/images/promap.PNG')),
+            // )
+      const TabBar(indicatorColor: Colors.purple,
+          labelColor: Colors.purple,
+          labelStyle: TextStyle(
+              // color: Colors.purple,
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
+          indicatorWeight: 3,
+          tabs: [
+            Tab(
+              text: '달력',
+              height: 50,
+            ),
+            Tab(
+              text: '피드',
+              height: 50,
+            ),
+            Tab(
+              text: '지도',
+              height: 50,
+            ),
+          ]),
+      Expanded(
+        child: TabBarView(
+          children: [
             Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              alignment: Alignment.center,
-              child: const Image(image: AssetImage('assets/images/promap.PNG')),
-            )
+              width: 10,
+              color: const Color.fromRGBO(91, 91, 91, 1),
+              child: const Center(
+                child: Text(
+                  '달력',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 56,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            ListView.builder(
+                key: const PageStorageKey("피드"),
+                itemCount: 1000,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: Text(
+                        "List View $index",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.accents[index % 15],
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  );
+                }),
+
+            Container(
+              width: 10,
+              color: const Color.fromRGBO(91, 91, 91, 1),
+              child: const Center(
+                child: Text(
+                  '지도',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 56,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
           ],
-        ),
+        ),),
+      ],
       ),
+    ),
+        ),
     );
   }
 
