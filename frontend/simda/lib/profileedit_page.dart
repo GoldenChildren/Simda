@@ -53,24 +53,36 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     iconSize: 28,
                   ),
                 ),
-                const Text(
-                  '프로필 수정',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(width: 180),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(
-                      context,
-                      {
-                        'nickname': _nickname,
-                        'bio': _bio,
-                        'pickedFile': _pickedFile,
-                      },
-                    );
-                  },
-                  child: const Text('Save'),
-                ),
+                // const Text(
+                //   '프로필 수정',
+                //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                // ),
+                 Flexible(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '프로필 수정',
+                          style:
+                                TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(
+                              context,
+                              {
+                                'nickname': _nickname,
+                                'bio': _bio,
+                                'pickedFile': _pickedFile,
+                              },
+                            );
+                          }, child: const Text(
+                          '수정하기',
+                          style: TextStyle(color: Colors.black87),
+                        ),),
+                      ],
+                    ),),
               ],
             ),
             Container(height: 2, color: Colors.purple),
@@ -118,11 +130,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 cursorColor: Colors.black45,
                 decoration: const InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   labelText: '닉네임',
@@ -131,7 +143,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   ),
                   // hintText: '닉네임을 입력해주세요',
                   border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
 
@@ -152,11 +164,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 cursorColor: Colors.black45,
                 decoration: const InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   labelText: '소개',
@@ -164,7 +176,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     color: Colors.black45,
                   ),
                   border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   fillColor: Colors.lightGreen,
