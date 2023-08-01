@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Image.network(
               // viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? ''),
-              "http://70.12.247.215:9090" + profileImg,
+              "http://i9a709.p.ssafy.io:8080" + profileImg,
               fit: BoxFit.cover,
               width: 200,
               height: 200,

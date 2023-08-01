@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SimdaApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(SimdaApplication.class, args);
+
+		System.out.println(System.getProperty("user.dir"));
 	}
 
 }

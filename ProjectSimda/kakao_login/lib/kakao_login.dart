@@ -12,7 +12,7 @@ class KakaoLogin implements SocialLogin {
   // static String email = "";
 
   // cmd -> ipconfig -> IPv4 복사
-  static String ip = "70.12.247.215";
+  static String ip = "http://i9a709.p.ssafy.io:8080/";
 
   Future<void> saveStorage(String userDto) async {
     Map<String, dynamic> map = jsonDecode(userDto);
@@ -54,7 +54,7 @@ class KakaoLogin implements SocialLogin {
           print(actoken);
           print(retoken);
 
-          final url = Uri.parse("http://" + ip + ":9090/user/login/kakao");
+          final url = Uri.parse("http://i9a709.p.ssafy.io:8080/user/login/kakao");
           final response = await http.post(url,
               headers: {"Content-Type": "application/json"},
               body: json.encode({
@@ -103,7 +103,7 @@ class KakaoLogin implements SocialLogin {
     print('회원가입');
     try {
       Dio dio = Dio();
-      var url = "http://" + ip + ":9090/user/";
+      var url = ip + "/user/";
 
       String? email = await storage.read(key: "email");
 
