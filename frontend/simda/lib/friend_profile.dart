@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simda/profileedit_page.dart';
-
+import 'calendar.dart';
 import 'chat_with_friend.dart';
 
 class FriendProfilePage extends StatefulWidget {
@@ -215,19 +215,20 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
       Expanded(
         child: TabBarView(
           children: [
-            Container(
-              width: 10,
-              color: const Color.fromRGBO(91, 91, 91, 1),
-              child: const Center(
-                child: Text(
-                  '달력',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 56,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            const TableCalendarScreen(),
+            // Container(
+            //   width: 10,
+            //   color: const Color.fromRGBO(91, 91, 91, 1),
+            //   child: const Center(
+            //     child: Text(
+            //       '달력',
+            //       style: TextStyle(
+            //           color: Colors.white,
+            //           fontSize: 56,
+            //           fontWeight: FontWeight.bold),
+            //     ),
+            //   ),
+            // ),
             ListView.builder(
                 key: const PageStorageKey("피드"),
                 itemCount: 1000,
