@@ -50,6 +50,8 @@ dependencies:
   google_sign_in: ^6.1.4
   social_login_buttons: ^1.0.7
   table_calendar: ^3.0.9
+  intl: ^0.18.0
+
 
 dev_dependencies:
   flutter_test:
