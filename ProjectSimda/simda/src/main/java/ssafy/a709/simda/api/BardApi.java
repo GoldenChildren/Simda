@@ -3,10 +3,12 @@ package ssafy.a709.simda.api;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class BardApi {
     public static void main(String[] args) throws IOException {
-        String input = "개빡치네";
+//        Scanner sc = new Scanner(System.in);
+        String input = "드디어 된다";
         ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
                 "C:\\Users\\SSAFY\\Desktop\\Project\\S09P12A709\\ProjectSimda\\simda\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
                 input);

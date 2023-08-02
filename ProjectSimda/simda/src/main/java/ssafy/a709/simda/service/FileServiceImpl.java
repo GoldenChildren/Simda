@@ -17,7 +17,8 @@ public class FileServiceImpl implements FileService{
     @Override
     public String createFile(MultipartFile profileImg) throws IOException {
         // profile img 를 경로에 저장해준다.
-        if(!profileImg.isEmpty()){
+
+        try {if(!profileImg.isEmpty()) {
 //            System.out.println(imgPath);
             // 저장할 디렉토리 생성
             String uploadDir = "/img/profile/";
@@ -25,7 +26,7 @@ public class FileServiceImpl implements FileService{
             // 업로드 디렉토리가 없으면 생성
             File directory = new File(imgPath + uploadDir);
 
-            if(!directory.exists()){
+            if (!directory.exists()) {
                 directory.mkdirs();
             }
 
@@ -37,6 +38,10 @@ public class FileServiceImpl implements FileService{
             profileImg.transferTo(destFile);
 
             return uploadDir + fileName;
+        }
+
+        }catch(Exception e){
+            return null;
         }
         return null;
     }
