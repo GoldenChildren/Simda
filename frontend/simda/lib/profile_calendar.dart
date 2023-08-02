@@ -20,11 +20,11 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   @override
   void initState() {
     super.initState();
-    _flowerPink = Image.asset('assets/images/flowerPink.png', width: 25, height: 25);
-    _flowerGreen = Image.asset('assets/images/flowerGreen.png', width: 25, height: 25);
-    _flowerPurple = Image.asset('assets/images/flowerPurple.png', width: 25, height: 25);
-    _flowerBlue = Image.asset('assets/images/flowerBlue.png', width: 25, height: 25);
-    _flowerYellow = Image.asset('assets/images/flowerYellow.png', width: 25, height: 25);
+    _flowerPink = Image.asset('assets/images/flowerPink.png', width: 20, height: 17);
+    _flowerGreen = Image.asset('assets/images/flowerGreen.png', width: 20, height: 17);
+    _flowerPurple = Image.asset('assets/images/flowerPurple.png', width: 20, height: 17);
+    _flowerBlue = Image.asset('assets/images/flowerBlue.png', width: 20, height: 17);
+    _flowerYellow = Image.asset('assets/images/flowerYellow.png', width: 20, height: 17);
 
 
     _markers.addAll({
@@ -69,21 +69,12 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
         ),
         calendarBuilders: CalendarBuilders(
           markerBuilder: (context, date, events) {
-            return Positioned(
-              top: 34,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (_markers.containsKey(date)) ..._markers[date]!,
-                  ],
-                ),
-              ),
-            );
+            final children = <Widget>[];
+            if (_markers.containsKey(date)) {
+              children.addAll(_markers[date]!);
+            }
+            return children.isNotEmpty ? Positioned(bottom: 1, child: Row(children: children)) : SizedBox.shrink();
+
           },
         ),
       ),

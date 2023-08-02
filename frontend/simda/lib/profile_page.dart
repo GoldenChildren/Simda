@@ -45,9 +45,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       style:
                       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    IconButton(onPressed: () {},
-                      icon: const Icon(Icons.menu), iconSize: 28,
-                    ),
+                    // IconButton(onPressed: () {},
+                    //   icon: const Icon(Icons.menu), iconSize: 28,
+                    // ),
                   ],
                 ),
               ),
@@ -237,6 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
+            endDrawer: EndDrawerButton(),
         ),
       ),
     );
