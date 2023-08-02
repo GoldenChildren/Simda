@@ -2,6 +2,7 @@ package ssafy.a709.simda.domain;
 
 import lombok.*;
 import ssafy.a709.simda.dto.ChatDto;
+import ssafy.a709.simda.dto.ChatRoomDto;
 
 import javax.persistence.*;
 
@@ -16,26 +17,28 @@ public class Chat {
 
     public static Chat chageToChat(ChatDto chatDto){
         System.out.println("chageToChat 시작");
+        ChatRoomDto chatroom = ChatRoomDto.builder().chatRoomId(chatDto.getChatRoomId()).build();
         return Chat.builder()
                 .chatId(chatDto.getChatId())
-                .chatRoom(Chatroom.chageToChatroom(chatDto.getChatRoom()))
+                .chatRoom(Chatroom.chageToChatroom(chatroom))
                 .user(User.changeToUser(chatDto.getUser()))
                 .content(chatDto.getContent())
                 .regDate(chatDto.getRegDate())
                 .readFlag(chatDto.getReadFlag())
                 .build();
-    };
+    }
     public static Chat chageToChatForTrans(ChatDto chatDto){
         System.out.println("chageToChat 시작");
+        ChatRoomDto chatroom = ChatRoomDto.builder().chatRoomId(chatDto.getChatRoomId()).build();
         return Chat.builder()
                 .chatId(chatDto.getChatId())
-                .chatRoom(Chatroom.chageToChatroomForTrans(chatDto.getChatRoom()))
+                .chatRoom(Chatroom.chageToChatroomForTrans(chatroom))
                 .user(User.changeToUser(chatDto.getUser()))
                 .content(chatDto.getContent())
                 .regDate(chatDto.getRegDate())
                 .readFlag(chatDto.getReadFlag())
                 .build();
-    };
+    }
 
 
 
