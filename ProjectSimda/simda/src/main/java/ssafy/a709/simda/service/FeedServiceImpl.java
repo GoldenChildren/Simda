@@ -3,7 +3,6 @@ package ssafy.a709.simda.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.User;
-import ssafy.a709.simda.repository.CommentRepository;
 import ssafy.a709.simda.repository.FeedRepository;
 import ssafy.a709.simda.domain.Feed;
 import ssafy.a709.simda.dto.FeedDto;
