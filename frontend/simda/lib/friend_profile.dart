@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simda/profileedit_page.dart';
-import 'calendar.dart';
+import 'profile_calendar.dart';
 import 'chat_with_friend.dart';
 
 class FriendProfilePage extends StatefulWidget {
