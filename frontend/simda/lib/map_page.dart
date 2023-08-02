@@ -225,7 +225,7 @@ class _MapPageState extends State<MapPage> {
                                                 },
                                                 child: const Image(
                                                     image: AssetImage(
-                                                        'assets/images/flowerPurple.png'),
+                                                        'assets/images/flower2.png'),
                                                     height: 30),
                                               ),
                                             ],
@@ -542,23 +542,23 @@ class _MapPageState extends State<MapPage> {
     switch (emotion) {
       //행복
       case 0:
-        assetPath = 'assets/images/flowerGreen.png';
+        assetPath = 'assets/images/flower0.png';
         break;
       //기쁨
       case 1:
-        assetPath = 'assets/images/flowerYellow.png';
+        assetPath = 'assets/images/flower1.png';
         break;
       //평온
       case 2:
-        assetPath = 'assets/images/flowerPurple.png';
+        assetPath = 'assets/images/flower2.png';
         break;
       //화남
       case 3:
-        assetPath = 'assets/images/flowerPink.png';
+        assetPath = 'assets/images/flower3png';
         break;
       //슬픔
       case 4:
-        assetPath = 'assets/images/flowerBlue.png';
+        assetPath = 'assets/images/flower4.png';
         break;
     }
     ByteData data = await rootBundle.load(assetPath);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:simda/models/Feed.dart';
+import 'package:simda/providers/feed_providers.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -8,6 +10,7 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
+
   int visit = 0;
 
   @override
@@ -24,41 +27,41 @@ class _FeedPageState extends State<FeedPage> {
   }
 }
 
-final List<String> arr = <String>[
-  '오늘은 기분이 좋아',
-  '랄랄라 랄랄랄랄라',
-  '저 하늘 높이',
-  '날개를 펴고',
-  '날아갈 것 같아요',
-  '오늘은 기분이 좋아',
-  '랄랄라 랄랄랄랄라',
-  '마음 속 깊이',
-  '간직한 꿈이',
-  '이루어질 것 같아요',
-  '꽃들이 너무 예뻐요',
-  '이 세상 모두가 눈이 부셔요',
-  '착한 마음으로 세상을 보면',
-  '모두가 아름다워요',
-  '오늘은 기분이 좋아',
-  '랄랄라 랄랄랄랄라',
-  '오래전부터',
-  '바라던 꿈이',
-  '이루어질 것 같아요',
-  '미안해 솔직하지 못한 내가',
-  '지금 이 순간이 꿈이라면',
-  '살며시 너에게로 다가가',
-  '모든걸 고백할텐데',
-  '전화도 할 수 없는 밤이 오면',
-  '자꾸만 설레이는 내 마음',
-  '동화속 마법의 세계로',
-  '손짓하는 저 달빛',
-  '밤하늘 저 멀리서 빛나고 있는',
-  '꿈결같은 우리의 사랑',
-  '수없이 많은 별들 중에서',
-  '당신을 만날 수 있는건',
-  '결코 우연이라 할 수 없어',
-  '기적의 세일러문'
-];
+// final List<String> arr = <String>[
+//   '오늘은 기분이 좋아',
+//   '랄랄라 랄랄랄랄라',
+//   '저 하늘 높이',
+//   '날개를 펴고',
+//   '날아갈 것 같아요',
+//   '오늘은 기분이 좋아',
+//   '랄랄라 랄랄랄랄라',
+//   '마음 속 깊이',
+//   '간직한 꿈이',
+//   '이루어질 것 같아요',
+//   '꽃들이 너무 예뻐요',
+//   '이 세상 모두가 눈이 부셔요',
+//   '착한 마음으로 세상을 보면',
+//   '모두가 아름다워요',
+//   '오늘은 기분이 좋아',
+//   '랄랄라 랄랄랄랄라',
+//   '오래전부터',
+//   '바라던 꿈이',
+//   '이루어질 것 같아요',
+//   '미안해 솔직하지 못한 내가',
+//   '지금 이 순간이 꿈이라면',
+//   '살며시 너에게로 다가가',
+//   '모든걸 고백할텐데',
+//   '전화도 할 수 없는 밤이 오면',
+//   '자꾸만 설레이는 내 마음',
+//   '동화속 마법의 세계로',
+//   '손짓하는 저 달빛',
+//   '밤하늘 저 멀리서 빛나고 있는',
+//   '꿈결같은 우리의 사랑',
+//   '수없이 많은 별들 중에서',
+//   '당신을 만날 수 있는건',
+//   '결코 우연이라 할 수 없어',
+//   '기적의 세일러문'
+// ];
 
 class ListViewBuilder extends StatefulWidget {
   const ListViewBuilder({super.key});
@@ -68,15 +71,39 @@ class ListViewBuilder extends StatefulWidget {
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
-  List<bool> isVisible = List.filled(arr.length, false);
-  List<bool> writeComment = List.filled(arr.length, false);
-  List<int> likes = List.filled(arr.length, 0);
+
+  double lat = 37.5013068;
+  double lng = 127.0396597;
+  List<Feed> feed = [];
+  bool isLoading = true;
+  FeedProviders feedProvider = FeedProviders();
+
+  List<bool> isVisible = [];
+  List<bool> writeComment = [];
+
+  // List<bool> isVisible = List.filled(feed.length, false);
+  // List<bool> writeComment = List.filled(feed.length, false);
+
+  Future initFeed() async {
+    // feed = await feedProvider.getFeed(lat, lng);
+    feed = await feedProvider.getFeed();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initFeed().then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       // scrollDirection: Axis.,
-      itemCount: arr.length,
+      itemCount: feed.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
           color: Colors.white,
@@ -94,23 +121,23 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         Row(
                           children: [
                             Text(
-                              arr[index],
+                              feed[index].title,
                               textAlign: TextAlign.left,
                               style: const TextStyle(fontSize: 20),
                             ),
                           ],
                         ),
                         const SizedBox(height: 5),
-                        const Row(
+                        Row(
                           children: [
                             Text(
-                              '김짱구',
-                              style: TextStyle(fontSize: 10),
+                              feed[index].userDto.nickname,
+                              style: const TextStyle(fontSize: 10),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Text(
-                              '2023년 7월 21일 15:54',
-                              style: TextStyle(
+                              feed[index].regDate,
+                              style: const TextStyle(
                                   fontSize: 10, color: Colors.black45),
                             ),
                           ],
@@ -119,18 +146,18 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                     Row(
                       children: [
-                        Text(likes[index].toString(),
+                        Text(feed[index].likeCnt.toString(),
                             style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              likes[index]++;
+                              feed[index].likeCnt++;
                             });
                           },
-                          child: const Image(
+                          child: Image(
                               image:
-                                  AssetImage('assets/images/flowerPurple.png'),
+                                  AssetImage('assets/images/flower${feed[index].emotion}.png'),
                               height: 30),
                         ),
                       ],
@@ -143,19 +170,19 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 alignment: Alignment.center,
                 child:
-                    const Image(image: AssetImage('assets/images/think.png')),
+                    Image(image: AssetImage(feed[index].img)),
               ),
               const SizedBox(height: 15),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: Text(
-                        '이곳에 글의 내용이 들어갈 예정입니다. 글이 길어지면 어떻게 되는지 보기 위해 긴 글을 작성하고 있습니다. 이 곳은 글이 들어갈 자리입니다.',
-                    style: TextStyle(height: 1.5),),
+                      feed[index].content,
+                    style: const TextStyle(height: 1.5),),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                 ],
               ),
               Column(

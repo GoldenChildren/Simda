@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simda/chat_with_friend.dart';
-
-import 'main.dart';
+import 'package:simda/main.dart';
 
 class ChattingPage extends StatefulWidget {
   const ChattingPage({super.key});

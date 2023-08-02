@@ -36,15 +36,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   awesome_bottom_bar: ^1.2.3
-  kakao_flutter_sdk: ^1.5.0
+  kakao_flutter_sdk: ^1.4.1
   google_maps_flutter: ^2.3.1
 #  geolocator: ^9.0.2
 #  geocoding: ^2.1.0
   location: ^5.0.0
-  html:
+  html: ^0.15.4
   image_picker: ^1.0.1
   image_cropper: ^5.0.0
   google_maps_cluster_manager: ^3.0.0+1
+  http: ^1.1.0
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:
@@ -85,11 +87,11 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/images/flowerYellow.png
-    - assets/images/flowerPurple.png
-    - assets/images/flowerBlue.png
-    - assets/images/flowerGreen.png
-    - assets/images/flowerPink.png
+    - assets/images/flower1.png
+    - assets/images/flower2.png
+    - assets/images/flower4.png
+    - assets/images/flower0.png
+    - assets/images/flower3png
     - assets/images/think.png
     - assets/images/yuri.jpg
     - assets/images/zzanga.png
@@ -97,6 +99,7 @@ flutter:
     - assets/images/1152.png
     - assets/images/simda.png
     - assets/images/promap.PNG
+    - assets/images/kakao_login_large_wide.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'friend_profile.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:simda/friend_profile.dart';
 
 class FollowersListPage extends StatelessWidget {
   const FollowersListPage({Key? key});
@@ -54,7 +54,7 @@ class FollowersListPage extends StatelessWidget {
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundImage:
-                      AssetImage(followerProfiles[index].profileImage),
+                      AssetImage(followerProfiles[index].profileImage.path),
                       radius: 26,
                     ),
                     title: Text(followerProfiles[index].nickname),
@@ -74,17 +74,17 @@ List<UserProfile> followerProfiles = [
   UserProfile(
     nickname: '유리',
     bio: '💙',
-    profileImage: 'assets/images/yuri.jpg',
+    profileImage: XFile('assets/images/yuri.jpg'),
   ),
   UserProfile(
     nickname: '짱아',
     bio: '짱아 일기장',
-    profileImage: 'assets/images/zzanga.png',
+    profileImage: XFile('assets/images/zzanga.png'),
   ),
   UserProfile(
     nickname: '김짱구',
     bio: '부리부리부리부리',
-    profileImage: 'assets/images/shin.jpg',
+    profileImage: XFile('assets/images/shin.jpg'),
   ),
   // 여기에 더 많은 사용자 정보를 추가할 수 있습니다.
 ];
@@ -92,7 +92,7 @@ List<UserProfile> followerProfiles = [
 class UserProfile {
   final String nickname;
   final String bio;
-  final String profileImage;
+  final XFile profileImage;
 
   UserProfile({
     required this.nickname,

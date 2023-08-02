@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'followers_list.dart';
+import 'package:image_picker/image_picker.dart';
+import '../followers_list.dart';
 import 'following_list.dart';
-import 'package:simda/profileedit_page.dart';
+import 'package:simda/profile_edit_page.dart';
+
+import 'main.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -13,9 +16,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String _nickname = "신짱구";
+
+  // viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? '');
+
+  String? _nickname = viewModel.user?.kakaoAccount?.profile?.nickname;
   String _bio = "노는게 제일 좋아";
-  String? _pickedFile;
+  String? _pickedFile = viewModel.user?.kakaoAccount?.profile?.profileImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +37,10 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    '신짱구',
+                  Text(
+                    _nickname!,
                     style:
-                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   IconButton(onPressed: () {},
                     icon: const Icon(Icons.menu), iconSize: 28,
@@ -118,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Row(
                     children: [
                       Text(
-                        _nickname,
+                        _nickname!,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -161,7 +167,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) => ProfileEditPage(
-          nickname: _nickname,
+          nickname: _nickname!,
           bio: _bio,
           pickedFile: _pickedFile,
         ),

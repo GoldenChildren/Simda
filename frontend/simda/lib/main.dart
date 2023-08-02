@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'main_page.dart';
+import 'package:simda/KakaoLogin/main_view_model.dart';
+import 'package:simda/KakaoLogin/kakao_login.dart';
+import 'package:simda/KakaoLogin/login_page.dart';
+import 'package:simda/main_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(
     nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b',
   );
-  runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyApp()));
+  runApp(const MyApp());
 }
 
 bool isVisible = true;
+final viewModel = MainViewModel(KakaoLogin());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,11 +27,12 @@ class MyApp extends StatelessWidget {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: '심다 Demo',
+        title: '심다',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           canvasColor: Colors.transparent,
         ),
+        // home: viewModel.isLoggedIn ? const MainPage() : const LoginPage(),
         home: const MainPage(),
       ),
     );

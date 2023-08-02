@@ -97,7 +97,7 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flowerYellow.png')),
+                                                        'assets/images/flower1.png')),
                                                 SizedBox(height: 5),
                                                 Text('신남')
                                               ],
@@ -128,7 +128,7 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flowerPurple.png')),
+                                                        'assets/images/flower2.png')),
                                                 SizedBox(height: 5),
                                                 Text('평온')
                                               ],
@@ -158,7 +158,7 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flowerBlue.png')),
+                                                        'assets/images/flower4.png')),
                                                 SizedBox(height: 5),
                                                 Text('슬픔')
                                               ],
@@ -194,7 +194,7 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flowerGreen.png')),
+                                                        'assets/images/flower0.png')),
                                                 SizedBox(height: 5),
                                                 Text('행복')
                                               ],
@@ -224,7 +224,7 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flowerPink.png')),
+                                                        'assets/images/flower3png')),
                                                 SizedBox(height: 5),
                                                 Text('화남')
                                               ],
@@ -253,6 +253,13 @@ class _WritePageState extends State<WritePage> {
                                       Navigator.of(context).pop();
                                     },
                                     child: const Text('저장하기'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {});
+                                      Navigator.of(context).pop(); // 나중에는 글 최종 작성하는 버튼으로!!!!
+                                    },
+                                    child: const Text('작성완료'),
                                   ),
                                 ],
                               );
@@ -336,8 +343,8 @@ class _WritePageState extends State<WritePage> {
         ]),
         bottomSheet: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(0),
-            // padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            // padding: const EdgeInsets.all(0),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
                 decoration: const BoxDecoration(
                     border: Border(
