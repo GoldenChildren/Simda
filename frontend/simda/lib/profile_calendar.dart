@@ -20,11 +20,11 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   @override
   void initState() {
     super.initState();
-    _flowerPink = Image.asset('assets/images/flowerPink.png', width: 24, height: 24);
-    _flowerGreen = Image.asset('assets/images/flowerGreen.png', width: 24, height: 24);
-    _flowerPurple = Image.asset('assets/images/flowerPurple.png', width: 24, height: 24);
-    _flowerBlue = Image.asset('assets/images/flowerBlue.png', width: 24, height: 24,);
-    _flowerYellow = Image.asset('assets/images/flowerYellow.png', width: 24, height: 24,);
+    _flowerPink = Image.asset('assets/images/flowerPink.png', width: 25, height: 25);
+    _flowerGreen = Image.asset('assets/images/flowerGreen.png', width: 25, height: 25);
+    _flowerPurple = Image.asset('assets/images/flowerPurple.png', width: 25, height: 25);
+    _flowerBlue = Image.asset('assets/images/flowerBlue.png', width: 25, height: 25);
+    _flowerYellow = Image.asset('assets/images/flowerYellow.png', width: 25, height: 25);
 
 
     _markers.addAll({
@@ -65,14 +65,25 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
           outsideDaysVisible: true,
           weekendTextStyle: const TextStyle().copyWith(color: Colors.red),
           holidayTextStyle: const TextStyle().copyWith(color: Colors.blue[800]),
+          // cellMargin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
         calendarBuilders: CalendarBuilders(
           markerBuilder: (context, date, events) {
-            final children = <Widget>[];
-            if (_markers.containsKey(date)) {
-              children.addAll(_markers[date]!);
-            }
-            return children.isNotEmpty ? Positioned(bottom: 1, child: Row(children: children)) : SizedBox.shrink();
+            return Positioned(
+              top: 34,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (_markers.containsKey(date)) ..._markers[date]!,
+                  ],
+                ),
+              ),
+            );
           },
         ),
       ),
