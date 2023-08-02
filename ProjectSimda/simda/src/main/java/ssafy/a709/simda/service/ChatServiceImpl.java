@@ -39,7 +39,7 @@ public class ChatServiceImpl implements ChatService {
             newChat=chatRepository.save(newChat);
             System.out.println(newChat);
             //채팅방의 마지막 채팅을 업로드함
-            Chatroom updateChatRoom = chatRoomRepository.findById(chatDto.getChatRoom().getChatRoomId()).get();
+            Chatroom updateChatRoom = chatRoomRepository.findById(chatDto.getChatRoomId()).get();
             updateChatRoom.update(newChat);
             chatRoomRepository.save(updateChatRoom);
         }catch (Exception e){
