@@ -21,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _pickedFile;
 
 
+
   @override
   Widget build(BuildContext context) {
     final imageSize = MediaQuery
@@ -45,9 +46,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       style:
                       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    // IconButton(onPressed: () {},
-                    //   icon: const Icon(Icons.menu), iconSize: 28,
-                    // ),
+                    Builder(builder: (context) =>
+                    IconButton(onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                      icon: const Icon(Icons.menu), iconSize: 28,
+                    ),
+                    ),
                   ],
                 ),
               ),
@@ -237,10 +242,33 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-            endDrawer: EndDrawerButton(),
+            endDrawer: Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  UserAccountsDrawerHeader(
+                    currentAccountPicture: const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/shin.jpg'),
+                      backgroundColor: Colors.white,
+                    ),
+                    accountName: const Text('SHIN'),
+                    accountEmail: const Text('shin@ssafy.com'),
+                  decoration: BoxDecoration(
+                    color: Colors.purple[200],
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(40.0),
+                      bottomRight: Radius.circular(40.0))),
+                      ),
+              const ListTile(
+                leading: Icon(Icons.home, color: Colors.blueGrey,),
+                title : Text('Home'),
+              ),
+                    ],
+                ),
+              ),
+          ),
         ),
-      ),
-    );
+      );
   }
 
   void _navigateToProfileEditPage(BuildContext context) async {
