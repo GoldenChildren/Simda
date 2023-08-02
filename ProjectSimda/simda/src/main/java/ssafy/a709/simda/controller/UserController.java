@@ -136,14 +136,14 @@ public class UserController {
         System.out.println(nickname);
         System.out.println(email);
 
-        String fileName = fileService.createFile(profileImg);
+        String fileUrl = fileService.uploadProfile(profileImg);
 
         // 유저 DTO에 nickname, email, profile img path를 넣어준다
         UserDto userDto = new UserDto();
 
         userDto.setNickname(nickname);
         userDto.setEmail(email);
-        userDto.setProfileImg(fileName);
+        userDto.setProfileImg(fileUrl);
 
         userService.createUser(userDto);
 
