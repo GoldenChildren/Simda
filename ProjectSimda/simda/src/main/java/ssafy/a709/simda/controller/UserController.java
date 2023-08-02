@@ -115,6 +115,7 @@ public class UserController {
         // DB에 email 비교해서 가입했는지, 안했는지 확인
         if(userDto != null && userDto.getUserRole() != 2){
             System.out.println("로그인 성공!");
+            System.out.println("로그인 성공 유저닉네임  : "+userDto.getNickname());
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         }else{
             System.out.println("회원가입으로!");
