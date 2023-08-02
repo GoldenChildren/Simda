@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 //@Slf4j
@@ -23,14 +24,14 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public String uploadProfile(MultipartFile multipartFile) throws IOException {
-        String dir = "img/profile";
+        String dir = "/img/profile";
 
         return uploadFile(multipartFile, dir);
     }
 
     @Override
     public String uploadFeed(MultipartFile multipartFile) throws IOException {
-        String dir = "img/feed";
+        String dir = "/img/feed";
 
         return uploadFile(multipartFile, dir);
     }
@@ -45,14 +46,14 @@ public class FileServiceImpl implements FileService{
         String bucketDir = bucket + dir;
 
         ObjectMetadata objMeta = new ObjectMetadata();
+        objMeta.setContentLength(multipartFile.getSize());
 
-        objMeta.setContentLength(multipartFile.getInputStream().available());
-
-//        multipartFile.getInputStream().close();
-
-        amazonS3.putObject(bucketDir, s3FileName, multipartFile.getInputStream(), objMeta);
-
-        multipartFile.getInputStream().close();
+        try(InputStream inputStream = multipartFile.getInputStream()){
+            amazonS3.putObject(bucketDir, s3FileName, inputStream, objMeta);
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
 
         return amazonS3.getUrl(bucketDir, s3FileName).toString();
     }

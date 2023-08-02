@@ -149,6 +149,8 @@ public class UserController {
 
         System.out.println("회원가입 성공!");
 
+        System.out.println(userDto);
+
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
