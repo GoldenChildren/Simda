@@ -20,10 +20,22 @@ public class ApiController {
         int emotion = 0; // 감정 기본 값은 0으로 고정
 
         try {
-            ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
-                    "C:\\Users\\SSAFY\\Desktop\\Project\\S09P12A709\\ProjectSimda\\simda\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
-                    content);
+            // test 1 - 절대 경로 실행
+//            ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
+//                    "C:\\Users\\SSAFY\\Desktop\\Project\\S09P12A709\\ProjectSimda\\simda\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
+//                    content);
 
+            // test 2 - 경로찾기로 실행
+//            ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
+//                    System.getProperty("user.dir")+"\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
+//                    content);
+//            System.out.println(System.getProperty("user.dir"));
+
+            // test 3 - 돚거에서 실행
+            ProcessBuilder pb = new ProcessBuilder("/usr/bin/python3.9",
+                    System.getProperty("user.dir")+"\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
+                    content);
+            System.out.println(System.getProperty("user.dir")+"\\api\\bard.py");
 
             Process p = pb.start();
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));

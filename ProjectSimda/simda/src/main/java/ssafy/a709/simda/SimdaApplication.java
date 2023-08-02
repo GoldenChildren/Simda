@@ -10,7 +10,7 @@ public class SimdaApplication {
 
 		SpringApplication.run(SimdaApplication.class, args);
 
-		System.out.println(System.getProperty("user.dir"));
+
 	}
 
 }
