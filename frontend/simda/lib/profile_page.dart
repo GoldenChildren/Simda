@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:simda/profileedit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
 import 'KakaoLogin/login_page.dart';
@@ -288,24 +288,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('SIMDA에 문의사항이 있으십니까?'),
-                            content: const Text(''),
+                            content: const Text('simda@gmail.com 으로 문의주세요!'),
                             actions: [
                               TextButton(
-                                onPressed: () async {
-                                  await viewModel.logout();
-                                  if(!mounted) return;
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const LoginPage()),
-                                  );
+                                onPressed: () {
+                                  Clipboard.setData(ClipboardData(text: "simda@gmail.com"));
+                                  Navigator.of(context).pop(); // 다이얼로그를 닫음
                                 },
                                 child: const Text("복사하기"),
                               ),
                               TextButton(onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                                child: const Text("취소하기"),
+                                child: const Text("알겠습니다."),
                               ),
                             ],
                           );
