@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'main_page.dart';
+import 'package:simda/KakaoLogin/main_view_model.dart';
+import 'package:simda/KakaoLogin/kakao_login.dart';
+import 'package:simda/KakaoLogin/login_page.dart';
+
 // 달력 한국 시각
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -19,6 +23,7 @@ void main() async{
 }
 
 bool isVisible = true;
+final viewModel = MainViewModel(KakaoLogin());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,10 +36,10 @@ class MyApp extends StatelessWidget {
       },
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: '심다 Demo',
+        title: '심다',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+          primarySwatch: Colors.blue,
+          canvasColor: Colors.transparent,
         ),
         home: const MainPage(),
       ),

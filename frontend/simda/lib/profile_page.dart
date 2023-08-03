@@ -256,13 +256,24 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: BoxDecoration(
                     color: Colors.purple[200],
                     borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(40.0),
-                      bottomRight: Radius.circular(40.0))),
+                      bottomLeft: Radius.circular(25.0),
+                      bottomRight: Radius.circular(25.0))),
                       ),
+                  const ListTile(
+                    leading: Icon(Icons.account_circle_outlined, color: Colors.blueGrey,),
+                    title : Text('로그아웃'),
+                    // onTap:() {} ,
+                  ),
               const ListTile(
-                leading: Icon(Icons.home, color: Colors.blueGrey,),
-                title : Text('Home'),
+                leading: Icon(Icons.delete_forever, color: Colors.blueGrey,),
+                title : Text('탈퇴하기'),
+                // onTap:() {} ,
               ),
+                  const ListTile(
+                    leading: Icon(Icons.question_mark_outlined, color: Colors.blueGrey,),
+                    title : Text('문의하기'),
+                    // onTap:() {} ,
+                  ),
                     ],
                 ),
               ),
