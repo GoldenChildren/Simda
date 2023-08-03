@@ -271,17 +271,48 @@ class _ProfilePageState extends State<ProfilePage> {
                     title : const Text('로그아웃'),
                     onTap: () async {
                       await viewModel.logout();
+                      if(!mounted) return;
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const LoginPage()),
                       );
                     },
                   ),
-              const ListTile(
-                leading: Icon(Icons.delete_forever, color: Colors.blueGrey,),
-                title : Text('탈퇴하기'),
-                // onTap:() {} ,
-              ),
+                  ListTile(
+                    leading: const Icon(Icons.delete_forever, color: Colors.blueGrey,),
+                    title : const Text('탈퇴하기'),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('회원 탈퇴 하시겠습니까?'),
+                            content: const Text('정말요? 가지마요~~~'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    await viewModel.logout();
+                                    if(!mounted) return;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const LoginPage()),
+                                    );
+                                  },
+                                  child: const Text("탈퇴하기"),
+                              ),
+                              TextButton(onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                                  child: const Text("취소하기"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                   const ListTile(
                     leading: Icon(Icons.question_mark_outlined, color: Colors.blueGrey,),
                     title : Text('문의하기'),
