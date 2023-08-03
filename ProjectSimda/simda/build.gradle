@@ -56,6 +56,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.pkslow/google-bard - 구글 bard gradle
 	implementation group: 'com.pkslow', name: 'google-bard', version: '0.3.4'
 
+	// https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+	implementation 'commons-fileupload:commons-fileupload:1.4'
+
+
 }
 
 tasks.named('test') {
