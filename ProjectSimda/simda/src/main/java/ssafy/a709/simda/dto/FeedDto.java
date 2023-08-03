@@ -35,6 +35,10 @@ public class FeedDto {
     private int likeCnt;
     // Regist Date
     private String regDate;
+    //Writer Nick
+    private String nickName;
+    //Writer id
+    private int userId;
     // Feed(Entity)를 FeedDto로 변환
     public static FeedDto changeToFeedDto(Feed feed, User user){
         return FeedDto.builder()
@@ -42,6 +46,8 @@ public class FeedDto {
                 .userDto(UserDto.changeToUserDto(user))
                 .title(feed.getTitle())
                 .emotion(feed.getEmotion())
+                .nickName(user.getNickname())
+                .userId(user.getUserId())
                 .content(feed.getContent())
                 .img(feed.getImg())
                 .lat(feed.getLat())
