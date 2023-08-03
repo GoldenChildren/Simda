@@ -12,7 +12,8 @@ class KakaoLogin implements SocialLogin {
   final storage = const FlutterSecureStorage();
 
   // static String email = "";
-  static String ip = "http://i9a709.p.ssafy.io:8000";
+  static String ip = "http://70.12.247.165:8000";
+  // static String ip = "http://i9a709.p.ssafy.io:8000";
 
   Future<void> saveStorage(Map<String, dynamic> map) async {
     // print(userDto);
@@ -65,10 +66,11 @@ class KakaoLogin implements SocialLogin {
               }));
 
           print(response);
+          saveStorage(jsonDecode(response.body));
           if (response.statusCode == 200) {
             print("로그인 성공!");
             return 1;
-          } else if (response.statusCode == 404) {
+          } else if (response.statusCode == 202) {
             print("회원가입 필요!");
             // email = response.body;
             // print(email);
