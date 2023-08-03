@@ -9,22 +9,22 @@ class TableCalendarScreen extends StatefulWidget {
 }
 
 class _TableCalendarScreenState extends State<TableCalendarScreen> {
-  late final Image _flowerPink;
   late final Image _flowerGreen;
-  late final Image _flowerPurple;
-  late final Image _flowerBlue;
   late final Image _flowerYellow;
+  late final Image _flowerPurple;
+  late final Image _flowerPink;
+  late final Image _flowerBlue;
 
   final Map<DateTime, List<Widget>> _markers = {};
 
   @override
   void initState() {
     super.initState();
-    _flowerPink = Image.asset('assets/images/flowerPink.png', width: 20, height: 17);
-    _flowerGreen = Image.asset('assets/images/flowerGreen.png', width: 20, height: 17);
-    _flowerPurple = Image.asset('assets/images/flowerPurple.png', width: 20, height: 17);
-    _flowerBlue = Image.asset('assets/images/flowerBlue.png', width: 20, height: 17);
-    _flowerYellow = Image.asset('assets/images/flowerYellow.png', width: 20, height: 17);
+    _flowerGreen = Image.asset('assets/images/flower0.png', width: 20, height: 17);
+    _flowerYellow = Image.asset('assets/images/flower1.png', width: 20, height: 17);
+    _flowerPurple = Image.asset('assets/images/flower2.png', width: 20, height: 17);
+    _flowerPink = Image.asset('assets/images/flower3.png', width: 20, height: 17);
+    _flowerBlue = Image.asset('assets/images/flower4.png', width: 20, height: 17);
 
 
     _markers.addAll({

@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dio: ^5.3.2
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,7 +54,7 @@ dependencies:
   social_login_buttons: ^1.0.7
   table_calendar: ^3.0.9
   intl: ^0.18.0
-
+  dio: ^5.3.2
 
 dev_dependencies:
   flutter_test:
@@ -95,11 +95,11 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/images/flowerYellow.png
-    - assets/images/flowerPurple.png
-    - assets/images/flowerBlue.png
-    - assets/images/flowerGreen.png
-    - assets/images/flowerPink.png
+    - assets/images/flower1.png
+    - assets/images/flower2.png
+    - assets/images/flower4.png
+    - assets/images/flower0.png
+    - assets/images/flower3.png
     - assets/images/think.png
     - assets/images/yuri.jpg
     - assets/images/zzanga.png
