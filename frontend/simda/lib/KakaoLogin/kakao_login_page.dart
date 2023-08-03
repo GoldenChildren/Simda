@@ -37,7 +37,7 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
             //     setState(() {});
             //   },
             //   child: const Text('Logout'),
-            )
+            // )
           ],
         ),
       ),

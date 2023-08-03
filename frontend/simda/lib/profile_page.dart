@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:simda/profileedit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
+import 'KakaoLogin/login_page.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'followers_list.dart';
 import 'following_list.dart';
 import 'profile_calendar.dart';
 import 'profile_feed.dart';
 import 'profile_map.dart';
+
 
 
 
@@ -269,7 +271,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     title : const Text('로그아웃'),
                     onTap: () async {
                       await viewModel.logout();
-                      setState(() {});
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage()),
+                      );
                     },
                   ),
               const ListTile(

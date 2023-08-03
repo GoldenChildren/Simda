@@ -93,13 +93,13 @@ class _LoginPageState extends State<LoginPage> {
               style: Theme.of(context).textTheme.headline4,
             ),
 
-            ElevatedButton(
-              onPressed: () async {
-                await viewModel.logout();
-                setState(() {});
-              },
-              child: const Text('Logout'),
-            )
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     await viewModel.logout();
+            //     setState(() {});
+            //   },
+            //   child: const Text('Logout'),
+            // )
           ],
         ),
       ),
