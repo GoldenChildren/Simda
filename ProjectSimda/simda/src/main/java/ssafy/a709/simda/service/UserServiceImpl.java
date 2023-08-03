@@ -139,12 +139,31 @@ public class UserServiceImpl implements UserService {
         // User Dto 반환
         return UserDto.changeToUserDto(user);
     }
-
+    
+    // 유저 회원 등록
     @Override
     public void createUser(UserDto userDto) {
         User user = User.changeToUser(userDto);
 
         userRepository.save(user);
+    }
+
+    // 유저를 탈퇴처리한다
+    // nickname = "탈퇴한 유저입니다", userRole = 2, profile img = ""
+    @Override
+    public boolean deleteUser(int userId) {
+        System.out.println("UserService 155 : 유저를 delete 처리합니다.");
+        // userId로 현재 유저를 조회
+        User user = userRepository.findByUserId(userId);
+        if(user == null) {
+            return false;
+        } else {
+            user.setNickname("탈퇴한 사용자입니다");
+            user.setUserRole(2);
+            user.setProfileImg("");
+            userRepository.save(user);
+            return true;
+        }
     }
 
 }

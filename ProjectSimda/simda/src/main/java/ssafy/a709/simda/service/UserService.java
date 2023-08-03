@@ -18,7 +18,7 @@ public interface UserService {
     boolean selectUserByNickname(String nickname);
 
     // Email 중복 체크
-    public UserDto selectUserByEmail(String email);
+    UserDto selectUserByEmail(String email);
 
     // 유저 정보 수정
     boolean updateUser(UserDto userDto);
@@ -28,5 +28,8 @@ public interface UserService {
 
     // 유저 회원가입
     void createUser(UserDto userDto);
+
+    // 유저의 Role을 2로 바꾸는.
+    boolean deleteUser(int userId);
 
 }

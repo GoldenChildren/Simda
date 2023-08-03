@@ -159,23 +159,19 @@ public class UserController {
     // 사용자의 탈퇴 처리 - 수정과 유사하다
     @PutMapping("/{userId}")
     public ResponseEntity<String> removeUser(@PathVariable("userId") int userId) {
-
-        // 현재 사용자의 고유 id값을 기준으로 userId 가져오기
-        UserDto nowUser = userService.selectOneUser(userId);
-
-        // userId로 DB에서 정보를 가져오지 못한 경우
-        if(nowUser == null) {
-            // 실패 출력
-            return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
-        }
-
-        // 현재 유저의 user_role을 2로 변경
-        nowUser.setUserRole(2);
-        System.out.println(nowUser.getUserRole());
+        System.out.println("UserController 162: 유저를 탈퇴처리 합니다");
+//        // 현재 사용자의 고유 id값을 기준으로 UserDto 가져오기
+//        UserDto nowUser = userService.selectOneUser(userId);
+//
+//        // userId로 DB에서 정보를 가져오지 못한 경우
+//        if(nowUser == null) {
+//            // 실패 출력
+//            return new ResponseEntity<>(FAIL, HttpStatus.NO_CONTENT);
+//        }
 
         // 현재 유저의 상태를 변경하여 저장
-        if(userService.updateUser(nowUser)) {
-
+        // 유저 정보가 있는 경우, 해당 userDto를 userService의 deleteUser로 보낸다
+        if(userService.deleteUser(userId)) {
             // 성공하면 OK 반환
             System.out.println(userService.selectOneUser(userId).getNickname());
             System.out.println(userService.selectOneUser(userId).getUserRole());
