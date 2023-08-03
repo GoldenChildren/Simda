@@ -36,7 +36,7 @@ public class User {
     private String nickname;
 
     // Profile Image Address
-    @Column(name = "profile_img", columnDefinition = "varchar(100)")
+    @Column(name = "profile_img", columnDefinition = "varchar(200)")
     private String profileImg;
 
     // userRole
