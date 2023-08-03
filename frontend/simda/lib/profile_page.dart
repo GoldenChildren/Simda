@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:simda/profileedit_page.dart';
+import 'KakaoLogin/kakao_login.dart';
+import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'followers_list.dart';
 import 'following_list.dart';
 import 'profile_calendar.dart';
 import 'profile_feed.dart';
 import 'profile_map.dart';
+
+
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -20,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _bio = "노는게 제일 좋아";
   String? _pickedFile;
 
+  final viewModel = MainViewModel(KakaoLogin());
 
 
   @override
@@ -259,10 +264,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       bottomLeft: Radius.circular(25.0),
                       bottomRight: Radius.circular(25.0))),
                       ),
-                  const ListTile(
-                    leading: Icon(Icons.account_circle_outlined, color: Colors.blueGrey,),
-                    title : Text('로그아웃'),
-                    // onTap:() {} ,
+                   ListTile(
+                    leading: const Icon(Icons.logout_outlined, color: Colors.blueGrey,),
+                    title : const Text('로그아웃'),
+                    onTap: () async {
+                      await viewModel.logout();
+                      setState(() {});
+                    },
                   ),
               const ListTile(
                 leading: Icon(Icons.delete_forever, color: Colors.blueGrey,),

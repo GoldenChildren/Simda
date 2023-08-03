@@ -31,12 +31,12 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
               },
               child: const Text('Login'),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await viewModel.logout();
-                setState(() {});
-              },
-              child: const Text('Logout'),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     await viewModel.logout();
+            //     setState(() {});
+            //   },
+            //   child: const Text('Logout'),
             )
           ],
         ),
