@@ -279,6 +279,41 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   ListTile(
+                    leading: const Icon(Icons.question_mark_outlined, color: Colors.blueGrey,),
+                    title : const Text('문의하기'),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('SIMDA에 문의사항이 있으십니까?'),
+                            content: const Text(''),
+                            actions: [
+                              TextButton(
+                                onPressed: () async {
+                                  await viewModel.logout();
+                                  if(!mounted) return;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const LoginPage()),
+                                  );
+                                },
+                                child: const Text("복사하기"),
+                              ),
+                              TextButton(onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                                child: const Text("취소하기"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                  ListTile(
                     leading: const Icon(Icons.delete_forever, color: Colors.blueGrey,),
                     title : const Text('탈퇴하기'),
                     onTap: () {
@@ -312,11 +347,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                       );
                     },
-                  ),
-                  const ListTile(
-                    leading: Icon(Icons.question_mark_outlined, color: Colors.blueGrey,),
-                    title : Text('문의하기'),
-                    // onTap:() {} ,
                   ),
                     ],
                 ),

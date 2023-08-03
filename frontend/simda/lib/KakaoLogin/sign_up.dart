@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
-import 'package:simda/KakaoLogin/main_view_model.dart';
-import 'package:simda/KakaoLogin/kakao_login.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:simda/KakaoLogin/kakao_login.dart';
 import 'dart:io';
-import 'package:simda/main_page.dart';
+
+import 'package:simda/KakaoLogin/main_view_model.dart';
 
 class SignUp extends StatelessWidget {
   SignUp({Key? key}) : super(key: key);
@@ -24,69 +24,41 @@ class SignUp extends StatelessWidget {
   }
 
   // 이미지 미리보기를 원하는 크기로 조정하는 함수
-  Widget _getProfileImagePreview(BuildContext context) {
-    final imageSize = MediaQuery.of(context).size.width / 4;
+  Widget _getProfileImagePreview() {
     if (_profileImage != null) {
-      return CircleAvatar(
-        radius: 60,
-        backgroundImage: FileImage(File(_profileImage!.path)),
+      return Image.file(
+        File(_profileImage!.path),
+        width: 200, // 원하는 너비로 조정
+        height: 200, // 원하는 높이로 조정
       );
     } else {
-      return CircleAvatar(
-          radius: imageSize / 2,
-          backgroundColor: Colors.transparent,
-          child: Icon(Icons.account_circle, size: imageSize, color: Colors.black45,)
-      );
+      return Text("프로필 이미지를 선택하세요");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 20),
-                    Text(
-                      '회원 설정',
-                      style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      child: IconButton(
-                        color: Colors.transparent,
-                        onPressed: null,
-                        icon: Icon(Icons.settings),
-                        iconSize: 28,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(height: 2, color: Colors.purple),
-                const SizedBox(height: 50),
-                // 프로필 이미지 선택 버튼
-                // 이미지 선택한 경우 이미지 미리보기
-                _getProfileImagePreview(context), // 미리보기 이미지 출력 함수 사용
-                const SizedBox(height: 10), // 간격 추가
-                TextButton(
-                  child: const Text("프로필 이미지 선택",
-                      style: TextStyle(color: Colors.black45)),
-                  onPressed: () async {
-                    await _pickImage(context);
-                  },
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: textFormFieldComponent(
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 프로필 이미지 선택 버튼
+                  // 이미지 선택한 경우 이미지 미리보기
+                  _getProfileImagePreview(), // 미리보기 이미지 출력 함수 사용
+                  SizedBox(height: 20), // 간격 추가
+                  ElevatedButton(
+                    child: Text("프로필 이미지 선택"),
+                    onPressed: () async {
+                      await _pickImage(context);
+                      print(_profileImage?.path);
+                    },
+                  ),
+                  TextFormFieldComponent(
                     false,
                     TextInputType.text,
                     TextInputAction.next,
@@ -95,33 +67,25 @@ class SignUp extends StatelessWidget {
                     '닉네임은 20자 이하여야 합니다',
                     nicknameController, // 닉네임 입력 값을 저장하는 컨트롤러를 전달
                   ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey,
-                    padding: const EdgeInsetsDirectional.all(15),
+                  ElevatedButton(
+                    child: const Text("회원가입"),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        // 폼 검증을 통과한 경우에만 회원가입 동작 수행
+                        String nickname = nicknameController.text; // 닉네임 값을 가져옴
+                        print("가입 시 닉네임 : "+nickname);
+                        // FormData formData = FormData.fromMap({
+                        //   'profileImg': await MultipartFile.fromFile(_profileImage!.path, filename: nickname+'_profile_img.jpg'),
+                        //   'nickname' : nickname,
+                        //   'email': null,
+                        // });
+                        viewModel.signup(_profileImage!.path, nickname);
+                        Navigator.pop(context);
+                      }
+                    },
                   ),
-                  child: const Text("회원가입"),
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      // 폼 검증을 통과한 경우에만 회원가입 동작 수행
-                      String nickname = nicknameController.text; // 닉네임 값을 가져옴
-                      // FormData formData = FormData.fromMap({
-                      //   'profileImg': await MultipartFile.fromFile(_profileImage!.path, filename: nickname+'_profile_img.jpg'),
-                      //   'nickname' : nickname,
-                      //   'email': null,
-                      // });
-                      viewModel.signup(_profileImage!.path, nickname);
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainPage()), (route) => false
-                      );
-                    }
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -129,7 +93,7 @@ class SignUp extends StatelessWidget {
     );
   }
 
-  Widget textFormFieldComponent(
+  Widget TextFormFieldComponent(
       bool obscureText,
       TextInputType keyboardType,
       TextInputAction textInputAction,
@@ -138,39 +102,25 @@ class SignUp extends StatelessWidget {
       String errorMessage,
       TextEditingController controller, // 컨트롤러 매개변수 추가
       ) {
-    return TextFormField(
-      controller: controller, // 전달받은 컨트롤러를 사용하여 입력 값을 관리
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      cursorColor: Colors.black45,
-      decoration: InputDecoration(
-        hintText: hintText,
-        enabledBorder: const UnderlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide: BorderSide(color: Colors.transparent),
+    return Container(
+      child: TextFormField(
+        controller: controller, // 전달받은 컨트롤러를 사용하여 입력 값을 관리
+        obscureText: obscureText,
+        keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        decoration: InputDecoration(
+          hintText: hintText,
         ),
-        focusedBorder: const UnderlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide: BorderSide(color: Colors.transparent),
-        ),
-        border: const UnderlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          borderSide: BorderSide(color: Colors.transparent),
-        ),
-
-        fillColor: Colors.lightGreen,
-        filled: true,
+        validator: (value) {
+          if (value!.trim().isEmpty) {
+            return errorMessage;
+          }
+          if (value.length > maxSize) {
+            return '닉네임은 $maxSize자 이하여야 합니다';
+          }
+          return null;
+        },
       ),
-      validator: (value) {
-        if (value!.trim().isEmpty) {
-          return errorMessage;
-        }
-        if (value.length > maxSize) {
-          return '닉네임은 $maxSize자 이하여야 합니다';
-        }
-        return null;
-      },
     );
   }
 }

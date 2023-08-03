@@ -3,7 +3,9 @@ import 'package:simda/KakaoLogin//kakao_login.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
 
 class KakaoLoginPage extends StatefulWidget {
-  const KakaoLoginPage({Key? key}) : super(key: key);
+  const KakaoLoginPage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
 
   @override
   State<KakaoLoginPage> createState() => _KakaoLoginPageState();
@@ -15,6 +17,9 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,13 +36,13 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
               },
               child: const Text('Login'),
             ),
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     await viewModel.logout();
-            //     setState(() {});
-            //   },
-            //   child: const Text('Logout'),
-            // )
+            ElevatedButton(
+              onPressed: () async {
+                await viewModel.logout();
+                setState(() {});
+              },
+              child: const Text('Logout'),
+            )
           ],
         ),
       ),

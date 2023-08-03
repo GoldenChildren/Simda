@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:simda/KakaoLogin/kakao_login.dart';
-import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'package:simda/KakaoLogin/sign_up.dart';
+import 'package:simda/main.dart';
+import 'package:simda/main_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,11 +11,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final storage = const FlutterSecureStorage();
-  final viewModel = MainViewModel(KakaoLogin());
 
   String email = "";
-  String profileImg = "";
+  String profileImg =
+      "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
   String nickname = "";
 
   @override
@@ -32,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
       String? storeNickname = await storage.read(key: "nickname");
       setState(() {
         email = storeEmail ?? "";
-        profileImg = storeProfileImg ?? "/img/profile/noimg.jpg";
+        profileImg = storeProfileImg ??
+            "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
         nickname = storeNickname ?? "";
       });
     } catch (e) {
@@ -48,9 +47,11 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Image(image: AssetImage('assets/images/1152.png'), height: 150),
+            const Image(
+                image: AssetImage('assets/images/1152.png'), height: 150),
             const SizedBox(height: 20),
-            const Image(image: AssetImage('assets/images/simda.png'), height: 40),
+            const Image(
+                image: AssetImage('assets/images/simda.png'), height: 40),
             const SizedBox(height: 50),
             // Image.network(
             //     viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? ''),
@@ -59,16 +60,15 @@ class _LoginPageState extends State<LoginPage> {
             GestureDetector(
               onTap: () async {
                 await viewModel.login();
-                if(!mounted) return;
                 // Navigator.pushAndRemoveUntil(
-                // context,
-                // MaterialPageRoute(
-                //     builder: (context) => const MainPage()), (route) => false
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => const MainPage()), (route) => false
                 // );
                 setState(() {});
-
+                if (!mounted) return;
                 // 화면 이동
-                if (viewModel.isLoggedIn) {
+                if (viewModel.isLoggedIn == 0) {
                   print('회원가입 화면으로 이동합니다.');
                   Navigator.push(
                     context,
@@ -76,30 +76,38 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 }
                 // 카카오 로그인 오류
-                if (!viewModel.isLoggedIn) {
+                else if (viewModel.isLoggedIn == -1) {
                   print('카카오 로그인 오류');
+                }
+                else {
+                  print('로그인 성공');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MainPage()), (route) => false
+                  );
                 }
 
                 getValueFromSecureStorage();
               },
               child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: const Image(image: AssetImage('assets/images/kakao_login_large_wide.png'))),
+                  child: const Image(
+                      image: AssetImage(
+                          'assets/images/kakao_login_large_wide.png'))),
             ),
-
 
             Text(
               '${viewModel.isLoggedIn}',
-              style: Theme.of(context).textTheme.headline4,
             ),
 
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     await viewModel.logout();
-            //     setState(() {});
-            //   },
-            //   child: const Text('Logout'),
-            // )
+            ElevatedButton(
+              onPressed: () async {
+                await viewModel.logout();
+                setState(() {});
+              },
+              child: const Text('Logout'),
+            )
           ],
         ),
       ),

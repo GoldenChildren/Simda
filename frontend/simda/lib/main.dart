@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'main_page.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
@@ -22,6 +23,7 @@ void main() async{
 }
 
 bool isVisible = true;
+const storage = FlutterSecureStorage();
 final viewModel = MainViewModel(KakaoLogin());
 
 class MyApp extends StatelessWidget {
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           canvasColor: Colors.transparent,
         ),
-        // home: viewModel.isLoggedIn ? const MainPage() : const LoginPage(),
+        // home: viewModel.isLoggedIn == 1 ? const MainPage() : const LoginPage(),
         home: const MainPage(),
       ),
     );
