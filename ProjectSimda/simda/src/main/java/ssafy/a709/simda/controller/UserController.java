@@ -117,8 +117,8 @@ public class UserController {
         System.out.println("-----로그인 해볼게요------");
         System.out.println(userDto.getNickname());
         System.out.println(userDto.getUserId());
-        int userRole = userService.selectRole(email); // userRole은 repo에서 가져와야만 한다.
-        System.out.println("로그인 할 때 유저의 롤은? : "+userRole);
+
+
 
         // userDto 값을 통해 가입했는지, 안했는지 확인
         if(userDto == null) {
@@ -129,17 +129,22 @@ public class UserController {
             // email을 저장하여 넘겨줌
             userDto.setEmail(email);
             return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
-        } else if(userRole == 2) {
-            // 탈퇴한 유저라면, 해당 유저의 email을 비운채로 넘겨주자
-            System.out.println("UserController에서 넘겨줄 때 Id가 있는가? " + userDto.getUserId());
-            System.out.println("UserController에서 넘겨줄 때 userRole이 있는가? " + userService.selectRole(email));
-            System.out.println("UserController 129 : 탈퇴유저 회원가입으로!");
-            return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
-        } else {
+        } else{
+            // 가입 이력이 있다
+            int userRole = userService.selectRole(email); // userRole은 repo에서 가져와야만 한다.
+            System.out.println("로그인 할 때 유저의 롤은? : "+userRole);
+            if(userRole == 2) {
+                // 탈퇴한 유저라면, 해당 유저의 email을 비운채로 넘겨주자
+                System.out.println("UserController에서 넘겨줄 때 Id가 있는가? " + userDto.getUserId());
+                System.out.println("UserController에서 넘겨줄 때 userRole이 있는가? " + userService.selectRole(email));
+                System.out.println("UserController 129 : 탈퇴유저 회원가입으로!");
+                return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
+            }else{
             // 둘 다 통과되면 성공
-            System.out.println("UserController 130 : 로그인 성공!");
-            System.out.println(userDto.getNickname());
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
+                System.out.println("UserController 130 : 로그인 성공!");
+                System.out.println(userDto.getNickname());
+                return new ResponseEntity<>(userDto, HttpStatus.OK);
+            }
         }
     }
 
