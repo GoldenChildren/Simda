@@ -10,7 +10,7 @@ import ssafy.a709.simda.domain.Feed;
 import java.util.List;
 
 public interface FeedRepository extends JpaRepository<Feed, Integer> {
-    @Query("select f from Feed f where ((f.lat - :lat) * (f.lat - :lat) + (f.lng - :lng) * (f.lng - :lng)) between -1 and 1")
+    @Query(value = "select f from Feed f where ((f.lat - :lat) * (f.lat - :lat) + (f.lng - :lng) * (f.lng - :lng)) between 0 and 0.00001 and f.regDate >  DATE_ADD(now(), INTERVAL -1 DAY)",nativeQuery = true)
     List<Feed> getListAround(@Param("lat") double lat, @Param("lng") double lng);
 
     @Query("select distinct f from Feed f join Follow w on f.user.userId = w.toUserId.userId join User u on w.fromUserId.userId = u.userId where w.fromUserId.userId = :userId")
