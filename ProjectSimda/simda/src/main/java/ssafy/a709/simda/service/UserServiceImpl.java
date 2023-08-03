@@ -44,22 +44,6 @@ public class UserServiceImpl implements UserService {
         return userDtoList;
     }
 
-//    @Override
-//    public List<UserDto> testUser() throws ExecutionException, InterruptedException{
-//        final String COLLECTION_NAME = "users";
-//
-//        List<UserDto> list = new ArrayList<>();
-//        Firestore db = FirestoreClient.getFirestore();
-//        ApiFuture<QuerySnapshot> future = db.collection(COLLECTION_NAME).get();
-//        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-//        for (QueryDocumentSnapshot document : documents) {
-//            list.add(document.toObject(UserDto.class));
-//
-//        }
-//
-//        return list;
-//    }
-
     // 검색한 닉네임이 포함되는 유저들을 조회한다
     @Override
     public List<UserDto> selectUsers(String nickname) {
@@ -108,7 +92,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUser(UserDto userDto) {
         try {
+            System.out.println("UserServiceImpl updateUser 진입");
             // User Repo에서 id를 통해 해당 User의 Entity를 가져오기
+            System.out.println("현재 유저의 Id를 가져오는가? : "+ userDto.getUserId());
             User nowUser = userRepository.findByUserId(userDto.getUserId());
 
             // 닉네임, 프로필 사진 두 개만 변경이 가능하다
@@ -116,6 +102,14 @@ public class UserServiceImpl implements UserService {
             nowUser.setNickname(userDto.getNickname());
             nowUser.setUserRole(userDto.getUserRole());
 
+            System.out.println("UserService에서 eamil을 가져오는가? "+ nowUser.getEmail());
+            System.out.println("그때의 유저 Role은? "+ selectRole(nowUser.getEmail()));
+
+            if(selectRole(nowUser.getEmail()) == 2) {
+                nowUser = userRepository.findByEmail(userDto.getEmail());
+                System.out.println("UserServiceImpl의 120까지 오나?");
+                nowUser.setUserRole(1);
+            }
             // userRepo에서 변경된 부분을 저장한다.
             userRepository.save(nowUser);
 
@@ -158,12 +152,19 @@ public class UserServiceImpl implements UserService {
         if(user == null) {
             return false;
         } else {
-            user.setNickname("탈퇴한 사용자입니다");
+            user.setNickname(user.getEmail());
             user.setUserRole(2);
             user.setProfileImg("");
             userRepository.save(user);
             return true;
         }
     }
+
+    // userRole을 db에서 가져오기
+    @Override
+    public int selectRole(String email) {
+        return userRepository.findByEmail(email).getUserRole();
+    }
+
 
 }

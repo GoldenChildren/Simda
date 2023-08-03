@@ -32,4 +32,6 @@ public interface UserService {
     // 유저의 Role을 2로 바꾸는.
     boolean deleteUser(int userId);
 
+    int selectRole(String email);
+
 }
