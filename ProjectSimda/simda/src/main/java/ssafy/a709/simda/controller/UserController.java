@@ -144,32 +144,34 @@ public class UserController {
     }
 
     // 사용자 가입 처리
-    @PostMapping("/")
+    @PostMapping(path = "/", consumes = "multipart/form-data")
     public ResponseEntity<UserDto> registUser(
-            @RequestParam("profileImg") MultipartFile profileImg,
-            @RequestParam("nickname") String nickname,
-            @RequestParam("email") String email
+            @RequestPart(value="imgfile", required = false) MultipartFile profileImg,
+            @ModelAttribute UserDto userDto
     ) throws Exception {
         System.out.println("UserController registUser 진입");
 //        System.out.println(profileImg);
-        System.out.println(nickname);
-        System.out.println(email);
+//        System.out.println(nickname);
+//        System.out.println(email);
 
         String fileUrl = fileService.uploadProfile(profileImg);
 
         // 유저 DTO에 nickname, email, profile img path를 넣어준다
 
-        UserDto userDto = userService.selectUserByEmail(email);
-        int temp = userService.selectRole(email);
-        System.out.println("UserController 164 : " + temp);
+        UserDto beforeUser = userService.selectUserByEmail(userDto.getEmail());
 
-        userDto.setNickname(nickname);
-        userDto.setEmail(email);
-        userDto.setProfileImg(fileUrl);
-
-        if(userService.selectUserByEmail(email) != null) {
+        // user 있는지 email로 체크
+        if(beforeUser != null) {
+            int temp = userService.selectRole(beforeUser.getEmail());
+            System.out.println("UserController 164 : " + temp);
+            if(temp != 2){
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            beforeUser.setNickname(userDto.getNickname());
+            beforeUser.setEmail(userDto.getEmail());
+            beforeUser.setProfileImg(fileUrl);
             System.out.println("UserController 161 진입 - 여기까지 온다");
-            userService.updateUser(userDto);
+            userService.updateUser(beforeUser);
         } else {
             userService.createUser(userDto);
         }
