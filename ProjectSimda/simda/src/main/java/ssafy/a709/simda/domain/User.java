@@ -28,7 +28,7 @@ public class User {
     // Social Type
     // @Column(name = "social_type", nullable = false, columnDefinition = "varchar(50)")
     // private String socialType;
-    @Column(name = "email", nullable = false, columnDefinition = "varchar(50)")
+    @Column(name = "email", nullable = false, unique = true, columnDefinition = "varchar(50)")
     private String email;
 
     // Nickname
