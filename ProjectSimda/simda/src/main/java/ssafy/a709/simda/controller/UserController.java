@@ -115,12 +115,13 @@ public class UserController {
         // 해당 추출된 이메일을 참조하여 userDto를 가져온다
         UserDto userDto = userService.selectUserByEmail(email);
         System.out.println("-----로그인 해볼게요------");
-        System.out.println(userDto.getNickname());
-        System.out.println(userDto.getUserId());
-        int userRole = userService.selectRole(email); // userRole은 repo에서 가져와야만 한다.
-        System.out.println("로그인 할 때 유저의 롤은? : "+userRole);
+//        System.out.println(userDto.getNickname());
+//        System.out.println(userDto.getUserId());
+
+
 
         // userDto 값을 통해 가입했는지, 안했는지 확인
+        // 가입 이력 자체가 없다
         if(userDto == null) {
             // userDto 값이 null이면 신규 유저
             System.out.println("UserController 121 : 신규유저 회원가입으로!");
@@ -129,48 +130,59 @@ public class UserController {
             // email을 저장하여 넘겨줌
             userDto.setEmail(email);
             return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
-        } else if(userRole == 2) {
-            // 탈퇴한 유저라면, 해당 유저의 email을 비운채로 넘겨주자
-            System.out.println("UserController에서 넘겨줄 때 Id가 있는가? " + userDto.getUserId());
-            System.out.println("UserController에서 넘겨줄 때 userRole이 있는가? " + userService.selectRole(email));
-            System.out.println("UserController 129 : 탈퇴유저 회원가입으로!");
-            return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
-        } else {
+        } else{
+            // 가입 이력이 있다
+            int userRole = userService.selectRole(email); // userRole은 repo에서 가져와야만 한다.
+            System.out.println("로그인 할 때 유저의 롤은? : "+userRole);
+            if(userRole == 2) {
+                // 탈퇴한 유저라면, 해당 유저의 email을 비운채로 넘겨주자
+                System.out.println("UserController에서 넘겨줄 때 Id가 있는가? " + userDto.getUserId());
+                System.out.println("UserController에서 넘겨줄 때 userRole이 있는가? " + userService.selectRole(email));
+                System.out.println("UserController 129 : 탈퇴유저 회원가입으로!");
+                return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
+            }else{
             // 둘 다 통과되면 성공
-            System.out.println("UserController 130 : 로그인 성공!");
-            System.out.println(userDto.getNickname());
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
+                System.out.println("UserController 130 : 로그인 성공!");
+                System.out.println(userDto.getNickname());
+                return new ResponseEntity<>(userDto, HttpStatus.OK);
+            }
         }
     }
 
     // 사용자 가입 처리
-    @PostMapping("/")
+    @PostMapping(path = "/", consumes = "multipart/form-data")
     public ResponseEntity<UserDto> registUser(
-            @RequestParam("profileImg") MultipartFile profileImg,
-            @RequestParam("nickname") String nickname,
-            @RequestParam("email") String email
+            @RequestPart(value="imgfile", required = false) MultipartFile profileImg,
+            @ModelAttribute UserDto userDto
     ) throws Exception {
         System.out.println("UserController registUser 진입");
 //        System.out.println(profileImg);
-        System.out.println(nickname);
-        System.out.println(email);
+//        System.out.println(nickname);
+//        System.out.println(email);
 
         String fileUrl = fileService.uploadProfile(profileImg);
 
         // 유저 DTO에 nickname, email, profile img path를 넣어준다
 
-        UserDto userDto = userService.selectUserByEmail(email);
-        int temp = userService.selectRole(email);
-        System.out.println("UserController 164 : " + temp);
+        UserDto beforeUser = userService.selectUserByEmail(userDto.getEmail());
 
-        userDto.setNickname(nickname);
-        userDto.setEmail(email);
-        userDto.setProfileImg(fileUrl);
-
-        if(userService.selectUserByEmail(email) != null) {
+        // user 있는지 email로 체크
+        // 기존 유저의 경우
+        if(beforeUser != null) {
+            int temp = userService.selectRole(beforeUser.getEmail());
+            System.out.println("UserController 164 : " + temp);
+            if(temp != 2){
+                // 탈퇴 안했는데 회원가입한 경우 에러
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            beforeUser.setNickname(userDto.getNickname());
+            beforeUser.setEmail(userDto.getEmail());
+            beforeUser.setProfileImg(fileUrl);
             System.out.println("UserController 161 진입 - 여기까지 온다");
-            userService.updateUser(userDto);
+            userService.updateUser(beforeUser);
         } else {
+            // 신규 유저의 경우
+            userDto.setProfileImg(fileUrl);
             userService.createUser(userDto);
         }
 

@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ssafy.a709.simda.service.CommentService;
 import ssafy.a709.simda.service.FeedService;
 import ssafy.a709.simda.dto.FeedDto;
+import ssafy.a709.simda.service.FileService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,8 +22,20 @@ public class FeedController {
     private FeedService feedService;
     @Autowired
     private CommentService commentService;
-    @PostMapping("/")
-    public ResponseEntity<String> addFeed(@RequestBody FeedDto feedDto) {
+    @Autowired
+    private FileService fileService;
+
+    @PostMapping(path ="/", consumes = "multipart/form-data")
+    public ResponseEntity<String> addFeed(@RequestPart(value = "imgfile", required = false) MultipartFile imgfile,
+                                          @ModelAttribute FeedDto feedDto) {
+        try {
+            String fileUrl = fileService.uploadFeed(imgfile);
+            feedDto.setImg(fileUrl);
+        }catch (IOException e){
+            System.out.println("이미지 업로드 실패");
+            System.out.println(e);
+        }
+
         if (feedService.createFeed(feedDto)) {
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }
