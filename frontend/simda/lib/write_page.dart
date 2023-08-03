@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:simda/models/UserDto.dart';
+import 'package:simda/providers/feed_providers.dart';
+
+import 'models/FeedDto.dart';
 
 class WritePage extends StatefulWidget {
   const WritePage({super.key});
@@ -23,6 +27,14 @@ class _WritePageState extends State<WritePage> {
       });
     }
   }
+
+  String _title = '';
+  String _content = '';
+
+  final _titleEditController = TextEditingController();
+  final _contentEditController = TextEditingController();
+
+  FeedProviders feedProvider = FeedProviders();
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +67,7 @@ class _WritePageState extends State<WritePage> {
                     ),
                     TextButton(
                         onPressed: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
                           showDialog<String>(
                             context: context,
                             builder: (context) => StatefulBuilder(builder:
@@ -224,7 +237,7 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flower3png')),
+                                                        'assets/images/flower3.png')),
                                                 SizedBox(height: 5),
                                                 Text('화남')
                                               ],
@@ -257,7 +270,26 @@ class _WritePageState extends State<WritePage> {
                                   TextButton(
                                     onPressed: () {
                                       setState(() {});
-                                      Navigator.of(context).pop(); // 나중에는 글 최종 작성하는 버튼으로!!!!
+                                      // Navigator.of(context)
+                                      //     .pop(); // 나중에는 글 최종 작성하는 버튼으로!!!!
+                                      print(_titleEditController.text);
+                                      print(_contentEditController.text);
+                                      print(_image!.path);
+                                      print(selected);
+                                      feedProvider.postFeed(
+                                          _content,
+                                          selected,
+                                          _image!.path,
+                                          37.5013068,
+                                          127.0396597,
+                                          _title,
+                                          UserDto(
+                                              email: "wcyang8@kakao.com",
+                                              nickname: "afaf",
+                                              profileImg:
+                                                  "https://s3.ap-northeast-2.amazonaws.com/simda/img/profile/46456e49-1f2f-4eca-969b-8b25f6f0b031-profile.jpg",
+                                              userId: 1,
+                                              userRole: 0));
                                     },
                                     child: const Text('작성완료'),
                                   ),
@@ -287,12 +319,14 @@ class _WritePageState extends State<WritePage> {
               ),
               child: Column(
                 children: [
-                  const TextField(
+                  TextField(
+                    controller: _titleEditController,
                     maxLines: null,
-                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 17.0, fontWeight: FontWeight.bold),
                     cursorColor: Colors.black12,
                     cursorWidth: 1.0,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                       hintText: '제목을 입력하세요',
                       enabledBorder: OutlineInputBorder(
@@ -308,17 +342,21 @@ class _WritePageState extends State<WritePage> {
                       filled: true,
                       fillColor: Colors.white,
                     ),
+                    onChanged: (text) {
+                      _title = text;
+                    },
                   ),
                   Container(
                       margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       height: 1,
                       color: Colors.black54),
-                  const TextField(
+                  TextField(
+                    controller: _contentEditController,
                     maxLines: null,
-                    style: TextStyle(fontSize: 16.0, height: 1.5),
+                    style: const TextStyle(fontSize: 16.0, height: 1.5),
                     cursorColor: Colors.black12,
                     cursorWidth: 1.0,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.fromLTRB(20, 10, 10, 10),
                       hintText: '내용을 입력하세요',
                       enabledBorder: OutlineInputBorder(
@@ -334,6 +372,9 @@ class _WritePageState extends State<WritePage> {
                       filled: true,
                       fillColor: Colors.white,
                     ),
+                    onChanged: (text) {
+                      _content = text;
+                    },
                   ),
                   _buildImageArea(),
                 ],
@@ -344,7 +385,8 @@ class _WritePageState extends State<WritePage> {
         bottomSheet: SafeArea(
           child: Padding(
             // padding: const EdgeInsets.all(0),
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
                 decoration: const BoxDecoration(
                     border: Border(
@@ -377,10 +419,17 @@ class _WritePageState extends State<WritePage> {
             child: Image.file(File(_image!.path)),
           )
         : Container(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
             width: 300,
             height: 300,
             color: Colors.red,
           );
+  }
+
+  @override
+  void dispose() {
+    _titleEditController.dispose();
+    _contentEditController.dispose();
+    super.dispose();
   }
 }

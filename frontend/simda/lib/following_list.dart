@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'friend_profile.dart';
 
 class FollowingListPage extends StatelessWidget {
-  const FollowingListPage({Key? key});
+  const FollowingListPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,6 @@
-import 'User.dart';
+import 'UserDto.dart';
 
-class Feed {
+class FeedDto {
   final String content;
   final int emotion;
   final int feedId;
@@ -10,9 +10,9 @@ class Feed {
   final double lng;
   final String regDate;
   final String title;
-  final User userDto;
+  final UserDto userDto;
 
-  Feed({
+  FeedDto({
     required this.content,
     required this.emotion,
     required this.feedId,
@@ -25,8 +25,8 @@ class Feed {
     required this.userDto,
   });
 
-  factory Feed.fromJson(Map<String, dynamic> json) {
-    return Feed(
+  factory FeedDto.fromJson(Map<String, dynamic> json) {
+    return FeedDto(
       content: json['content'],
       emotion: json['emotion'],
       feedId: json['feedId'],
@@ -38,4 +38,19 @@ class Feed {
       title: json['title'],
       userDto: json['userDto'],
     );}
+
+  Map<String, dynamic> toJson() {
+    return {
+      "content": content,
+      "emotion": emotion,
+      "feedId": feedId,
+      "img": img,
+      "lat": lat,
+      "likeCnt": likeCnt,
+      "lng": lng,
+      "regDate": regDate,
+      "title": title,
+      "userDto": userDto.toString(),
+    };
+  }
 }

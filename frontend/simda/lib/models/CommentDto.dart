@@ -1,4 +1,4 @@
-class Comment {
+class CommentDto {
   final List commentList;
   final int cmtId;
   final String content;
@@ -6,7 +6,7 @@ class Comment {
   final int pcmtId;
   final int userId;
 
-  Comment({
+  CommentDto({
     required this.commentList,
     required this.cmtId,
     required this.content,
@@ -15,8 +15,8 @@ class Comment {
     required this.userId,
   });
 
-  factory Comment.fromJson(Map<String, dynamic> json) {
-    return Comment(
+  factory CommentDto.fromJson(Map<String, dynamic> json) {
+    return CommentDto(
       content: json['content'],
       cmtId: json['cmtId'],
       commentList: json['commentList'],

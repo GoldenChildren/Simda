@@ -1,15 +1,15 @@
-import 'ChatRoom.dart';
-import 'User.dart';
+import 'ChatRoomDto.dart';
+import 'UserDto.dart';
 
-class Chat {
+class ChatDto {
   final int chatId;
-  final ChatRoom chatRoom;
+  final ChatRoomDto chatRoom;
   final String content;
   final int readFlag;
   final String regDate;
-  final User user;
+  final UserDto user;
 
-  Chat({
+  ChatDto({
     required this.chatId,
     required this.chatRoom,
     required this.content,
@@ -18,8 +18,8 @@ class Chat {
     required this.user,
   });
 
-  factory Chat.fromJson(Map<String, dynamic> json) {
-    return Chat(
+  factory ChatDto.fromJson(Map<String, dynamic> json) {
+    return ChatDto(
       chatId: json['chatId'],
       chatRoom: json['chatRoom'],
       content: json['content'],

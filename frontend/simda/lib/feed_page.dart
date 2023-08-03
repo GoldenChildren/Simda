@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simda/models/Feed.dart';
+import 'package:simda/models/FeedDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
 class FeedPage extends StatefulWidget {
@@ -74,7 +74,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
 
   double lat = 37.5013068;
   double lng = 127.0396597;
-  List<Feed> feed = [];
+  List<FeedDto> feed = [];
   bool isLoading = true;
   FeedProviders feedProvider = FeedProviders();
 
@@ -92,11 +92,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   @override
   void initState() {
     super.initState();
-    initFeed().then((_) {
-      setState(() {
-        isLoading = false;
-      });
-    });
+    initFeed();
   }
 
   @override

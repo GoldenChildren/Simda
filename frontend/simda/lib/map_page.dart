@@ -554,7 +554,7 @@ class _MapPageState extends State<MapPage> {
         break;
       //화남
       case 3:
-        assetPath = 'assets/images/flower3png';
+        assetPath = 'assets/images/flower3.png';
         break;
       //슬픔
       case 4:
