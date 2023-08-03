@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssafy.a709.simda.API.API;
+import ssafy.a709.simda.dto.FeedList;
 import ssafy.a709.simda.service.CommentService;
 import ssafy.a709.simda.service.FeedService;
 import ssafy.a709.simda.dto.FeedDto;
@@ -20,29 +22,34 @@ public class FeedController {
     @Autowired
     private CommentService commentService;
     @PostMapping("/")
-    public ResponseEntity<String> addFeed(@RequestBody FeedDto feedDto) {
+    public ResponseEntity<Integer> addFeed(@RequestBody FeedDto feedDto) {
+        String caption = API.imageCaptioningApi(feedDto.getImg());
+        int emotion = API.bardApi(caption + feedDto.getContent());
         if (feedService.createFeed(feedDto)) {
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+            return new ResponseEntity<Integer>(emotion, HttpStatus.OK);
         }
-        return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<Integer>(-1, HttpStatus.NO_CONTENT);
     }
 
    // 내 lat, lng로 주변의 피드목록 가져오기
     @GetMapping("/")
-    public ResponseEntity<List<FeedDto>> getFeedListByMyAround(@RequestParam("lat") double lat, @RequestParam("lng") double lng) {
-        return new ResponseEntity<List<FeedDto>>(feedService.selectAroundList(lat, lng), HttpStatus.OK);
+    public ResponseEntity<FeedList> getFeedListByMyAround(@RequestParam("lat") double lat, @RequestParam("lng") double lng) {
+        FeedList feedList = FeedList.builder().feedList(feedService.selectAroundList(lat, lng)).build();
+        return new ResponseEntity<FeedList>(feedList, HttpStatus.OK);
     }
 
     // 내 Id로 내가 팔로우 한 사람들의 피드목록 가져오기
     @GetMapping("/follow")
-    public ResponseEntity<List<FeedDto>> getFollowFeedListByUser(@RequestParam("userId") int userId) {
-        return new ResponseEntity<List<FeedDto>>(feedService.selectFollowList(userId), HttpStatus.OK);
+    public ResponseEntity<FeedList> getFollowFeedListByUser(@RequestParam("userId") int userId) {
+        FeedList feedList = FeedList.builder().feedList(feedService.selectFollowList(userId)).build();
+        return new ResponseEntity<FeedList>(feedList, HttpStatus.OK);
     }
 
     // 내 Id로 내 피드목록 가져오기
     @GetMapping("/{userId}")
-    public ResponseEntity<List<FeedDto>> getArticleInfo(@PathVariable("userId") int userId){
-        return new ResponseEntity<List<FeedDto>>(feedService.selectMyFeedList(userId), HttpStatus.OK);
+    public ResponseEntity<FeedList> getArticleInfo(@PathVariable("userId") int userId){
+        FeedList feedList = FeedList.builder().feedList(feedService.selectMyFeedList(userId)).build();
+        return new ResponseEntity<FeedList>(feedList, HttpStatus.OK);
     }
     @PutMapping("/like")
     public ResponseEntity<String> hitLikePoint(@RequestBody FeedDto feedDto) {
