@@ -38,7 +38,7 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	// Springboot-Starter Security
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	// oauth2-client 라이브러리
 //	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -49,6 +49,13 @@ dependencies {
 //	implementation 'org.springframework.security:spring-security-oauth2-jose'
 	// Gson
 	implementation group: 'com.google.code.gson', name: 'gson'
+	// S3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
+
+	// https://mvnrepository.com/artifact/com.pkslow/google-bard - 구글 bard gradle
+	implementation group: 'com.pkslow', name: 'google-bard', version: '0.3.4'
+
 }
 
 tasks.named('test') {
