@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -15,7 +14,7 @@ class ProfileEditPage extends StatefulWidget {
     Key? key,
     required this.nickname,
     required this.bio,
-    this.pickedFile,
+    required this.pickedFile,
   }) : super(key: key);
 
   @override

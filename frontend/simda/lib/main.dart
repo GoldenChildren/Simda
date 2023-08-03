@@ -5,14 +5,11 @@ import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'package:simda/KakaoLogin/kakao_login.dart';
 import 'package:simda/KakaoLogin/login_page.dart';
 import 'package:simda/main_page.dart';
-import 'main_page.dart';
-import 'package:simda/KakaoLogin/main_view_model.dart';
-import 'package:simda/KakaoLogin/kakao_login.dart';
-import 'package:simda/KakaoLogin/login_page.dart';
+
 // 달력 한국 시각
 import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(
     nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b',

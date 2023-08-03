@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:simda/profileedit_page.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:simda/profile_edit_page.dart';
 import 'profile_calendar.dart';
 import 'chat_with_friend.dart';
 
 class FriendProfilePage extends StatefulWidget {
   String nickname;
   String bio;
-  String profileImage;
+  XFile profileImage;
 
   FriendProfilePage(
       {Key? key,
@@ -88,7 +89,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                     color: Colors.purple,
                                   ),
                                   image: DecorationImage(
-                                    image: AssetImage(widget.profileImage),
+                                    image: AssetImage(widget.profileImage as String),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -277,7 +278,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
         builder: (context) => ProfileEditPage(
           nickname: widget.nickname,
           bio: widget.bio,
-          pickedFile: widget.profileImage,
+          pickedFile: widget.profileImage.path,
         ),
       ),
     );

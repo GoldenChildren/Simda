@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:simda/profileedit_page.dart';
+import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
 import 'KakaoLogin/login_page.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
@@ -322,7 +322,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             actions: [
                               TextButton(
                                   onPressed: () async {
-                                    await deleteUser();
+                                    // await deleteUser(userId);
                                     if(!mounted) return;
                                     Navigator.push(
                                       context,
