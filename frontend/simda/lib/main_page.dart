@@ -3,8 +3,8 @@ import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 
 import 'main.dart';
 import 'map_page.dart';
-import 'feed_page.dart';
-import 'chatting_page.dart';
+import '../feed_page.dart';
+import '../chatting_page.dart';
 import 'search_page.dart';
 import 'profile_page.dart';
 
@@ -27,9 +27,12 @@ const List<TabItem> items = [
   ),
   TabItem(
     icon: Icons.person_outlined,
-    title: 'profile',
+    title: 'Profile',
   ),
 ];
+
+int storeUserId = storage.read(key: "userId") as int;
+String storeEmail = storage.read(key: "email") as String;
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'main.dart';
+import 'package:simda/main.dart';
 
 class ChatWithFriend extends StatefulWidget {
   final int idx;

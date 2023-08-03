@@ -82,9 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                 else {
                   print('로그인 성공');
                   Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MainPage()), (route) => false
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MainPage()), (route) => false
                   );
                 }
 

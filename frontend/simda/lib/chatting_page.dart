@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:simda/chat_with_friend.dart';
+import 'package:simda/main.dart';
+import 'package:simda/providers/chatroom_providers.dart';
 
-import 'main.dart';
+import 'models/ChatRoomDto.dart';
 
 class ChattingPage extends StatefulWidget {
   const ChattingPage({super.key});
@@ -11,6 +13,19 @@ class ChattingPage extends StatefulWidget {
 }
 
 class _ChattingPageState extends State<ChattingPage> {
+
+  List<ChatRoomDto> chatroom = [];
+  ChatRoomProviders chatroomprovider = ChatRoomProviders();
+
+  Future initChatRoom() async {
+    // chatroom = await chatroomprovider.getChatRoom(user);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initChatRoom();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +54,8 @@ class _ChattingPageState extends State<ChattingPage> {
                   ),
                 ),
                 Container(height: 2, color: Colors.purple),
-                const Expanded(
-                    child: ListViewBuilder()),
+                Expanded(
+                    child: ListViewBuilder(chatroom: chatroom,)),
               ],
             ),
           ),
@@ -49,10 +64,13 @@ class _ChattingPageState extends State<ChattingPage> {
   }
 }
 
-final List<String> friends = <String>['맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아'];
+// final List<String> friends = <String>['맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아'];
 
 class ListViewBuilder extends StatefulWidget {
-  const ListViewBuilder({super.key});
+
+  ListViewBuilder({required this.chatroom, super.key});
+
+  List<ChatRoomDto> chatroom;
 
   @override
   State<ListViewBuilder> createState() => _ListViewBuilderState();
@@ -62,7 +80,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemCount: friends.length,
+      itemCount: widget.chatroom.length,
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
           onTap: () {
@@ -79,6 +97,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const CircleAvatar(
+                  // backgroundImage: AssetImage(widget.chatroom.user1.img),
                   backgroundImage: AssetImage('assets/images/yuri.jpg'),
                   radius: 30,
                 ),
