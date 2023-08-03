@@ -115,12 +115,13 @@ public class UserController {
         // 해당 추출된 이메일을 참조하여 userDto를 가져온다
         UserDto userDto = userService.selectUserByEmail(email);
         System.out.println("-----로그인 해볼게요------");
-        System.out.println(userDto.getNickname());
-        System.out.println(userDto.getUserId());
+//        System.out.println(userDto.getNickname());
+//        System.out.println(userDto.getUserId());
 
 
 
         // userDto 값을 통해 가입했는지, 안했는지 확인
+        // 가입 이력 자체가 없다
         if(userDto == null) {
             // userDto 값이 null이면 신규 유저
             System.out.println("UserController 121 : 신규유저 회원가입으로!");
@@ -166,10 +167,12 @@ public class UserController {
         UserDto beforeUser = userService.selectUserByEmail(userDto.getEmail());
 
         // user 있는지 email로 체크
+        // 기존 유저의 경우
         if(beforeUser != null) {
             int temp = userService.selectRole(beforeUser.getEmail());
             System.out.println("UserController 164 : " + temp);
             if(temp != 2){
+                // 탈퇴 안했는데 회원가입한 경우 에러
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
             beforeUser.setNickname(userDto.getNickname());
@@ -178,6 +181,8 @@ public class UserController {
             System.out.println("UserController 161 진입 - 여기까지 온다");
             userService.updateUser(beforeUser);
         } else {
+            // 신규 유저의 경우
+            userDto.setProfileImg(fileUrl);
             userService.createUser(userDto);
         }
 
