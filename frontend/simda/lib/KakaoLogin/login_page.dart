@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:simda/KakaoLogin/kakao_login.dart';
-import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'package:simda/KakaoLogin/sign_up.dart';
+import 'package:simda/main.dart';
+import 'package:simda/main_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,8 +11,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final storage = const FlutterSecureStorage();
-  final viewModel = MainViewModel(KakaoLogin());
 
   String email = "";
   String profileImg =
@@ -79,8 +76,16 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 }
                 // 카카오 로그인 오류
-                if (viewModel.isLoggedIn == -1) {
+                else if (viewModel.isLoggedIn == -1) {
                   print('카카오 로그인 오류');
+                }
+                else {
+                  print('로그인 성공');
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MainPage()), (route) => false
+                  );
                 }
 
                 getValueFromSecureStorage();

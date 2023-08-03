@@ -282,14 +282,9 @@ class _WritePageState extends State<WritePage> {
                                           _image!.path,
                                           37.5013068,
                                           127.0396597,
+                                          "afaf",
                                           _title,
-                                          UserDto(
-                                              email: "wcyang8@kakao.com",
-                                              nickname: "afaf",
-                                              profileImg:
-                                                  "https://s3.ap-northeast-2.amazonaws.com/simda/img/profile/46456e49-1f2f-4eca-969b-8b25f6f0b031-profile.jpg",
-                                              userId: 1,
-                                              userRole: 0));
+                                          1);
                                     },
                                     child: const Text('작성완료'),
                                   ),

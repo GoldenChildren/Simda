@@ -8,9 +8,10 @@ class FeedDto {
   final double lat;
   late int likeCnt;
   final double lng;
+  final String nickname;
   final String regDate;
   final String title;
-  final UserDto userDto;
+  final int userId;
 
   FeedDto({
     required this.content,
@@ -20,9 +21,10 @@ class FeedDto {
     required this.lat,
     required this.likeCnt,
     required this.lng,
+    required this.nickname,
     required this.regDate,
     required this.title,
-    required this.userDto,
+    required this.userId,
   });
 
   factory FeedDto.fromJson(Map<String, dynamic> json) {
@@ -34,9 +36,10 @@ class FeedDto {
       lat: json['lat'],
       likeCnt: json['likeCnt'],
       lng: json['lng'],
+      nickname: json['nickname'],
       regDate: json['regDate'],
       title: json['title'],
-      userDto: json['userDto'],
+      userId: json['userId'],
     );}
 
   Map<String, dynamic> toJson() {
@@ -48,9 +51,10 @@ class FeedDto {
       "lat": lat,
       "likeCnt": likeCnt,
       "lng": lng,
+      "nickname": nickname,
       "regDate": regDate,
       "title": title,
-      "userDto": userDto.toString(),
+      "userId": userId,
     };
   }
 }

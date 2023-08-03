@@ -35,9 +35,10 @@ class FeedProviders {
       double lat,
       // int likeCnt,
       double lng,
+      String nickname,
       // String regDate,
       String title,
-      UserDto userDto) async {
+      int userId) async {
     var response = await http.post(
       Uri.parse('http://i9a709.p.ssafy.io:8000/feed/'),
       headers: {
@@ -52,9 +53,10 @@ class FeedProviders {
         "lat": lat,
         // "likeCnt": likeCnt,
         "lng": lng,
+        "nickname": nickname,
         // "regDate": regDate,
         "title": title,
-        "userDto": userDto.toString(),
+        "userId": userId,
       }),
     );
     return json.decode(response.body);

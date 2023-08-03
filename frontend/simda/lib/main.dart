@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'package:simda/KakaoLogin/kakao_login.dart';
@@ -14,6 +15,7 @@ void main() {
 }
 
 bool isVisible = true;
+const storage = FlutterSecureStorage();
 final viewModel = MainViewModel(KakaoLogin());
 
 class MyApp extends StatelessWidget {

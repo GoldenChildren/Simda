@@ -31,6 +31,9 @@ const List<TabItem> items = [
   ),
 ];
 
+int storeUserId = storage.read(key: "userId") as int;
+String storeEmail = storage.read(key: "email") as String;
+
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
