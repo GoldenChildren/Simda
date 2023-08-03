@@ -322,7 +322,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             actions: [
                               TextButton(
                                   onPressed: () async {
-                                    await viewModel.logout();
+                                    await deleteUser();
                                     if(!mounted) return;
                                     Navigator.push(
                                       context,
