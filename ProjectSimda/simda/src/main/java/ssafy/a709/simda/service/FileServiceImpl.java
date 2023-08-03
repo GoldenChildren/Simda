@@ -47,6 +47,7 @@ public class FileServiceImpl implements FileService{
 
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentLength(multipartFile.getSize());
+        objMeta.setContentType(multipartFile.getContentType());
 
         try(InputStream inputStream = multipartFile.getInputStream()){
             amazonS3.putObject(bucketDir, s3FileName, inputStream, objMeta);
