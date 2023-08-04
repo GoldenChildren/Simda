@@ -53,7 +53,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
      body: SingleChildScrollView(
-     scrollDirection: Axis.vertical,
+       scrollDirection: Axis.vertical,
        child: TableCalendar(
         locale: 'ko_KR',
         firstDay: DateTime.utc(2021, 10, 16),

@@ -166,9 +166,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
               // Container(
               //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               //   alignment: Alignment.center,
