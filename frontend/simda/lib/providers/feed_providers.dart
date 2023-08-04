@@ -29,14 +29,12 @@ class FeedProviders {
     return feed;
   }
 
-  Future<int> postFeed(
-      FeedDto feedDto, String path) async {
+  Future<int> postFeed(FeedDto feedDto, String path) async {
     Dio dio = Dio();
     var url = "$ip/feed/";
 
     FormData formData = FormData.fromMap({
-      'imgfile':
-      await MultipartFile.fromFile(path, filename: 'feed.jpg'),
+      'imgfile': await MultipartFile.fromFile(path, filename: 'feed.jpg'),
       'title': feedDto.title,
       'content': feedDto.content,
       'lat': feedDto.lat,
@@ -44,8 +42,23 @@ class FeedProviders {
       'userDto.userId': feedDto.userId
     });
 
-    Response response = await dio.post(url, data: formData, options: Options(headers: {'Content-Type': 'multipart/form-data'}),);
+    Response response = await dio.post(
+      url,
+      data: formData,
+      options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+    );
 
     return response.data;
+  }
+
+  void removeFeed(int feedId) async {
+    String uri = "$ip/feed/";
+    uri += "$feedId";
+
+    final response = await http.delete(Uri.parse(uri));
+
+    if (response.statusCode == 200) {
+      print("Success!");
+    }
   }
 }

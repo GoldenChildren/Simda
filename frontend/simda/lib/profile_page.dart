@@ -24,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _profileImg = "";
   String _nickname = "";
   String _bio = "";
+  String _email ="";
   int _userId = 0;
 
   @override
@@ -37,11 +38,13 @@ class _ProfilePageState extends State<ProfilePage> {
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
+      String? storeEmail = await storage.read(key: "email");
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
       setState(() {
         _profileImg = storeProfileImg ?? "";
         _nickname = storeNickname ?? "";
         _bio = storeBio ?? "";
+        _email = storeEmail ?? "";
         _userId = storeUserId;
       });
     } catch (e) {
@@ -233,12 +236,12 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  currentAccountPicture: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/shin.jpg'),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(_profileImg),
                     backgroundColor: Colors.white,
                   ),
-                  accountName: const Text('SHIN'),
-                  accountEmail: const Text('shin@ssafy.com'),
+                  accountName: Text(_nickname),
+                  accountEmail: Text(_email),
                   decoration: BoxDecoration(
                       color: Colors.purple[200],
                       borderRadius: const BorderRadius.only(
@@ -274,12 +277,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('SIMDA에 문의사항이 있으십니까?'),
-                          content: const Text('simda@gmail.com 으로 문의주세요!'),
+                          content: const Text('simda709@gmail.com 으로 문의주세요!'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Clipboard.setData(const ClipboardData(
-                                    text: "simda@gmail.com"));
+                                    text: "simda709@gmail.com"));
                                 Navigator.of(context).pop(); // 다이얼로그를 닫음
                               },
                               child: const Text("복사하기"),
@@ -288,7 +291,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("알겠습니다."),
+                              child: const Text("닫기"),
                             ),
                           ],
                         );
