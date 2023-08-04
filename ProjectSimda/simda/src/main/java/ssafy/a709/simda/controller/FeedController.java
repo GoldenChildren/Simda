@@ -38,7 +38,7 @@ public class FeedController {
             System.out.println(e);
         }
         String caption = API.imageCaptioningApi(feedDto.getImg());
-        int emotion = API.bardApi(caption + feedDto.getContent());
+        int emotion = API.bardApi("사진의 설명은 다음과 같아 : "+caption +" 게시글의 내용은 다음과 같아 : "+ feedDto.getContent());
         feedDto.setEmotion(emotion);
         if (feedService.createFeed(feedDto)) {
             return new ResponseEntity<Integer>(emotion, HttpStatus.OK);
