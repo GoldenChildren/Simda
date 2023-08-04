@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/profile_edit_page.dart';
@@ -181,6 +184,9 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                 style: const TextStyle(fontSize: 16),
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             // Container(
             //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             //   alignment: Alignment.center,
@@ -242,6 +248,9 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                     ),
                   );
                 }),
+
+
+
 
             Container(
               width: 10,

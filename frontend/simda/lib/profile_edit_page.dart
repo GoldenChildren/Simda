@@ -8,6 +8,7 @@ import 'main.dart';
 import 'models/UserDto.dart';
 
 class ProfileEditPage extends StatefulWidget {
+
   const ProfileEditPage({
     Key? key,
   }) : super(key: key);
@@ -176,7 +177,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   labelText: '닉네임',
-
                   labelStyle: TextStyle(
                     color: Colors.black45,
                   ),

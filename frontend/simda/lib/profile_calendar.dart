@@ -52,7 +52,9 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TableCalendar(
+     body: SingleChildScrollView(
+       scrollDirection: Axis.vertical,
+       child: TableCalendar(
         locale: 'ko_KR',
         firstDay: DateTime.utc(2021, 10, 16),
         lastDay: DateTime.utc(2030, 3, 14),
@@ -78,6 +80,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
           },
         ),
       ),
+    ),
     );
   }
 }

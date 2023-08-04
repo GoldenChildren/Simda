@@ -2,10 +2,7 @@ package ssafy.a709.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,5 +27,6 @@ public class User {
     private String profileImg;
 
     @Column
+    @Enumerated(EnumType.ORDINAL)
     private UserRole useRole;
 }
