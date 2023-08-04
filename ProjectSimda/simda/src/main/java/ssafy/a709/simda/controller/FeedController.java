@@ -28,7 +28,7 @@ public class FeedController {
     private FileService fileService;
 
     @PostMapping(path ="/", consumes = "multipart/form-data")
-    public ResponseEntity<String> addFeed(@RequestPart(value = "imgfile", required = false) MultipartFile imgfile,
+    public ResponseEntity<Integer> addFeed(@RequestPart(value = "imgfile", required = false) MultipartFile imgfile,
                                           @ModelAttribute FeedDto feedDto) {
         try {
             String fileUrl = fileService.uploadFeed(imgfile);
