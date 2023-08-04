@@ -1,12 +1,11 @@
-package ssafy.a709.simda.service;
+package ssafy.a709.simda.API;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pkslow.ai.AIClient;
 import com.pkslow.ai.GoogleBardClient;
 import com.pkslow.ai.domain.Answer;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -14,65 +13,43 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.*;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import ssafy.a709.simda.dto.TokenDto;
 
 import java.net.URI;
 
-@Service
-public class ApiServiceImpl implements ApiService{
-
-    // 카카오 서버에서 API를 요청한다.
-    @Override
-    public String getEmailByAccessToken(TokenDto tokenDto) throws JsonProcessingException {
-        RestTemplate restTemplate = new RestTemplate();
-
-        // REST 요청의 헤더에 들어갈 내용 저장
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBearerAuth(tokenDto.getAccessToken());
-        headers.add("Accept", "application/json");
-
-        // parameter로 들어갈 내용 저장
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        // parameters.add("property_keys", "[kakao_account.email]");    // property_keys 로 받으면 깔끔한데 방법을 모르겠음
-
-        // headers and parameters로 request entity 생성
-        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(parameters, headers);
-
-        // API endpoint URL 설정
-        String url = "https://kapi.kakao.com/v2/user/me";
-
-        // 카카오 서버로 GET 요청 보내기
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
-
-        // responseEntity 자체가 null 이면 return null
-        if (responseEntity == null) return null;
-
-        // TODO : responseEntity 의 응답이 success가 아닌 경우 예외 처리
-
-        // json 파싱 후 email 얻기
-        ObjectMapper mapper = new ObjectMapper();
-        System.out.println(responseEntity);
-        JsonNode newNode = mapper.readTree(responseEntity.getBody());
-        ObjectNode node = ((ObjectNode) newNode).put("Authentication", "Successful");
-        String email = node.get("kakao_account").get("email").toString().replaceAll("\"", "");
-        System.out.println(email);
-
-        return email;
-    }
-
-    // 바드 API 호출
-    @Override
-    public int bardApi(String content){
+public class API {
+    public static int bardApi(String content){
         System.out.println("ApiController - BardApi 호출");
         // 게시글의 Content를 받아서 Ptyhon의 Bard API로 정보를 전달한다
         int emotion = 0; // 감정 기본 값은 0으로 고정
         try {
+            // test 1 - 절대 경로 실행
+//            ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
+//                    "C:\\Users\\SSAFY\\Desktop\\Project\\S09P12A709\\ProjectSimda\\simda\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
+//                    content);
+//
+            // test 2 - 경로찾기로 실행
+//            ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
+//                    System.getProperty("user.dir")+"\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
+//                    content);
+//            System.out.println(System.getProperty("user.dir"));
+//
+//            // test 3 - 돚거에서 실행
+//            ProcessBuilder pb = new ProcessBuilder("/usr/bin/python3.9",
+//                    System.getProperty("user.dir")+"\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
+//                    content);
+//            System.out.println(System.getProperty("user.dir")+"/api/bard.py");
+//
+//            Process p = pb.start();
+//            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
+//
+//            // 출력 값을 확인해 보는 코드
+//            String line = " ";
+//            String output = "";
+//            while (line != null) {
+//                output += line;
+//                line = br.readLine();
+//                output += "\n";
+//            }
             System.out.println(content);
             content = content.replaceAll("(\r\n|\r|\n|\n\r)", " ");
             AIClient client = new GoogleBardClient("Ygj5yW4U7eHBq5WAD5CPYQlzJ-Bi0nrNSdAkri99eP1VIqXc4gzGainsORoV0sgLpsolPw.");
@@ -107,9 +84,8 @@ public class ApiServiceImpl implements ApiService{
         return emotion;
     }
 
-    //image captioning API
-    @Override
-    public String imageCaptioningApi(String imageUrl){
+    //image captioning
+    public static String imageCaptioningApi(String imageUrl){
         HttpClient httpclient = HttpClients.createDefault();
         // 결과 문자열
         StringBuilder res = new StringBuilder();
@@ -126,7 +102,7 @@ public class ApiServiceImpl implements ApiService{
             StringEntity reqEntity = new StringEntity("{\"url\" : \"" + imageUrl + "\"}");
             request.setEntity(reqEntity);
             HttpResponse response = httpclient.execute(request);
-            org.apache.http.HttpEntity entity = response.getEntity();
+            HttpEntity entity = response.getEntity();
 
             if (entity != null)
             {

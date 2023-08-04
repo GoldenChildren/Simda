@@ -9,6 +9,7 @@ import ssafy.a709.simda.dto.FeedDto;
 import ssafy.a709.simda.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Service
 public class FeedServiceImpl implements FeedService{
@@ -27,7 +28,9 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public List<FeedDto> selectAroundList(double lat, double lng) {
-        List<Feed> list = feedRepository.getListAround(lat, lng);
+        long oneDayInMillis = 24 * 60 * 60 * 1000;
+        Date oneDayAgo = new Date(System.currentTimeMillis() - oneDayInMillis);
+        List<Feed> list = feedRepository.findFeedAroundAndWithinOneDay(lat, lng, oneDayAgo);
         List<FeedDto> resList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             User feedUser = userRepository.findByUserId(list.get(i).getUser().getUserId());

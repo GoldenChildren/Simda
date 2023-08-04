@@ -7,11 +7,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ssafy.a709.simda.domain.Feed;
 
+import java.util.Date;
 import java.util.List;
 
 public interface FeedRepository extends JpaRepository<Feed, Integer> {
-    @Query(value = "select f from Feed f where ((f.lat - :lat) * (f.lat - :lat) + (f.lng - :lng) * (f.lng - :lng)) between 0 and 0.00001 and f.regDate >  DATE_ADD(now(), INTERVAL -1 DAY)",nativeQuery = true)
-    List<Feed> getListAround(@Param("lat") double lat, @Param("lng") double lng);
+    @Query("SELECT f FROM Feed f WHERE ((f.lat - :lat) * (f.lat - :lat) + (f.lng - :lng) * (f.lng - :lng)) BETWEEN 0 AND 0.00001 AND f.regDate > :oneDayAgo")
+    List<Feed> findFeedAroundAndWithinOneDay(@Param("lat") double lat, @Param("lng") double lng, @Param("oneDayAgo") Date oneDayAgo);
 
     @Query("select distinct f from Feed f join Follow w on f.user.userId = w.toUserId.userId join User u on w.fromUserId.userId = u.userId where w.fromUserId.userId = :userId")
     List<Feed> getListByMyId(@Param("userId")int userId);

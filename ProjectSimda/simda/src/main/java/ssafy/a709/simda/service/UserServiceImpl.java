@@ -97,19 +97,22 @@ public class UserServiceImpl implements UserService {
             System.out.println("현재 유저의 Id를 가져오는가? : "+ userDto.getUserId());
             User nowUser = userRepository.findByUserId(userDto.getUserId());
 
-            // 닉네임, 프로필 사진 두 개만 변경이 가능하다
+            // 닉네임, 프로필 사진 BIO 수정
             nowUser.setProfileImg(userDto.getProfileImg());
+            nowUser.setBio(userDto.getBio());
             nowUser.setNickname(userDto.getNickname());
             nowUser.setUserRole(userDto.getUserRole());
 
             System.out.println("UserService에서 eamil을 가져오는가? "+ nowUser.getEmail());
             System.out.println("그때의 유저 Role은? "+ selectRole(nowUser.getEmail()));
 
+            // 유저가 탈퇴된 상황이면 userRole을 1로 변경한다
             if(selectRole(nowUser.getEmail()) == 2) {
                 nowUser = userRepository.findByEmail(userDto.getEmail());
                 System.out.println("UserServiceImpl의 120까지 오나?");
                 nowUser.setUserRole(1);
             }
+            
             // userRepo에서 변경된 부분을 저장한다.
             userRepository.save(nowUser);
 
