@@ -22,6 +22,7 @@ import ssafy.a709.simda.service.FollowService;
 import ssafy.a709.simda.service.UserService;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import java.util.Map;
@@ -79,8 +80,20 @@ public class UserController {
     }
 
     // 유저 정보 수정하는 Post 요청
-    @PutMapping("/")
-    public ResponseEntity<String> modifyUser(@RequestBody UserDto userDto) {
+    @PostMapping(path = "/modify", consumes = "multipart/form-data")
+    public ResponseEntity<String> modifyUser(
+            @RequestPart(value="imgfile", required = false) MultipartFile profileImg,
+            @ModelAttribute UserDto userDto) throws IOException {
+        // 프론트에서 프로필 이미지 변경 시 orgFileName을 modified로 저장해놔야함.
+        if(profileImg.getOriginalFilename().equals("modified")){
+            // origin file name이 modified라면 이미지 수정
+            userDto.setProfileImg(
+                    fileService.updateProfile(
+                            profileImg,
+                            userDto.getProfileImg()
+                    )
+            );
+        }
 
         if (userService.updateUser(userDto)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
