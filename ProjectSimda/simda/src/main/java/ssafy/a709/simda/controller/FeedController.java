@@ -39,6 +39,7 @@ public class FeedController {
         }
         String caption = API.imageCaptioningApi(feedDto.getImg());
         int emotion = API.bardApi(caption + feedDto.getContent());
+        feedDto.setEmotion(emotion);
         if (feedService.createFeed(feedDto)) {
             return new ResponseEntity<Integer>(emotion, HttpStatus.OK);
         }
