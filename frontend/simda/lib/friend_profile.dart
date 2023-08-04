@@ -89,7 +89,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                     color: Colors.purple,
                                   ),
                                   image: DecorationImage(
-                                    image: AssetImage(widget.profileImage as String),
+                                    image: AssetImage(widget.profileImage.path),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
