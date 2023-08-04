@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:simda/providers/user_providers.dart';
 import 'main.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
@@ -23,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _profileImg = "";
   String _nickname = "";
   String _bio = "";
+  int _userId = 0;
 
   @override
   void initState() {
@@ -35,15 +37,19 @@ class _ProfilePageState extends State<ProfilePage> {
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
+      int storeUserId = int.parse((await storage.read(key: "userId"))!);
       setState(() {
         _profileImg = storeProfileImg ?? "";
         _nickname = storeNickname ?? "";
         _bio = storeBio ?? "";
+        _userId = storeUserId;
       });
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
   }
+
+  UserProviders userProvider = UserProviders();
 
   final viewModel = MainViewModel(KakaoLogin());
 
@@ -306,8 +312,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           content: const Text('정말요? 가지마요~~~'),
                           actions: [
                             TextButton(
-                              onPressed: () async {
-                                // await deleteUser(userId);
+                              onPressed: () {
+                                userProvider.deleteUser(_userId);
                                 if (!mounted) return;
                                 Navigator.push(
                                   context,
