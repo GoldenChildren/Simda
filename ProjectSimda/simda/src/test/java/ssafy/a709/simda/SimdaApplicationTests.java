@@ -1,11 +1,27 @@
 package ssafy.a709.simda;
 
+import java.io.*;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.*;
+import java.net.URI;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +51,30 @@ import java.util.Optional;
 
 @SpringBootTest
 class SimdaApplicationTests {
+    @Test
+    void contextLoads() throws IOException {
+        System.out.println(1);
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("url", "http://hive-public.s3.amazonaws.com/demo_request/gun1.jpg")
+                .build();
+        Request request = new Request.Builder()
+                .url("https://api.thehive.ai/api/v2/task/sync")
+                .method("POST", body)
+                .addHeader("accept", "application/json")
+                .addHeader("authorization", "ZRb0om5O9maqyTwU2jxHP1ySuWWmc473")
+                .build();
+        Response response = client.newCall(request).execute();
+        System.out.println(response.body().string());
+        System.out.println(2);
+    }
+    @Test
+    void test2(){
+
+    }
+
 //	@Autowired
 //	UserRepository userRepository;
 //	@Autowired
