@@ -1,20 +1,20 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+
 class ProfileEditPage extends StatefulWidget {
-  final String? nickname;
+  final String nickname;
   final String bio;
   final String? pickedFile;
 
   const ProfileEditPage({
     Key? key,
-    this.nickname,
+    required this.nickname,
     required this.bio,
-    this.pickedFile,
+    required this.pickedFile,
   }) : super(key: key);
 
   @override
@@ -29,7 +29,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   @override
   void initState() {
     super.initState();
-    _nickname = widget.nickname!;
+    _nickname = widget.nickname;
     _bio = widget.bio;
     _pickedFile = widget.pickedFile;
   }
@@ -54,37 +54,42 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     iconSize: 28,
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        '프로필 수정',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(
-                            context,
-                            {
-                              'nickname': _nickname,
-                              'bio': _bio,
-                              'pickedFile': _pickedFile,
-                            },
-                          );
-                        },
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Colors.blue.shade200)),
-                        child: const Text(
+                // const Text(
+                //   '프로필 수정',
+                //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                // ),
+                 Flexible(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          '프로필 수정',
+                          style:
+                                TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(
+                              context,
+                              {
+                                'nickname': _nickname,
+                                'bio': _bio,
+                                'pickedFile': _pickedFile,
+                              },
+                            );
+                          },
+                          style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStatePropertyAll(Colors.blue.shade200)),
+                          child: const Text(
                           '수정하기',
                           style: TextStyle(color: Colors.black87),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
+                        ),
+                      ],
+                    ),
+                 ),
                 const SizedBox(width: 20),
               ],
             ),
@@ -101,36 +106,36 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   ),
                   child: _pickedFile == null
                       ? CircleAvatar(
-                          radius: imageSize / 2,
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.account_circle,
-                            size: imageSize,
-                            color: Colors.black45,
-                          ))
+                      radius: imageSize / 2,
+                      backgroundColor: Colors.transparent,
+                      child: Icon(
+                        Icons.account_circle,
+                        size: imageSize,
+                        color: Colors.black45,
+                      ))
                       : CircleAvatar(
-                          radius: imageSize / 2,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: FileImage(File(_pickedFile!)),
-                        )
+                    radius: imageSize / 2,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: FileImage(File(_pickedFile!)),
+                  )
 
-                  // Center(
-                  //         child: Container(
-                  //           width: imageSize,
-                  //           height: imageSize,
-                  //           decoration: BoxDecoration(
-                  //             shape: BoxShape.circle,
-                  //             border: Border.all(
-                  //                 width: 2,
-                  //                 color: Theme.of(context).colorScheme.primary),
-                  //             image: DecorationImage(
-                  //               image: FileImage(File(_pickedFile!)),
-                  //               fit: BoxFit.cover,
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  ),
+                // Center(
+                //         child: Container(
+                //           width: imageSize,
+                //           height: imageSize,
+                //           decoration: BoxDecoration(
+                //             shape: BoxShape.circle,
+                //             border: Border.all(
+                //                 width: 2,
+                //                 color: Theme.of(context).colorScheme.primary),
+                //             image: DecorationImage(
+                //               image: FileImage(File(_pickedFile!)),
+                //               fit: BoxFit.cover,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
