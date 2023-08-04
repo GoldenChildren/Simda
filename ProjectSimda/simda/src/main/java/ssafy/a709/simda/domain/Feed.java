@@ -39,7 +39,7 @@ public class Feed {
     private String content;
 
     // Image Address
-    @Column(name = "img", nullable = false, columnDefinition = "varchar(100)")
+    @Column(name = "img", nullable = false, columnDefinition = "varchar(200)")
     private String img;
 
     // Latitude
