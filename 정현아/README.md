@@ -40,8 +40,8 @@ Hello, 현아
 
 
 ## 07/18 TIL
-- 하단바 제작 : pub.dev  패키지 사용 
-awesone_bottom_bar (https://pub.dev/packages/awesome_bottom_bar) 
+
+- 하단바 제작 : pub.dev  패키지 사용 awesone_bottom_bar (https://pub.dev/packages/awesome_bottom_bar) 
 및 flutter 공부
 
 - flutter 전반적인 폴더 구조 완료. ( 추가 작업 필요)
@@ -49,7 +49,6 @@ awesone_bottom_bar (https://pub.dev/packages/awesome_bottom_bar)
 
 ## 07/19 TIL
 - 코딩셰프 강의 및 gif/png 설정 및  AppBar, 미니 page 구현
-
 
 ![simdamini](/uploads/01a4f7c886f5d11798c7052268fb261b/simdamini.PNG)
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:simda/main.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
@@ -268,7 +269,7 @@ class _WritePageState extends State<WritePage> {
                                     child: const Text('저장하기'),
                                   ),
                                   TextButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       setState(() {});
                                       // Navigator.of(context)
                                       //     .pop(); // 나중에는 글 최종 작성하는 버튼으로!!!!
@@ -276,15 +277,23 @@ class _WritePageState extends State<WritePage> {
                                       print(_contentEditController.text);
                                       print(_image!.path);
                                       print(selected);
+                                      // String temp = storage.read(key:'userId');
+                                      int userId = int.parse(await storage.read(key: 'userId')??'0');
+                                      print(userId);
+                                      FeedDto feedDto = FeedDto(
+                                          content: _content,
+                                          emotion: 0,
+                                          feedId: 0,
+                                          img: '',
+                                          lat: 37.5013068,
+                                          likeCnt: 0,
+                                          lng: 127.0396597,
+                                          nickname: '',
+                                          regDate: '',
+                                          title: _title,
+                                          userId: userId);
                                       feedProvider.postFeed(
-                                          _content,
-                                          selected,
-                                          _image!.path,
-                                          37.5013068,
-                                          127.0396597,
-                                          "afaf",
-                                          _title,
-                                          1);
+                                          feedDto, _image!.path);
                                     },
                                     child: const Text('작성완료'),
                                   ),
