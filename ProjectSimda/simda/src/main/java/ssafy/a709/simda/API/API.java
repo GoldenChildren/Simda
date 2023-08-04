@@ -58,18 +58,18 @@ public class API {
             System.out.println(output);
 
             // 0 : 행복, 1 : 기쁨, 2 : 평온, 3 : 화남, 4 : 슬픔
-            if (output.contains("0")) {
+            if (output.contains("0") || output.contains("행복")) {
                 System.out.println("hello, 0 행복");
-            } else if (output.contains("1")) {
+            } else if (output.contains("1") || output.contains("기쁨")) {
                 emotion = 1;
                 System.out.println("hello, 1 기쁨");
-            } else if (output.contains("2")) {
+            } else if (output.contains("2") || output.contains("평온")) {
                 emotion = 2;
                 System.out.println("hello, 2 평온");
-            } else if (output.contains("3")) {
+            } else if (output.contains("3")|| output.contains("화남")) {
                 emotion = 3;
                 System.out.println("hello, 3 화남");
-            } else if (output.contains("4")) {
+            } else if (output.contains("4")|| output.contains("슬픔")) {
                 emotion = 4;
                 System.out.println("hello, 4 슬픔");
             } else {
