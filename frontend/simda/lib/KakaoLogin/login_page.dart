@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   String profileImg =
       "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
   String nickname = "";
+  String bio = "";
 
   @override
   void initState() {
@@ -28,11 +29,13 @@ class _LoginPageState extends State<LoginPage> {
       String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
+      String? storeBio = await storage.read(key: "bio");
       setState(() {
         email = storeEmail ?? "";
         profileImg = storeProfileImg ??
             "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
         nickname = storeNickname ?? "";
+        bio = storeBio ?? "";
       });
     } catch (e) {
       print("Error reading from secure storage: $e");

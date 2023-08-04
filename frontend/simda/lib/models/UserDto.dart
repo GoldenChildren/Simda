@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class UserDto {
+  final String bio;
   final String email;
   final String nickname;
   final String profileImg;
@@ -8,6 +9,7 @@ class UserDto {
   final int userRole;
 
   UserDto({
+    required this.bio,
     required this.email,
     required this.nickname,
     required this.profileImg,
@@ -17,11 +19,12 @@ class UserDto {
 
   factory UserDto.fromJson(Map<String, dynamic> json) {
     return UserDto(
-        email: json['email'],
-        nickname: json['nickname'],
-        profileImg: json['profileImg'],
-        userId: json['userId'],
-        userRole: json['userRole'],
+      bio: json['bio'],
+      email: json['email'],
+      nickname: json['nickname'],
+      profileImg: json['profileImg'],
+      userId: json['userId'],
+      userRole: json['userRole'],
     );
   }
 }

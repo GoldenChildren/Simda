@@ -64,7 +64,7 @@ class _WritePageState extends State<WritePage> {
                     const Text(
                       '글 작성하기',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     TextButton(
                         onPressed: () {
@@ -87,7 +87,7 @@ class _WritePageState extends State<WritePage> {
                                     const SizedBox(height: 20),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -101,8 +101,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 0
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -132,8 +132,8 @@ class _WritePageState extends State<WritePage> {
                                             // color: _colors[1],
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 1
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -162,8 +162,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 2
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -184,7 +184,7 @@ class _WritePageState extends State<WritePage> {
                                     const SizedBox(height: 20),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -198,8 +198,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 3
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -228,8 +228,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 4
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -304,7 +304,7 @@ class _WritePageState extends State<WritePage> {
                         },
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(Colors.blue.shade200)),
+                            MaterialStatePropertyAll(Colors.blue.shade200)),
                         child: const Text(
                           '작성하기',
                           style: TextStyle(color: Colors.black87),
@@ -335,14 +335,14 @@ class _WritePageState extends State<WritePage> {
                       hintText: '제목을 입력하세요',
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
+                            color: Colors.white,
+                            width: 0.0,
+                          )),
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
+                            color: Colors.white,
+                            width: 0.0,
+                          )),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -365,14 +365,14 @@ class _WritePageState extends State<WritePage> {
                       hintText: '내용을 입력하세요',
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
+                            color: Colors.white,
+                            width: 0.0,
+                          )),
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
+                            color: Colors.white,
+                            width: 0.0,
+                          )),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -395,9 +395,9 @@ class _WritePageState extends State<WritePage> {
                 decoration: const BoxDecoration(
                     border: Border(
                         top: BorderSide(
-                  color: Colors.black12,
-                  width: 1,
-                ))),
+                          color: Colors.black12,
+                          width: 1,
+                        ))),
                 width: double.infinity,
                 child: Row(
                   children: [
@@ -417,17 +417,17 @@ class _WritePageState extends State<WritePage> {
   Widget _buildImageArea() {
     return _image != null
         ? Container(
-            margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
-            width: 300,
-            height: 300,
-            child: Image.file(File(_image!.path)),
-          )
+      margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
+      width: 300,
+      height: 300,
+      child: Image.file(File(_image!.path)),
+    )
         : Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
-            width: 300,
-            height: 300,
-            color: Colors.red,
-          );
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
+      width: 300,
+      height: 300,
+      color: Colors.red,
+    );
   }
 
   @override

@@ -1,20 +1,15 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:simda/main.dart';
+import 'package:simda/providers/user_providers.dart';
+
+import 'main.dart';
+import 'models/UserDto.dart';
 
 class ProfileEditPage extends StatefulWidget {
-  final String? nickname;
-  final String bio;
-  final String? pickedFile;
-
   const ProfileEditPage({
     Key? key,
-    this.nickname,
-    required this.bio,
-    this.pickedFile,
   }) : super(key: key);
 
   @override
@@ -22,17 +17,42 @@ class ProfileEditPage extends StatefulWidget {
 }
 
 class _ProfileEditPageState extends State<ProfileEditPage> {
-  String _nickname = '';
-  String _bio = '';
-  String? _pickedFile;
+  String _email = "";
+  String _profileImg = "";
+  String _nickname = "";
+  String _bio = "";
+  int _userId = 0;
+  final int _userRole = 1;
+
+  bool isChanged = false;
 
   @override
   void initState() {
     super.initState();
-    _nickname = widget.nickname!;
-    _bio = widget.bio;
-    _pickedFile = widget.pickedFile;
+    getValueFromSecureStorage();
   }
+
+  Future<void> getValueFromSecureStorage() async {
+    try {
+      String? storeEmail = await storage.read(key: "profileImg");
+      String? storeProfileImg = await storage.read(key: "profileImg");
+      String? storeNickname = await storage.read(key: "nickname");
+      String? storeBio = await storage.read(key: "bio");
+      int storeUserId = int.parse((await storage.read(key: "userId"))!);
+
+      setState(() {
+        _email = storeEmail ?? "";
+        _profileImg = storeProfileImg ?? "";
+        _nickname = storeNickname ?? "";
+        _bio = storeBio ?? "";
+        _userId = storeUserId;
+      });
+    } catch (e) {
+      print("Error reading from secure storage: $e");
+    }
+  }
+
+  UserProviders userProvider = UserProviders();
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +74,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     iconSize: 28,
                   ),
                 ),
+                // const Text(
+                //   '프로필 수정',
+                //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                // ),
                 Flexible(
                   flex: 1,
                   child: Row(
@@ -61,18 +85,23 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     children: [
                       const Text(
                         '프로필 수정',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(
-                            context,
-                            {
-                              'nickname': _nickname,
-                              'bio': _bio,
-                              'pickedFile': _pickedFile,
-                            },
-                          );
+                          print(_bio);
+                          print(_nickname);
+                          print(_userId);
+                          print(_profileImg);
+                          userProvider.modifyUser(UserDto(
+                              bio: _bio,
+                              email: _email,
+                              userId: _userId,
+                              nickname: _nickname,
+                              profileImg: _profileImg,
+                              userRole: _userRole));
+                          Navigator.pop(context);
                         },
                         style: ButtonStyle(
                             backgroundColor:
@@ -99,19 +128,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     minHeight: imageSize,
                     minWidth: imageSize,
                   ),
-                  child: _pickedFile == null
+                  child: isChanged
                       ? CircleAvatar(
                           radius: imageSize / 2,
                           backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Icons.account_circle,
-                            size: imageSize,
-                            color: Colors.black45,
-                          ))
+                          backgroundImage: FileImage(File(_profileImg)),
+                        )
                       : CircleAvatar(
                           radius: imageSize / 2,
                           backgroundColor: Colors.transparent,
-                          backgroundImage: FileImage(File(_pickedFile!)),
+                          backgroundImage: NetworkImage(_profileImg),
                         )
 
                   // Center(
@@ -135,8 +161,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: TextField(
-                onChanged: (value) {
-                  _nickname = value;
+                maxLines: 1,
+                onChanged: (text) {
+                  _nickname = text;
                 },
                 cursorColor: Colors.black45,
                 decoration: const InputDecoration(
@@ -149,6 +176,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   labelText: '닉네임',
+
                   labelStyle: TextStyle(
                     color: Colors.black45,
                   ),
@@ -169,8 +197,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             Padding(
               padding: const EdgeInsets.all(20),
               child: TextField(
-                onChanged: (value) {
-                  _bio = value;
+                onChanged: (text) {
+                  _bio = text;
                 },
                 cursorColor: Colors.black45,
                 decoration: const InputDecoration(
@@ -209,7 +237,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       (context as Element).markNeedsBuild();
-      _pickedFile = pickedFile.path;
+      _profileImg = pickedFile.path;
+      print(_profileImg);
+      isChanged = true;
       // final croppedFile = await ImageCropper().cropImage(
       //   sourcePath: pickedFile.path,
       //   maxWidth: 1080,

@@ -25,18 +25,18 @@ class _KakaoLoginPageState extends State<KakaoLoginPage> {
               style: Theme.of(context).textTheme.headline4,
             ),
             ElevatedButton(
-                onPressed: () async {
-                  await viewModel.login();
-                  setState(() {});
-                },
-                child: const Text('Login'),
+              onPressed: () async {
+                await viewModel.login();
+                setState(() {});
+              },
+              child: const Text('Login'),
             ),
             ElevatedButton(
               onPressed: () async {
                 await viewModel.logout();
                 setState(() {});
               },
-                child: const Text('Logout'),
+              child: const Text('Logout'),
             )
           ],
         ),

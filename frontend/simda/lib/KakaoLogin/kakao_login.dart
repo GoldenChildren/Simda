@@ -8,7 +8,6 @@ import 'package:dio/dio.dart';
 import 'package:simda/models/UserDto.dart';
 
 class KakaoLogin implements SocialLogin {
-
   final storage = const FlutterSecureStorage();
 
   // static String email = "";
@@ -95,7 +94,10 @@ class KakaoLogin implements SocialLogin {
       await UserApi.instance.unlink();
       storage.write(key: "email", value: "");
       storage.write(key: "nickname", value: "");
-      storage.write(key: "profileImg", value: "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg");
+      storage.write(
+          key: "profileImg",
+          value:
+              "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg");
       return true;
     } catch (error) {
       return false;
@@ -112,20 +114,24 @@ class KakaoLogin implements SocialLogin {
       String? email = await storage.read(key: "email");
 
       UserDto userDto = UserDto(
+          bio: '',
           userId: 0,
-          email: email??'',
+          email: email ?? '',
           nickname: nickname,
           profileImg: '',
           userRole: 0);
 
       FormData formData = FormData.fromMap({
-        'imgfile':
-            await MultipartFile.fromFile(path, filename: 'profile.jpg'),
+        'imgfile': await MultipartFile.fromFile(path, filename: 'profile.jpg'),
         'email': userDto.email,
         'nickname': userDto.nickname,
       });
 
-      Response response = await dio.post(url, data: formData, options: Options(headers: {'Content-Type': 'multipart/form-data'}),);
+      Response response = await dio.post(
+        url,
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+      );
 
       // print(response.data);
 
