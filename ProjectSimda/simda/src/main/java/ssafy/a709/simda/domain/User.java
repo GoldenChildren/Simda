@@ -44,6 +44,10 @@ public class User {
     @Column(name ="user_role", nullable = false, columnDefinition = "int default 1")
     private int userRole = 1;
 
+    // userBio = 자기소개 추가
+    @Column(name = "bio", columnDefinition = "text")
+    private String bio;
+
     // UserDto를 User(Entity)로 변환
     public static User changeToUser(UserDto userDto) {
         return User.builder()
@@ -53,6 +57,7 @@ public class User {
                 .email(userDto.getEmail())
                 .nickname(userDto.getNickname())
                 .profileImg(userDto.getProfileImg())
+                .bio(userDto.getBio())
 //                .userRole(userDto.getUserRole())
                 .build();
     }

@@ -20,6 +20,8 @@ public class CommentDto {
 
     private int userId;
 
+    private String nickName;
+
     private int feedId;
 
     private int pCmtId;
@@ -33,6 +35,7 @@ public class CommentDto {
         return CommentDto.builder()
                 .cmtId(comment.getCmtId())
                 .userId(comment.getUser().getUserId())
+                .nickName(comment.getUser().getNickname())
                 .feedId(comment.getFeed().getFeedId())
                 .pCmtId(comment.getPComment() == null ? -1 : comment.getPComment().getCmtId())
                 .content(comment.getContent())
