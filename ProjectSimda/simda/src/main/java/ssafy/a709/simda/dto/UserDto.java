@@ -24,7 +24,9 @@ public class UserDto {
 
     private int userRole;
 
-    public UserDto(int userId, String email, String nickname, String profileImg, int userRole) {
+    private String bio;
+
+    public UserDto(int userId, String email, String nickname, String profileImg, int userRole, String bio) {
         this.userId = userId;
         this.email = email;
 
@@ -35,9 +37,10 @@ public class UserDto {
         }
 
         this.profileImg = profileImg;
+
         this.userRole = userRole;
 
-
+        this.bio = bio;
     }
 
     // User(Entity)를 UserDto로 변환
@@ -50,6 +53,7 @@ public class UserDto {
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
                  .userRole(user.getUserRole())
+                .bio(user.getBio())
                 .build();
     }
 
