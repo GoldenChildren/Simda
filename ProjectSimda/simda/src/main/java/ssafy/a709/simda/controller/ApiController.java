@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ssafy.a709.simda.API.API;
 import ssafy.a709.simda.dto.FeedDto;
 import ssafy.a709.simda.service.ApiService;
 import ssafy.a709.simda.service.FeedService;
@@ -51,7 +52,7 @@ public class ApiController {
         try {
             // 경로
             String caption = apiService.imageCaptioningApi(feedDto.getImg());
-            emotion = apiService.bardApi(caption + " " + feedDto.getContent());
+            emotion = apiService.bardApi("사진의 설명은 다음과 같아 : "+caption +" 게시글의 내용은 다음과 같아 : "+ feedDto.getContent());
         } catch (Exception e) {
             System.out.println("Bard API 전송 오류");
             feedDto.setEmotion(-1);
