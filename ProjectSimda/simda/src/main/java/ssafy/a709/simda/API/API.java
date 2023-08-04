@@ -13,8 +13,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 
@@ -24,12 +22,12 @@ public class API {
         // 게시글의 Content를 받아서 Ptyhon의 Bard API로 정보를 전달한다
         int emotion = 0; // 감정 기본 값은 0으로 고정
         try {
-        // test 1 - 절대 경로 실행
+            // test 1 - 절대 경로 실행
 //            ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
 //                    "C:\\Users\\SSAFY\\Desktop\\Project\\S09P12A709\\ProjectSimda\\simda\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
 //                    content);
 //
-        // test 2 - 경로찾기로 실행
+            // test 2 - 경로찾기로 실행
 //            ProcessBuilder pb = new ProcessBuilder("C:\\Users\\SSAFY\\AppData\\Local\\Programs\\Python\\Python311\\python",
 //                    System.getProperty("user.dir")+"\\src\\main\\java\\ssafy\\a709\\simda\\api\\bard.py",
 //                    content);
@@ -52,8 +50,10 @@ public class API {
 //                line = br.readLine();
 //                output += "\n";
 //            }
+            System.out.println(content);
+            content = content.replaceAll("(\r\n|\r|\n|\n\r)", " ");
             AIClient client = new GoogleBardClient("Ygj5yW4U7eHBq5WAD5CPYQlzJ-Bi0nrNSdAkri99eP1VIqXc4gzGainsORoV0sgLpsolPw.");
-            Answer answer = client.ask(content+"(이)라는 문장은 다음 보기 중 어디에 가장 가까워? 0 : 행복, 1 : 기쁨, 2 : 평온, 3 : 화남, 4 : 슬픔. 대답은 다음과 같은 형식으로만 대답해. ex) 답 : 1");
+            Answer answer = client.ask("다음 문장의 전체 분위기를 반환해. 형식을 맞춰서"+content+"(이)라는 문장은 다음 보기 중 어디에 가장 가까워? 0 : 행복, 1 : 기쁨, 2 : 평온, 3 : 화남, 4 : 슬픔. 대답은 다음과 같은 형식으로만 대답해. ex) 답 : 1");
             String output = answer.getChosenAnswer();
             System.out.println(output);
 
