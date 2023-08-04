@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.TokenDto;
 import ssafy.a709.simda.dto.UserDto;
+import ssafy.a709.simda.dto.UserList;
 import ssafy.a709.simda.service.ApiService;
 import ssafy.a709.simda.service.FileService;
 import ssafy.a709.simda.service.FollowService;
@@ -64,18 +65,17 @@ public class UserController {
 
     // 유저 - 검색 keyword를 통해 닉네임을 포함하는 유저를 전체 반환
     @GetMapping("/search")
-    public ResponseEntity<List<UserDto>> getUsers(@RequestParam String nickname) {
+    public ResponseEntity<UserList> getUsers(@RequestParam String nickname) {
 
         // 키워드를 포함하는 닉네임을 받아올 유저들의 리스트 생성
-        List<UserDto> userDtoList = userService.selectUsers(nickname);
-
+        UserList userList = UserList.builder().userList(userService.selectUsers(nickname)).build();
         // 만약 userDtoList의 size가 0이라면, 검색 결과가 없는 것이므로, notFound 반환
-        if (userDtoList.size() == 0) {
+        if (userList.getUserList().size() == 0) {
             return ResponseEntity.notFound().build();
         }
 
         // 정보가 있다면 user 반환
-        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     // 유저 정보 수정하는 Post 요청
@@ -238,12 +238,11 @@ public class UserController {
 
     // 팔로잉 목록 보기(내가 팔로우 하는)
     @GetMapping("/followings")
-    public ResponseEntity<List<UserDto>> getFollowings(@RequestParam int userId) {
+    public ResponseEntity<UserList> getFollowings(@RequestParam int userId) {
         // userId를 통해서 해당 유저가 팔로우 하는 following 목록을 가져옵니다
-        List<UserDto> userList = followService.selectFollowList(userId);
-
+        UserList userList = UserList.builder().userList(followService.selectFollowList(userId)).build();
         // UserList의 size가 0이라면?
-        if (userList.size() == 0) {
+        if (userList.getUserList().size() == 0) {
             System.out.println("비어있습니다");
             return ResponseEntity.notFound().build();
         }
@@ -254,11 +253,10 @@ public class UserController {
 
     // 팔로워 목록 보기(나를 팔로우 하는)
     @GetMapping("/followers")
-    public ResponseEntity<List<UserDto>> getFollowers(@RequestParam int userId) {
+    public ResponseEntity<UserList> getFollowers(@RequestParam int userId) {
         // userId를 통해서 해당 유저가 팔로우 하는 followers 목록을 가져옵니다
-        List<UserDto> userList = followService.selectFollowerList(userId);
-
-        if (userList.size() == 0) {
+        UserList userList = UserList.builder().userList(followService.selectFollowerList(userId)).build();
+        if (userList.getUserList().size() == 0) {
             System.out.println("비어있습니다.");
             return ResponseEntity.notFound().build();
         }
