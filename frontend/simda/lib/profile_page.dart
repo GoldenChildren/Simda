@@ -288,11 +288,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('SIMDA에 문의사항이 있으십니까?'),
-                            content: const Text('simda@gmail.com 으로 문의주세요!'),
+                            content: const Text('simda709@gmail.com 으로 문의주세요!'),
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  Clipboard.setData(ClipboardData(text: "simda@gmail.com"));
+                                  Clipboard.setData(ClipboardData(text: "simda709@gmail.com"));
                                   Navigator.of(context).pop(); // 다이얼로그를 닫음
                                 },
                                 child: const Text("복사하기"),
@@ -377,7 +377,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-        const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
+        const FollowingListPage(),
       ),
     );
   }
@@ -387,7 +387,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-        const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
+        const FollowersListPage(),
       ),
     );
   }

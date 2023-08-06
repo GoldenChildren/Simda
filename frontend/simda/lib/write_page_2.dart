@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/feed_providers.dart';
-
 import 'models/FeedDto.dart';
 
 class WritePage extends StatefulWidget {
@@ -15,25 +13,28 @@ class WritePage extends StatefulWidget {
 }
 
 class _WritePageState extends State<WritePage> {
-
-  // 감정분석 로딩화면
-  // bool _isLoading = false;
-  //
-  // void _showLoading() {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  // }
-  //
-  // void _hideLoading() {
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
-
+  bool _isLoading = false;
   int selected = -1;
   XFile? _image;
   final ImagePicker picker = ImagePicker();
+  String _title = '';
+  String _content = '';
+
+  final _titleEditController = TextEditingController();
+  final _contentEditController = TextEditingController();
+  FeedProviders feedProvider = FeedProviders();
+
+  void _showLoading() {
+    setState(() {
+      _isLoading = true;
+    });
+  }
+
+  void _hideLoading() {
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -44,13 +45,48 @@ class _WritePageState extends State<WritePage> {
     }
   }
 
-  String _title = '';
-  String _content = '';
+  Future<void> _analyzeImage() async {
+    // 가상의 3초 대기 시간을 표현하기 위해 Future.delayed 사용
+    _showLoading();
+    await Future.delayed(Duration(seconds: 3));
+    _hideLoading();
 
-  final _titleEditController = TextEditingController();
-  final _contentEditController = TextEditingController();
+    // 분석 결과에 따라 이미지 선택
+    // 이 부분은 실제 분석 결과에 따라서 결과값을 설정해야 합니다.
+    // 예시로 selected 변수에 따라 결과값 설정
+    if (selected >= 0 && selected <= 4) {
+      _showResultAlertDialog(selected);
+    }
+  }
 
-  FeedProviders feedProvider = FeedProviders();
+  void _showResultAlertDialog(int result) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('분석 결과'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/images/flower$result.png',
+              width: 40,
+              height: 40,
+            ),
+            SizedBox(height: 10),
+            Text('결과값: $result'),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('확인'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,38 +94,34 @@ class _WritePageState extends State<WritePage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        body: Column(children: [
-          Row(
-            children: [
-              const SizedBox(width: 10),
-              SizedBox(
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  iconSize: 28,
+        body: Column(
+          children: [
+            Row(
+              children: [
+                const SizedBox(width: 10),
+                SizedBox(
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    iconSize: 28,
+                  ),
                 ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      '글 작성하기',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    TextButton(
+                Flexible(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        '글 작성하기',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
                         onPressed: () async {
-                          // _showLoading();
-                          // bool isSuccess = await _sendPostToBackend();
-                          // _hideLoading();
-                          // if (isSuccess) {
-                          //   _showResultAlertDialog();
-                          // }
-
                           FocusManager.instance.primaryFocus?.unfocus();
                           showDialog<String>(
                             context: context,
@@ -109,7 +141,7 @@ class _WritePageState extends State<WritePage> {
                                     const SizedBox(height: 20),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -123,8 +155,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 0
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -154,8 +186,8 @@ class _WritePageState extends State<WritePage> {
                                             // color: _colors[1],
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 1
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -184,8 +216,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 2
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -206,7 +238,7 @@ class _WritePageState extends State<WritePage> {
                                     const SizedBox(height: 20),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -220,8 +252,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 3
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -250,8 +282,8 @@ class _WritePageState extends State<WritePage> {
                                             width: 65,
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(5)),
+                                              const BorderRadius.all(
+                                                  Radius.circular(5)),
                                               color: selected == 4
                                                   ? Colors.black12
                                                   : Colors.transparent,
@@ -293,21 +325,7 @@ class _WritePageState extends State<WritePage> {
                                   TextButton(
                                     onPressed: () {
                                       setState(() {});
-                                      // Navigator.of(context)
-                                      //     .pop(); // 나중에는 글 최종 작성하는 버튼으로!!!!
-                                      print(_titleEditController.text);
-                                      print(_contentEditController.text);
-                                      print(_image!.path);
-                                      print(selected);
-                                      feedProvider.postFeed(
-                                          _content,
-                                          selected,
-                                          _image!.path,
-                                          37.5013068,
-                                          127.0396597,
-                                          "afaf",
-                                          _title,
-                                          1);
+                                      _analyzeImage();
                                     },
                                     child: const Text('작성완료'),
                                   ),
@@ -318,110 +336,122 @@ class _WritePageState extends State<WritePage> {
                         },
                         style: ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(Colors.blue.shade200)),
+                            MaterialStatePropertyAll(Colors.blue.shade200)),
                         child: const Text(
                           '작성하기',
                           style: TextStyle(color: Colors.black87),
-                        )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+              ],
+            ),
+            Container(height: 2, color: Colors.purple),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _titleEditController,
+                      maxLines: null,
+                      style: const TextStyle(
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      cursorColor: Colors.black12,
+                      cursorWidth: 1.0,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        hintText: '제목을 입력하세요',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 0.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 0.0,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      onChanged: (text) {
+                        _title = text;
+                      },
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      height: 1,
+                      color: Colors.black54,
+                    ),
+                    TextField(
+                      controller: _contentEditController,
+                      maxLines: null,
+                      style: const TextStyle(fontSize: 16.0, height: 1.5),
+                      cursorColor: Colors.black12,
+                      cursorWidth: 1.0,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                        hintText: '내용을 입력하세요',
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 0.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 0.0,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      onChanged: (text) {
+                        _content = text;
+                      },
+                    ),
+                    _buildImageArea(),
                   ],
                 ),
               ),
-              const SizedBox(width: 20),
-            ],
-          ),
-          Container(height: 2, color: Colors.purple),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _titleEditController,
-                    maxLines: null,
-                    style: const TextStyle(
-                        fontSize: 17.0, fontWeight: FontWeight.bold),
-                    cursorColor: Colors.black12,
-                    cursorWidth: 1.0,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      hintText: '제목을 입력하세요',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    onChanged: (text) {
-                      _title = text;
-                    },
-                  ),
-                  Container(
-                      margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      height: 1,
-                      color: Colors.black54),
-                  TextField(
-                    controller: _contentEditController,
-                    maxLines: null,
-                    style: const TextStyle(fontSize: 16.0, height: 1.5),
-                    cursorColor: Colors.black12,
-                    cursorWidth: 1.0,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.fromLTRB(20, 10, 10, 10),
-                      hintText: '내용을 입력하세요',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.white,
-                        width: 0.0,
-                      )),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    onChanged: (text) {
-                      _content = text;
-                    },
-                  ),
-                  _buildImageArea(),
-                ],
-              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         bottomSheet: SafeArea(
           child: Padding(
-            // padding: const EdgeInsets.all(0),
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Container(
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(
-                  color: Colors.black12,
-                  width: 1,
-                ))),
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          getImage(ImageSource.gallery);
-                        },
-                        icon: const Icon(Icons.image_outlined))
-                  ],
-                )),
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.black12,
+                    width: 1,
+                  ),
+                ),
+              ),
+              width: double.infinity,
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      getImage(ImageSource.gallery);
+                    },
+                    icon: const Icon(Icons.image_outlined),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -431,17 +461,45 @@ class _WritePageState extends State<WritePage> {
   Widget _buildImageArea() {
     return _image != null
         ? Container(
-            margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
-            width: 300,
-            height: 300,
-            child: Image.file(File(_image!.path)),
-          )
+      margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
+      width: 300,
+      height: 300,
+      child: Stack(
+        children: [
+          Image.file(File(_image!.path)),
+          if (_isLoading)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          if (selected >= 0 && selected <= 4)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                height: 50,
+                color: Colors.grey.withOpacity(0.5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/flower$selected.png',
+                      width: 20,
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      ),
+    )
         : Container(
-            margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
-            width: 300,
-            height: 300,
-            color: Colors.red,
-          );
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
+      width: 300,
+      height: 300,
+      color: Colors.red,
+    );
   }
 
   @override
