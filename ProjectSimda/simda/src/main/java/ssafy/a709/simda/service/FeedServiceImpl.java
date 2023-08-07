@@ -35,7 +35,6 @@ public class FeedServiceImpl implements FeedService{
         for (int i = 0; i < list.size(); i++) {
             User feedUser = userRepository.findByUserId(list.get(i).getUser().getUserId());
             FeedDto feeddto = FeedDto.changeToFeedDto(list.get(i), feedUser);
-            feeddto.setUserDto(null);
             resList.add(feeddto);
         }
         return resList;
@@ -47,7 +46,6 @@ public class FeedServiceImpl implements FeedService{
         for (int j = 0; j < list.size(); j++) {
             User feedUser = userRepository.findByUserId(list.get(j).getUser().getUserId());
             FeedDto feeddto = FeedDto.changeToFeedDto(list.get(j), feedUser);
-            feeddto.setUserDto(null);
             resList.add(feeddto);
         }
         return resList;
@@ -59,7 +57,6 @@ public class FeedServiceImpl implements FeedService{
         for (int j = 0; j < list.size(); j++) {
             User feedUser = userRepository.findByUserId(list.get(j).getUser().getUserId());
             FeedDto feeddto = FeedDto.changeToFeedDto(list.get(j), feedUser);
-            feeddto.setUserDto(null);
             resList.add(feeddto);
         }
         return resList;
