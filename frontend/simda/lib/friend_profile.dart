@@ -10,10 +10,12 @@ import 'chat_with_friend.dart';
 class FriendProfilePage extends StatefulWidget {
   String nickname;
   String bio;
+  int ? userId;
   XFile profileImage;
 
   FriendProfilePage(
       {Key? key,
+        this.userId,
       required this.nickname,
       required this.bio,
       required this.profileImage})
