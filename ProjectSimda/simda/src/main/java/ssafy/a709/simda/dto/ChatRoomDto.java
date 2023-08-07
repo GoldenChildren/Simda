@@ -13,6 +13,17 @@ import ssafy.a709.simda.domain.Chatroom;
 public class ChatRoomDto{
 
     public static ChatRoomDto changeToChatRoomDto(Chatroom chatRoom) {
+        if(chatRoom.getChat() != null){
+            return ChatRoomDto.builder()
+                    .chatRoomId(chatRoom.getChatroomId())
+                    .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
+                    .user1Id(chatRoom.getUser1().getUserId())
+                    .user1nickName(chatRoom.getUser1().getNickname())
+                    .user2(UserDto.changeToUserDto(chatRoom.getUser2()))
+                    .user2Id(chatRoom.getUser2().getUserId())
+                    .user2nickName(chatRoom.getUser2().getNickname())
+                    .build();
+        }
         return ChatRoomDto.builder()
                 .chatRoomId(chatRoom.getChatroomId())
                 .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
