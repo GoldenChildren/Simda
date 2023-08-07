@@ -12,5 +12,5 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     //해당 채팅방에 해당되는 채팅을 전부 가져오기
 
 
-    List<Chat> findByChatRoom(Chatroom chatRoom);
+//    List<Chat> findByChatRoom(Chatroom chatRoom);
 }
