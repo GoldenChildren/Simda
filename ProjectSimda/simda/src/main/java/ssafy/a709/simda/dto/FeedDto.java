@@ -17,8 +17,6 @@ import java.sql.Timestamp;
 public class FeedDto {
     // Feed Id
     private int feedId;
-    // Many(User Id) to One(User Id)
-    private UserDto userDto;
     // Title
     private String title;
     // Emotion
@@ -43,7 +41,6 @@ public class FeedDto {
     public static FeedDto changeToFeedDto(Feed feed, User user){
         return FeedDto.builder()
                 .feedId(feed.getFeedId())
-                .userDto(UserDto.changeToUserDto(user))
                 .title(feed.getTitle())
                 .emotion(feed.getEmotion())
                 .nickName(user.getNickname())
