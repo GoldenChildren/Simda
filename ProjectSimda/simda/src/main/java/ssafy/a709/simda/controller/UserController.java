@@ -72,7 +72,7 @@ public class UserController {
         UserList userList = UserList.builder().userList(userService.selectUsers(nickname)).build();
         // 만약 userDtoList의 size가 0이라면, 검색 결과가 없는 것이므로, notFound 반환
         if (userList.getUserList().size() == 0) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(userList, HttpStatus.NO_CONTENT);
         }
 
         // 정보가 있다면 user 반환
