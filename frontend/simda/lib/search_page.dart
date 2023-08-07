@@ -25,6 +25,9 @@ class _SearchPageState extends State<SearchPage> {
   // 응답 저장
   String _apiResponse = "";
 
+  // 프로필 이미지 저장
+  String _profileImg = "";
+
   // SearchPage에 대한 상태관리
   _SearchPageState() {
     _filter.addListener(() {
@@ -57,7 +60,8 @@ class _SearchPageState extends State<SearchPage> {
         if (userList.isNotEmpty) {
           setState(() {
             _apiResponse = userList.map((user) => user.nickname).join(', ');
-            List<String> list = _apiResponse.split(', ');
+            _profileImg = userList.map((user) => user.profileImg).join(', ');
+            // List<String> list = _apiResponse.split(', ');
           });
         }
       }
@@ -76,7 +80,8 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> list = _apiResponse.split(', ');
+    List<String> ulist = _apiResponse.split(', ');
+    List<String> plist = _profileImg.split(', ');
 
     return Column(
       children: <Widget>[
@@ -146,13 +151,17 @@ class _SearchPageState extends State<SearchPage> {
             ],
           ),
         ),
-        list.isNotEmpty
+        ulist.isNotEmpty
             ? ListView.builder(
           shrinkWrap: true,
-          itemCount:list.length,
+          itemCount:ulist.length,
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(list[index]),
+              leading: CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage(plist[index]),
+              ),
+              title: Text(ulist[index]),
             );
           },
         )
