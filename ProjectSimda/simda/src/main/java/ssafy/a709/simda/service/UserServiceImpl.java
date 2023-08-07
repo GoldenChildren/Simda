@@ -56,6 +56,9 @@ public class UserServiceImpl implements UserService {
 
         // User Entity -> UserDto로 변환해서 List에 담는다
         for(User u : userList) {
+            if(u.getUserRole() == 2) {
+                continue;
+            }
             userDtoList.add(UserDto.changeToUserDto(u));
         }
         
