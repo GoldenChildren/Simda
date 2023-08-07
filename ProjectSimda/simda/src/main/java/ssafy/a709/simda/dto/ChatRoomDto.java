@@ -1,11 +1,15 @@
 package ssafy.a709.simda.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ssafy.a709.simda.domain.Chatroom;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChatRoomDto{
 
     public static ChatRoomDto changeToChatRoomDto(Chatroom chatRoom) {

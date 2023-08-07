@@ -2,6 +2,7 @@ package ssafy.a709.simda.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ssafy.a709.simda.domain.Chat;
 import ssafy.a709.simda.domain.Chatroom;
 import ssafy.a709.simda.domain.User;
 import ssafy.a709.simda.dto.ChatRoomDto;
@@ -23,7 +24,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         List<ChatRoomDto> responseList = new ArrayList<>();
         List<Chatroom> resultList = chatRoomRepository.findByUser1IdOrUser2Id(userId, userId);
         for (Chatroom chatRoom:resultList) {
-            responseList.add(ChatRoomDTO.changeToChatRoomDto(chatRoom));
+            responseList.add(ChatRoomDto.changeToChatRoomDto(chatRoom));
         }
         return responseList;
     }

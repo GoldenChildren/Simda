@@ -51,29 +51,29 @@ import java.util.Optional;
 
 @SpringBootTest
 class SimdaApplicationTests {
-    @Test
-    void contextLoads() throws IOException {
-        System.out.println(1);
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
-        MediaType mediaType = MediaType.parse("text/plain");
-        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("url", "http://hive-public.s3.amazonaws.com/demo_request/gun1.jpg")
-                .build();
-        Request request = new Request.Builder()
-                .url("https://api.thehive.ai/api/v2/task/sync")
-                .method("POST", body)
-                .addHeader("accept", "application/json")
-                .addHeader("authorization", "ZRb0om5O9maqyTwU2jxHP1ySuWWmc473")
-                .build();
-        Response response = client.newCall(request).execute();
-        System.out.println(response.body().string());
-        System.out.println(2);
-    }
-    @Test
-    void test2(){
-
-    }
+//    @Test
+//    void contextLoads() throws IOException {
+//        System.out.println(1);
+//        OkHttpClient client = new OkHttpClient().newBuilder()
+//                .build();
+//        MediaType mediaType = MediaType.parse("text/plain");
+//        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+//                .addFormDataPart("url", "http://hive-public.s3.amazonaws.com/demo_request/gun1.jpg")
+//                .build();
+//        Request request = new Request.Builder()
+//                .url("https://api.thehive.ai/api/v2/task/sync")
+//                .method("POST", body)
+//                .addHeader("accept", "application/json")
+//                .addHeader("authorization", "ZRb0om5O9maqyTwU2jxHP1ySuWWmc473")
+//                .build();
+//        Response response = client.newCall(request).execute();
+//        System.out.println(response.body().string());
+//        System.out.println(2);
+//    }
+//    @Test
+//    void test2(){
+//
+//    }
 
 //	@Autowired
 //	UserRepository userRepository;

@@ -1,11 +1,15 @@
 package ssafy.a709.simda.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ssafy.a709.simda.domain.Chat;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChatDto {
 
     public static ChatDto changeToChatDto(Chat chat) {
