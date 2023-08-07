@@ -3,22 +3,21 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_edit_page.dart';
 import 'profile_calendar.dart';
 import 'chat_with_friend.dart';
 
 class FriendProfilePage extends StatefulWidget {
-  String nickname;
-  String bio;
-  int ? userId;
-  XFile profileImage;
+  UserDto userDto;
+  // String nickname;
+  // String bio;
+  // int ? userId;
+  // String profileImage;
 
   FriendProfilePage(
       {Key? key,
-        this.userId,
-      required this.nickname,
-      required this.bio,
-      required this.profileImage})
+      required this.userDto})
       : super(key: key);
 
   @override
@@ -73,7 +72,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                         minHeight: imageSize,
                         minWidth: imageSize,
                       ),
-                      child: widget.profileImage == null
+                      child: widget.userDto.profileImg == null
                           ? Center(
                               child: Icon(
                                 Icons.account_circle,
@@ -91,7 +90,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                     color: Colors.purple,
                                   ),
                                   image: DecorationImage(
-                                    image: AssetImage(widget.profileImage.path),
+                                    image: NetworkImage(widget.userDto.profileImg),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -167,7 +166,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                   Row(
                     children: [
                       Text(
-                        widget.nickname,
+                        widget.userDto.nickname,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -182,7 +181,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
             Container(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Text(
-                widget.bio,
+                widget.userDto.bio ?? '',
                 style: const TextStyle(fontSize: 16),
               ),
             ),

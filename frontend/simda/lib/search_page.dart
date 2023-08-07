@@ -172,14 +172,16 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     title: Text(_userList[index].nickname),
                     onTap: () {
+                      UserDto user = _userList[index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => FriendProfilePage(
-                            userId: _userList[index].userId,
-                            nickname: followingProfiles[index].nickname,
-                            bio: followingProfiles[index].bio,
-                            profileImage: followingProfiles[index].profileImage,
+                            userDto: user,
+                            // userId: user.userId,
+                            // nickname: user.nickname,
+                            // bio: user.bio,
+                            // profileImage: user.profileImg,
                           ),
                         ),
                       );
