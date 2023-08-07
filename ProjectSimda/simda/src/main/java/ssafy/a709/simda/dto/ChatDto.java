@@ -13,6 +13,9 @@ import ssafy.a709.simda.domain.Chat;
 public class ChatDto {
 
     public static ChatDto changeToChatDto(Chat chat) {
+        if(chat == null){
+            return null;
+        }
         return ChatDto.builder()
                 .chatId(chat.getChatId())
                 .chatRoomId(chat.getChatRoom().getChatroomId())
