@@ -288,7 +288,7 @@ class _WritePageState extends State<WritePage> {
                                           lat: 37.5013068,
                                           likeCnt: 0,
                                           lng: 127.0396597,
-                                          nickname: '',
+                                          nickName: '',
                                           regDate: '',
                                           title: _title,
                                           userId: userId);
