@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
+import 'package:simda/main_page.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
@@ -66,11 +67,61 @@ class _WritePageState extends State<WritePage> {
                       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          print(_titleEditController.text);
+                          print(_contentEditController.text);
+                          print(_image!.path);
+                          print(selected);
+                          // String temp = storage.read(key:'userId');
+                          int userId = int.parse(await storage.read(key: 'userId')??'0');
+                          print(userId);
+                          FeedDto feedDto = FeedDto(
+                              content: _content,
+                              emotion: 0,
+                              feedId: 0,
+                              img: '',
+                              lat: 37.5013068,
+                              likeCnt: 0,
+                              lng: 127.0396597,
+                              nickName: '',
+                              regDate: '',
+                              title: _title,
+                              userId: userId);
+                          feedProvider.postFeed(
+                              feedDto, _image!.path);
+
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white24,
+                                content: Container(
+                                  width: 400.0, // 원하는 가로 크기
+                                  height: 400.0, // 원하는 세로 크기
+                                  child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset('assets/images/flower.gif'), // 로딩 스피너
+                                    SizedBox(height: 20.0),
+                                    Text("로딩 중...", style: TextStyle(fontSize: 16.0)),
+                                  ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          // 로딩이 완료되었다고 가정하고, 백엔드에서 emotion 값을 받아옴
+                          int receivedEmotion = 2; // 예시로 2로 설정
+
+                          Navigator.of(context).pop(); // 로딩 화면 닫기
+
+
                           FocusManager.instance.primaryFocus?.unfocus();
                           showDialog<String>(
+                              builder: (context) => StatefulBuilder(builder:
                             context: context,
-                            builder: (context) => StatefulBuilder(builder:
                                 (BuildContext context, StateSetter setState) {
                               return AlertDialog(
                                 title: const Text(
@@ -110,9 +161,9 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flower1.png')),
+                                                        'assets/images/flower0.png')),
                                                 SizedBox(height: 5),
-                                                Text('신남')
+                                                Text('행복')
                                               ],
                                             ),
                                           ),
@@ -141,9 +192,9 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flower2.png')),
+                                                        'assets/images/flower1.png')),
                                                 SizedBox(height: 5),
-                                                Text('평온')
+                                                Text('신남')
                                               ],
                                             ),
                                           ),
@@ -171,9 +222,9 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flower4.png')),
+                                                        'assets/images/flower2.png')),
                                                 SizedBox(height: 5),
-                                                Text('슬픔')
+                                                Text('평온')
                                               ],
                                             ),
                                           ),
@@ -207,9 +258,9 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flower0.png')),
+                                                        'assets/images/flower3.png')),
                                                 SizedBox(height: 5),
-                                                Text('행복')
+                                                Text('화남')
                                               ],
                                             ),
                                           ),
@@ -237,9 +288,9 @@ class _WritePageState extends State<WritePage> {
                                               children: [
                                                 Image(
                                                     image: AssetImage(
-                                                        'assets/images/flower3.png')),
+                                                        'assets/images/flower4.png')),
                                                 SizedBox(height: 5),
-                                                Text('화남')
+                                                Text('슬픔')
                                               ],
                                             ),
                                           ),
@@ -268,31 +319,13 @@ class _WritePageState extends State<WritePage> {
                                     child: const Text('저장하기'),
                                   ),
                                   TextButton(
-                                    onPressed: () async {
-                                      setState(() {});
-                                      // Navigator.of(context)
-                                      //     .pop(); // 나중에는 글 최종 작성하는 버튼으로!!!!
-                                      print(_titleEditController.text);
-                                      print(_contentEditController.text);
-                                      print(_image!.path);
-                                      print(selected);
-                                      // String temp = storage.read(key:'userId');
-                                      int userId = int.parse(await storage.read(key: 'userId')??'0');
-                                      print(userId);
-                                      FeedDto feedDto = FeedDto(
-                                          content: _content,
-                                          emotion: 0,
-                                          feedId: 0,
-                                          img: '',
-                                          lat: 37.5013068,
-                                          likeCnt: 0,
-                                          lng: 127.0396597,
-                                          nickName: '',
-                                          regDate: '',
-                                          title: _title,
-                                          userId: userId);
-                                      feedProvider.postFeed(
-                                          feedDto, _image!.path);
+                                    onPressed: ()  async {
+                                      if (!mounted) return;
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>  const MainPage()),
+                                      );
                                     },
                                     child: const Text('작성완료'),
                                   ),
@@ -300,6 +333,7 @@ class _WritePageState extends State<WritePage> {
                               );
                             }),
                           );
+
                         },
                         style: ButtonStyle(
                             backgroundColor:
