@@ -28,9 +28,7 @@ public class ChatDto {
 
 
     private int chatId;
-//    private ChatRoomDto chatRoom;
     private int chatRoomId;
-//    private UserDto user;
     private int userId;
     private String nickName;
     private String content;

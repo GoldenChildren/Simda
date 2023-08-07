@@ -25,7 +25,19 @@ public class ChatRoomServiceImpl implements ChatRoomService{
         List<ChatRoomDto> responseList = new ArrayList<>();
         List<Chatroom> resultList = chatRoomRepository.findAllByUser1IdOrUser2Id(userId,userId);
         for (Chatroom chatRoom:resultList) {
-            responseList.add(ChatRoomDto.changeToChatRoomDto(chatRoom));
+            ChatRoomDto chatRoomDto = ChatRoomDto.changeToChatRoomDto(chatRoom);
+            if(userId == chatRoom.getUser1().getUserId()){
+                //1번이 자신일때
+            }else{
+                chatRoomDto.setUser1Id(chatRoom.getUser2().getUserId());
+                chatRoomDto.setUser1nickName(chatRoom.getUser2().getNickname());
+                chatRoomDto.setUser1Img(chatRoom.getUser2().getProfileImg());
+
+                chatRoomDto.setUser2Id(chatRoom.getUser1().getUserId());
+                chatRoomDto.setUser2nickName(chatRoom.getUser1().getNickname());
+                chatRoomDto.setUser2Img(chatRoom.getUser1().getProfileImg());
+            }
+            responseList.add(chatRoomDto);
         }
         return responseList;
 
