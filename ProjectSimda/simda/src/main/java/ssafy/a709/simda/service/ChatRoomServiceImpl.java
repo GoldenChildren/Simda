@@ -21,10 +21,10 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     @Override
     public List<ChatRoomDto> selectAllChatRoomList(int userId) {
         List<ChatRoomDto> responseList = new ArrayList<>();
-//        List<Chatroom> resultList = chatRoomRepository.findByUser1IdOrUser2Id(userId, userId);
-//        for (Chatroom chatRoom:resultList) {
-//            responseList.add(ChatRoomDTO.changeToChatRoomDto(chatRoom));
-//        }
+        List<Chatroom> resultList = chatRoomRepository.findByUser1IdOrUser2Id(userId, userId);
+        for (Chatroom chatRoom:resultList) {
+            responseList.add(ChatRoomDto.changeToChatRoomDto(chatRoom));
+        }
         return responseList;
     }
     //채팅방생성
