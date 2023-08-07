@@ -24,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String _profileImg = "";
   String _nickname = "";
   String _bio = "";
+  String _email ="";
   int _userId = 0;
 
   @override
@@ -37,11 +38,13 @@ class _ProfilePageState extends State<ProfilePage> {
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
+      String? storeEmail = await storage.read(key: "email");
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
       setState(() {
         _profileImg = storeProfileImg ?? "";
         _nickname = storeNickname ?? "";
         _bio = storeBio ?? "";
+        _email = storeEmail ?? "";
         _userId = storeUserId;
       });
     } catch (e) {
@@ -72,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       _nickname,
                       style:
-                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Builder(
                       builder: (context) => IconButton(
@@ -101,28 +104,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: _profileImg == ""
                           ? Center(
-                              child: Icon(
-                                Icons.account_circle,
-                                size: imageSize,
-                              ),
-                            )
+                        child: Icon(
+                          Icons.account_circle,
+                          size: imageSize,
+                        ),
+                      )
                           : Center(
-                              child: Container(
-                                width: imageSize,
-                                height: imageSize,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Colors.purple,
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(_profileImg),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
+                        child: Container(
+                          width: imageSize,
+                          height: imageSize,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.purple,
                             ),
+                            image: DecorationImage(
+                              image: NetworkImage(_profileImg),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -199,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   indicatorColor: Colors.purple,
                   labelColor: Colors.purple,
                   labelStyle: TextStyle(
-                      // color: Colors.purple,
+                    // color: Colors.purple,
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                   indicatorWeight: 3,
@@ -219,6 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ]),
               const Expanded(
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     TableCalendarScreen(),
                     ProfileFeedPage(),
@@ -233,12 +237,12 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  currentAccountPicture: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/shin.jpg'),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(_profileImg),
                     backgroundColor: Colors.white,
                   ),
-                  accountName: const Text('SHIN'),
-                  accountEmail: const Text('shin@ssafy.com'),
+                  accountName: Text(_nickname),
+                  accountEmail: Text(_email),
                   decoration: BoxDecoration(
                       color: Colors.purple[200],
                       borderRadius: const BorderRadius.only(
@@ -274,12 +278,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('SIMDA에 문의사항이 있으십니까?'),
-                          content: const Text('simda@gmail.com 으로 문의주세요!'),
+                          content: const Text('simda709@gmail.com 으로 문의주세요!'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Clipboard.setData(const ClipboardData(
-                                    text: "simda@gmail.com"));
+                                    text: "simda709@gmail.com"));
                                 Navigator.of(context).pop(); // 다이얼로그를 닫음
                               },
                               child: const Text("복사하기"),
@@ -288,7 +292,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("알겠습니다."),
+                              child: const Text("닫기"),
                             ),
                           ],
                         );
@@ -335,6 +339,36 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
+                            ListTile(
+                              leading: const Icon(
+                                Icons.info,
+                                color: Colors.blueGrey,
+                              ),
+                              title: const Text('개인정보처리방침'),
+                              onTap: () async {
+                                if (!mounted) return;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()),
+                                );
+                              },
+                            ),
+                            ListTile(
+                              leading: const Icon(
+                                Icons.location_on,
+                                color: Colors.blueGrey,
+                              ),
+                              title: const Text('위치기반서비스이용약관'),
+                              onTap: () async {
+                                if (!mounted) return;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()),
+                                );
+                              },
+                            ),
               ],
             ),
           ),
@@ -348,10 +382,10 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) => const ProfileEditPage(
-            // nickname: _nickname,
-            // bio: _bio,
-            // pickedFile: _pickedFile,
-            ),
+          // nickname: _nickname,
+          // bio: _bio,
+          // pickedFile: _pickedFile,
+        ),
       ),
     );
 
@@ -408,3 +442,4 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
