@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ssafy.a709.simda.dto.ChatDto;
 import ssafy.a709.simda.dto.ChatRoomDto;
+import ssafy.a709.simda.dto.UserDto;
 
 import javax.persistence.*;
 @Builder
@@ -16,18 +18,33 @@ import javax.persistence.*;
 
 public class Chatroom {
     public static Chatroom chageToChatroom(ChatRoomDto chatRoomDto){
+
+        UserDto user1 = new UserDto();
+        user1.setUserId(chatRoomDto.getUser1Id());
+
+        UserDto user2 = new UserDto();
+        user2.setUserId(chatRoomDto.getUser2Id());
+
+        ChatDto lChat = new ChatDto();
+        lChat.setChatId(chatRoomDto.getLChatId());
+
+
         return Chatroom.builder()
                 .chatroomId(chatRoomDto.getChatRoomId())
-                .user1(User.changeToUser(chatRoomDto.getUser1()))
-                .user2(User.changeToUser(chatRoomDto.getUser2()))
-                .chat(Chat.chageToChat(chatRoomDto.getLChat()))
+                .user1(User.changeToUser(user1))
+                .user2(User.changeToUser(user2))
+                .chat(Chat.chageToChat(lChat))
                 .build();
     };
     public static Chatroom chageToChatroomForTrans(ChatRoomDto chatRoomDto){
+        UserDto user1 = new UserDto();
+        user1.setUserId(chatRoomDto.getUser1Id());
+        UserDto user2 = new UserDto();
+        user2.setUserId(chatRoomDto.getUser2Id());
         return Chatroom.builder()
                 .chatroomId(chatRoomDto.getChatRoomId())
-                .user1(User.changeToUser(chatRoomDto.getUser1()))
-                .user2(User.changeToUser(chatRoomDto.getUser2()))
+                .user1(User.changeToUser(user1))
+                .user2(User.changeToUser(user2))
                 .build();
     };
 

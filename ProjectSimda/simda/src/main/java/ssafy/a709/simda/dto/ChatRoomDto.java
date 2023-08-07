@@ -16,32 +16,46 @@ public class ChatRoomDto{
         if(chatRoom.getChat() == null){
             return ChatRoomDto.builder()
                     .chatRoomId(chatRoom.getChatroomId())
-                    .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
+//                    .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
                     .user1Id(chatRoom.getUser1().getUserId())
                     .user1nickName(chatRoom.getUser1().getNickname())
-                    .user2(UserDto.changeToUserDto(chatRoom.getUser2()))
+                    .user1Img(chatRoom.getUser1().getProfileImg())
+//                    .user2(UserDto.changeToUserDto(chatRoom.getUser2()))
                     .user2Id(chatRoom.getUser2().getUserId())
+                    .user2Img(chatRoom.getUser2().getProfileImg())
                     .user2nickName(chatRoom.getUser2().getNickname())
                     .build();
         }
         return ChatRoomDto.builder()
                 .chatRoomId(chatRoom.getChatroomId())
-                .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
+//                .user1(UserDto.changeToUserDto(chatRoom.getUser1()))
                 .user1Id(chatRoom.getUser1().getUserId())
                 .user1nickName(chatRoom.getUser1().getNickname())
-                .user2(UserDto.changeToUserDto(chatRoom.getUser2()))
+                .user1Img(chatRoom.getUser1().getProfileImg())
+//                .user2(UserDto.changeToUserDto(chatRoom.getUser2()))
                 .user2Id(chatRoom.getUser2().getUserId())
+                .user2Img(chatRoom.getUser2().getProfileImg())
                 .user2nickName(chatRoom.getUser2().getNickname())
-                .lChat(ChatDto.changeToChatDto(chatRoom.getChat()))
+                .lChatContent(chatRoom.getChat().getContent())
+                .lChatUserId(chatRoom.getChat().getUser().getUserId())
+                .lChatId(chatRoom.getChat().getChatId())
                 .build();
     }
     private int chatRoomId;
-    private UserDto user1;
+    //user1정보
     private int user1Id;
     private String user1nickName;
-    private UserDto user2;
+    private String user1Img;
+    //user2 정보
     private int user2Id;
     private String user2nickName;
-    private ChatDto lChat;
-
+    private String user2Img;
+    //마지막 채팅정보
+    private String lChatContent;
+    private int lChatUserId;
+    private int lChatId;
+    //dto들
+//    private UserDto user1;
+//    private UserDto user2;
+//    private ChatDto lChat;
 }

@@ -34,7 +34,7 @@ public class ChatRoomController {
     @PostMapping("/chat/rooms")
     public ResponseEntity<?> addChatRoom(@RequestBody ChatRoomDto chatRoomDto){
         //서비스에서 채팅방 생성하는 부분
-        int result = chatRoomService.createChatRoom(chatRoomDto.getUser1().getUserId(), chatRoomDto.getUser2().getUserId());
+        int result = chatRoomService.createChatRoom(chatRoomDto.getUser1Id(), chatRoomDto.getUser2Id());
 
         if(result == 0) {
             //실패

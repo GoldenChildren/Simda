@@ -17,7 +17,7 @@ public class ChatDto {
         return ChatDto.builder()
                 .chatId(chat.getChatId())
                 .chatRoomId(chat.getChatRoom().getChatroomId())
-                .user(UserDto.changeToUserDto(chat.getUser()))
+//                .user(UserDto.changeToUserDto(chat.getUser()))
                 .content(chat.getContent())
                 .regDate(chat.getRegDate())
                 .userId(chat.getUser().getUserId())
@@ -28,9 +28,9 @@ public class ChatDto {
 
 
     private int chatId;
-    private ChatRoomDto chatRoom;
+//    private ChatRoomDto chatRoom;
     private int chatRoomId;
-    private UserDto user;
+//    private UserDto user;
     private int userId;
     private String nickName;
     private String content;
