@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simda/providers/user_providers.dart';
+import 'informaion_policy.dart';
+import 'location_service_policy.dart';
 import 'main.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
@@ -350,7 +352,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const LoginPage()),
+                                      builder: (context) =>  InformationPolicy()),
                                 );
                               },
                             ),
@@ -365,7 +367,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const LoginPage()),
+                                      builder: (context) => LocationServicePolicy()),
                                 );
                               },
                             ),
