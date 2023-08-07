@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:dio/dio.dart';
@@ -93,6 +94,42 @@ class UserProviders {
     print('유저 프로필 가져오기 : $userDto');
 
     return userDto;
+  }
+
+  // 검색하는 로직
+  Future<List<UserDto>> getUsers(String check) async {
+    final response = await dio.get('$url/search?nickname=$check');
+    final List<UserDto> userList = [];
+
+    if (response.statusCode == 200) {
+      // API 호출이 성공한 경우
+      print("여기오냐?");
+      final Map<String, dynamic> jsonResponse = response.data;
+
+      if (jsonResponse.containsKey('userList') &&
+          jsonResponse['userList'] is List) {
+        final List<dynamic> userListJson = jsonResponse['userList'];
+
+        for (var userJson in userListJson) {
+          var userDto = UserDto.fromJson(userJson);
+          userList.add(userDto);
+        }
+      }
+    }
+    else if (response.statusCode == 204) {
+      // 검색 결과 없음
+      print('204');
+      userList.clear();
+      return userList;
+    }
+    else {
+      // API 호출이 실패한 경우(404 이외의 오류)
+
+      if (kDebugMode) {
+        print('Failed to fetch data: ${response.statusCode}');
+      }
+    }
+    return userList;
   }
 
 }
