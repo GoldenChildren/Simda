@@ -22,6 +22,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   String _profileImg = "";
   String _nickname = "";
   String _bio = "";
+  XFile? _imgFile;
   int _userId = 0;
   final int _userRole = 1;
 
@@ -95,7 +96,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                           print(_nickname);
                           print(_userId);
                           print(_profileImg);
-                          userProvider.modifyUser(UserDto(
+                          userProvider.modifyUser(_imgFile!.path, UserDto(
                               bio: _bio,
                               email: _email,
                               userId: _userId,
@@ -237,8 +238,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       (context as Element).markNeedsBuild();
-      _profileImg = pickedFile.path;
-      print(_profileImg);
+      _imgFile = pickedFile;
+      print(_imgFile);
       isChanged = true;
       // final croppedFile = await ImageCropper().cropImage(
       //   sourcePath: pickedFile.path,
