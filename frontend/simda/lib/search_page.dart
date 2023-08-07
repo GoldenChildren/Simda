@@ -23,10 +23,13 @@ class _SearchPageState extends State<SearchPage> {
   String _searchText = "";
 
   // 응답 저장
-  String _apiResponse = "";
+  String _nickname = "";
 
   // 프로필 이미지 저장
   String _profileImg = "";
+
+  // 프로필 이미지 저장
+  String _userId = "";
 
   // SearchPage에 대한 상태관리
   _SearchPageState() {
@@ -59,15 +62,15 @@ class _SearchPageState extends State<SearchPage> {
 
         if (userList.isNotEmpty) {
           setState(() {
-            _apiResponse = userList.map((user) => user.nickname).join(', ');
+            _nickname = userList.map((user) => user.nickname).join(', ');
             _profileImg = userList.map((user) => user.profileImg).join(', ');
-            // List<String> list = _apiResponse.split(', ');
+            _userId = userList.map((user) => user.userId).join(', ');
           });
         }
       }
     } else if (response.statusCode == 404) {
       setState(() {
-        _apiResponse = '검색 결과가 없습니다'; // 404 오류일 경우 결과 없음 메시지 표시
+        _nickname = '검색 결과가 없습니다'; // 404 오류일 경우 결과 없음 메시지 표시
       });
     }
     else {
@@ -80,7 +83,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> ulist = _apiResponse.split(', ');
+    List<String> ulist = _nickname.split(', ');
     List<String> plist = _profileImg.split(', ');
 
     return Column(
