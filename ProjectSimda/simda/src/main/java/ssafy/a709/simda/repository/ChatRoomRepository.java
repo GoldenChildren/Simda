@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<Chatroom, Integer> {
-    List<Chatroom> findByUser1IdOrUser2Id(int userId1, int userId2);
+//    List<Chatroom> findByUser1IdOrUser2Id(int userId1, int userId2);
 
 }
