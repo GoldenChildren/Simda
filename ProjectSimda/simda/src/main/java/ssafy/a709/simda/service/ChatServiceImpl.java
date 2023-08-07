@@ -1,6 +1,7 @@
 package ssafy.a709.simda.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.Chat;
 import ssafy.a709.simda.domain.Chatroom;
@@ -15,8 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
-
+    @Autowired
     private final ChatRepository chatRepository;
+    @Autowired
     private final ChatRoomRepository chatRoomRepository;
 
     @Override

@@ -1,6 +1,7 @@
 package ssafy.a709.simda.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.Chat;
 import ssafy.a709.simda.domain.Chatroom;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatRoomServiceImpl implements ChatRoomService{
 
+    @Autowired
     private final ChatRoomRepository chatRoomRepository;
 
     //채팅방 목록가져오기
@@ -27,6 +29,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
             responseList.add(ChatRoomDto.changeToChatRoomDto(chatRoom));
         }
         return responseList;
+
     }
     //채팅방생성
     @Override
