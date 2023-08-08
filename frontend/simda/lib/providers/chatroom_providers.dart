@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:simda/models/ChatRoomDto.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,5 +22,10 @@ class ChatRoomProviders {
     }
 
     return chatroom;
+  }
+
+
+  void createData(){
+    final userReference = FirebaseDatabase.instance.ref("user/name");
   }
 }

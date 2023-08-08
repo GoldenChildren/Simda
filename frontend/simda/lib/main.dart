@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -11,6 +12,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   KakaoSdk.init(
     nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b',
   );
