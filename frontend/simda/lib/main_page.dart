@@ -47,7 +47,7 @@ class MainPage extends StatelessWidget {
       ),
       home: BottomNavigationBar(
         title: 'BottomNavigationBar',
-        index: visit ?? 0,
+        index: visit,
       ),
     );
   }

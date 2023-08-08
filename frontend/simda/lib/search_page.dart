@@ -1,12 +1,6 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:simda/following_list.dart';
 import 'package:simda/friend_profile.dart';
 import 'package:simda/models/UserDto.dart';
-import 'package:simda/profile_page.dart';
 import 'package:simda/providers/user_providers.dart';
 
 import 'main.dart';
@@ -80,147 +74,112 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  // 검색 결과를 보여주는 함수
-  // Future<void> _fetchData() async {
-  //   final url = Uri.parse(
-  //       'http://i9a709.p.ssafy.io:8000/user/search?nickname=$_searchText');
-  //   final response = await http.get(url);
-  //
-  //   if (response.statusCode == 200) {
-  //     // API 호출이 성공한 경우
-  //     final responseData = response.body;
-  //     final Map<String, dynamic> jsonResponse = jsonDecode(responseData);
-  //
-  //     if (jsonResponse.containsKey('userList') &&
-  //         jsonResponse['userList'] is List) {
-  //       final List<dynamic> userListJson = jsonResponse['userList'];
-  //
-  //       _userList =
-  //           userListJson.map((json) => UserDto.fromJson(json)).toList();
-  //
-  //     }
-  //   } else if (response.statusCode == 404) {
-  //     setState(() {
-  //       _userList = [];
-  //     });
-  //   } else {
-  //     // API 호출이 실패한 경우(404 이외의 오류)
-  //     if (kDebugMode) {
-  //       print('Failed to fetch data: ${response.statusCode}');
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        const Padding(padding: EdgeInsets.all(30)),
-        Container(
-          color: Colors.green,
-          padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                flex: 6,
-                child: TextField(
-                  focusNode: focusNode,
-                  style: const TextStyle(fontSize: 15),
-                  autofocus: true,
-                  controller: _filter,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.white60,
-                      size: 20,
+    return SafeArea(
+      child: Column(
+        children: <Widget>[
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 7,
+                  child: TextField(
+                    cursorColor: Colors.black54,
+                    focusNode: focusNode,
+                    style: const TextStyle(fontSize: 15),
+                    autofocus: true,
+                    controller: _filter,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.black12,
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.black45,
+                        size: 28,
+                      ),
+                      suffixIcon: focusNode.hasFocus
+                          ? IconButton(
+                              icon: const Icon(
+                                Icons.cancel,
+                                size: 23,
+                                color: Colors.black45,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _filter.clear();
+                                  _searchText = "";
+                                });
+                              },
+                            )
+                          : Container(),
+                      hintText: "검색",
+                      labelStyle: const TextStyle(color: Colors.white),
+                      focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
                     ),
-                    suffixIcon: focusNode.hasFocus
-                        ? IconButton(
-                            icon: const Icon(
-                              Icons.cancel,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _filter.clear();
-                                _searchText = "";
-                              });
-                            },
-                          )
-                        : Container(),
-                    hintText: "검색",
-                    labelStyle: const TextStyle(color: Colors.white),
-                    focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
-              ),
-              focusNode.hasFocus
-                  ? Expanded(
-                      child: TextButton(
-                        child: const Text('취소'),
-                        onPressed: () {
-                          setState(() {
-                            _filter.clear();
-                            _searchText = "";
-                            focusNode.unfocus();
-                          });
-                        },
-                      ),
-                    )
-                  : Expanded(flex: 0, child: Container()),
-            ],
+               Expanded(flex: 0, child: Container()),
+              ],
+            ),
           ),
-        ),
 
-        // nickname이 비어있지 않으면 결과를 출력
-        _userList.isNotEmpty
-            ? ListView.builder(
-                shrinkWrap: true,
-                itemCount: _userList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      radius: 25,
-                      backgroundImage:
-                          NetworkImage(_userList[index].profileImg),
-                    ),
-                    title: Text(_userList[index].nickname),
-                    onTap: () {
-                      UserDto user = _userList[
-                          index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
+          // nickname이 비어있지 않으면 결과를 출력
+          _userList.isNotEmpty
+              ? Container(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _userList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 25,
+                            backgroundImage:
+                                NetworkImage(_userList[index].profileImg),
+                          ),
+                          title: Text(_userList[index].nickname),
+                          onTap: () {
+                            UserDto user = _userList[
+                                index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
 
-                      user.userId == _userId
-                          ? Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainPage(4)),
-                              (route) => false)
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FriendProfilePage(
-                                  userDto: user,
-                                ),
-                              ),
-                            );
+                            user.userId == _userId
+                                ? Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MainPage(4)),
+                                    (route) => false)
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FriendProfilePage(
+                                        userDto: user,
+                                      ),
+                                    ),
+                                  );
+                          },
+                        ),
+                      );
                     },
-                  );
-                },
+                  ),
               )
-            : Container(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                child: const Text('결과 없음')), // 닉네임이 빈 경우 결과 없음을 출력
-      ],
+              : Container(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  child: const Text('결과 없음')), // 닉네임이 빈 경우 결과 없음을 출력
+        ],
+      ),
     );
   }
 }

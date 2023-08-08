@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: Colors.purple,
                             ),
                             image: DecorationImage(
-                              image: FileImage(File(_profileImg)),
+                              image: NetworkImage(_profileImg),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -203,8 +203,8 @@ class _ProfilePageState extends State<ProfilePage> {
               // Container(
               //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               //   alignment: Alignment.center,
-              //   child: const Image(image: AssetImage('assets/images/promap.PNG')),
-              // )
+              //   child: Image(image: NetworkImage(_profileImg)),
+              // ),
               const TabBar(
                   indicatorColor: Colors.purple,
                   labelColor: Colors.purple,
