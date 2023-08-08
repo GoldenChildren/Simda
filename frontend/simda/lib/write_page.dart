@@ -279,7 +279,7 @@ class _WritePageState extends State<WritePage> {
                                       print(selected);
                                       // String temp = storage.read(key:'userId');
                                       int userId = int.parse(await storage.read(key: 'userId')??'0');
-                                      String nickName = await storage.read(key:'nickName')?? '';
+                                      String nickname = await storage.read(key:'nickname')?? '';
                                       print(userId);
                                       FeedDto feedDto = FeedDto(
                                           content: _content,
@@ -289,7 +289,7 @@ class _WritePageState extends State<WritePage> {
                                           lat: 37.5013068,
                                           likeCnt: 0,
                                           lng: 127.0396597,
-                                          nickName: nickName,
+                                          nickname: nickname,
                                           regDate: '',
                                           title: _title,
                                           userId: userId);
