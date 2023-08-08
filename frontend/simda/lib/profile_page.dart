@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/user_providers.dart';
+import 'informaion_policy.dart';
+import 'location_service_policy.dart';
 import 'main.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
@@ -48,9 +50,9 @@ class _ProfilePageState extends State<ProfilePage> {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
 
       List<UserDto>? followings =
-          await userProvider.getFollowData("followings", storeUserId);
+      await userProvider.getFollowData("followings", storeUserId);
       List<UserDto>? followers =
-          await userProvider.getFollowData("followers", storeUserId);
+      await userProvider.getFollowData("followers", storeUserId);
 
       setState(() {
         _email = storeEmail ?? "";
@@ -112,10 +114,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => StatefulBuilder(builder:
-                                      (BuildContext context,
-                                          StateSetter setState) {
-                                    return const ProfileEditPage();
-                                  })));
+                                  (BuildContext context,
+                                  StateSetter setState) {
+                                return const ProfileEditPage();
+                              })));
                     },
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -125,28 +127,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: _profileImg == ""
                           ? Center(
-                              child: Icon(
-                                Icons.account_circle,
-                                size: imageSize,
-                              ),
-                            )
+                        child: Icon(
+                          Icons.account_circle,
+                          size: imageSize,
+                        ),
+                      )
                           : Center(
-                              child: Container(
-                                width: imageSize,
-                                height: imageSize,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Colors.purple,
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(_profileImg),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
                         child: Container(
                           width: imageSize,
                           height: imageSize,
@@ -241,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   indicatorColor: Colors.purple,
                   labelColor: Colors.purple,
                   labelStyle: TextStyle(
-                      // color: Colors.purple,
+                    // color: Colors.purple,
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                   indicatorWeight: 3,
@@ -377,6 +363,38 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
+
+                ListTile(
+                  leading: const Icon(
+                    Icons.info,
+                    color: Colors.blueGrey,
+                  ),
+                  title: const Text('개인정보처리방침'),
+                  onTap: () async {
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InformationPolicy()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.location_on,
+                    color: Colors.blueGrey,
+                  ),
+                  title: const Text('위치기반서비스이용약관'),
+                  onTap: () async {
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>  LocationServicePolicy()),
+                    );
+                  },
+                ),
+
               ],
             ),
           ),
@@ -387,7 +405,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _navigateToProfileEditPage(BuildContext context) async {
     final updatedData = await Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ProfileEditPage()))
+        MaterialPageRoute(builder: (context) => const ProfileEditPage()))
         .then((value) {
       setState(() {});
     });

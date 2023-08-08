@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
+import 'package:simda/map_page.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
@@ -226,12 +227,12 @@ class _WritePageState extends State<WritePage> {
             ),
             TextButton(
               onPressed: () async {
-
                 await feedProvider.postFeed(uploadFeed);
                 if (!mounted) return;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MainPage()),
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => const MapPage()),
                 );
               },
               child: const Text('작성완료'),
@@ -321,7 +322,7 @@ class _WritePageState extends State<WritePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Image.asset('assets/images/flower.gif'), // 로딩 스피너
+                                    Image.asset('assets/images/color.gif'), // 로딩 스피너
                                     SizedBox(height: 20.0),
                                     Text("로딩 중...", style: TextStyle(fontSize: 16.0)),
                                   ],
@@ -333,7 +334,7 @@ class _WritePageState extends State<WritePage> {
                         selected = uploadFeed.emotion;
 
                         // 2초 딜레이 후 로딩 화면 닫기 및 다이얼로그 표시
-                        await Future.delayed(Duration(seconds: 2));
+                        // await Future.delayed(Duration(seconds: 2));
                         Navigator.of(context).pop(); // 로딩 화면 닫기
 
                         if(!mounted) return;

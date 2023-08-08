@@ -114,3 +114,4 @@ final List<Widget> _page = [
   const SearchPage(),
   const ProfilePage(),
 ];
+
