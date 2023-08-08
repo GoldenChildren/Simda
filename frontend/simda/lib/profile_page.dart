@@ -60,8 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
         _userId = storeUserId;
         _followList = followings;
         _followerList = followers;
-        _followCount = followings?.length ?? 0;
-        _followerCount = followers?.length ?? 0;
+        _followCount = _followList.length;
+        _followerCount = _followerList.length;
       });
     } catch (e) {
       print("Error reading from secure storage: $e");
