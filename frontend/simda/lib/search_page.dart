@@ -210,10 +210,6 @@ class _SearchPageState extends State<SearchPage> {
                               MaterialPageRoute(
                                 builder: (context) => FriendProfilePage(
                                   userDto: user,
-                                  // userId: user.userId,
-                                  // nickname: user.nickname,
-                                  // bio: user.bio,
-                                  // profileImage: user.profileImg,
                                 ),
                               ),
                             );
@@ -221,7 +217,9 @@ class _SearchPageState extends State<SearchPage> {
                   );
                 },
               )
-            : Text('결과 없음'), // 닉네임이 빈 경우 결과 없음을 출력
+            : Container(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                child: const Text('결과 없음')), // 닉네임이 빈 경우 결과 없음을 출력
       ],
     );
   }
