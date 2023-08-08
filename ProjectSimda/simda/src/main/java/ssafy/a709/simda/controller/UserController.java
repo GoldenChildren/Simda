@@ -87,6 +87,7 @@ public class UserController {
         // 프론트에서 프로필 이미지 변경 시 orgFileName을 modified로 저장해놔야함.
         if(profileImg != null && profileImg.getOriginalFilename().equals("modified")){
             System.out.println("profileImg : "+profileImg.getOriginalFilename());
+
             // origin file name이 modified라면 이미지 수정
             System.out.println("이미지 수정됨");
             userDto.setProfileImg(
