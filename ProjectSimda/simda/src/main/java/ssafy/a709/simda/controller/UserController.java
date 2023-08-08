@@ -85,8 +85,10 @@ public class UserController {
             @RequestPart(value="imgfile", required = false) MultipartFile profileImg,
             @ModelAttribute UserDto userDto) throws IOException {
         // 프론트에서 프로필 이미지 변경 시 orgFileName을 modified로 저장해놔야함.
+        System.out.println("profileImg : "+profileImg.getOriginalFilename());
         if(profileImg != null && profileImg.getOriginalFilename().equals("modified")){
             // origin file name이 modified라면 이미지 수정
+            System.out.println("이미지 수정됨");
             userDto.setProfileImg(
                     fileService.updateProfile(
                             profileImg,
