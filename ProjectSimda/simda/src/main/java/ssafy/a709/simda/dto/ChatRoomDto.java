@@ -39,6 +39,7 @@ public class ChatRoomDto{
                 .lChatContent(chatRoom.getChat().getContent())
                 .lChatUserId(chatRoom.getChat().getUser().getUserId())
                 .lChatId(chatRoom.getChat().getChatId())
+                .lChatTime(chatRoom.getChat().getRegDate())
                 .build();
     }
     private int chatRoomId;
@@ -54,6 +55,7 @@ public class ChatRoomDto{
     private String lChatContent;
     private int lChatUserId;
     private int lChatId;
+    private String lChatTime;
     //dto들
 //    private UserDto user1;
 //    private UserDto user2;
