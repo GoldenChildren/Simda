@@ -58,8 +58,6 @@ class BottomNavigationBar extends StatefulWidget {
   State<BottomNavigationBar> createState() => _BottomNavigationBarState();
 }
 
-
-
 class _BottomNavigationBarState extends State<BottomNavigationBar> {
   int visit = 0;
 

@@ -157,7 +157,6 @@ class _SearchPageState extends State<SearchPage> {
             ],
           ),
         ),
-
         // nickname이 비어있지 않으면 결과를 출력
         _userList.isNotEmpty
             ? ListView.builder(
@@ -178,10 +177,6 @@ class _SearchPageState extends State<SearchPage> {
                         MaterialPageRoute(
                           builder: (context) => FriendProfilePage(
                             userDto: user,
-                            // userId: user.userId,
-                            // nickname: user.nickname,
-                            // bio: user.bio,
-                            // profileImage: user.profileImg,
                           ),
                         ),
                       );
