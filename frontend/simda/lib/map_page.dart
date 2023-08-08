@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:simda/place.dart';
@@ -39,7 +40,7 @@ class _MapPageState extends State<MapPage> {
 
   //지도의 초기 위치를 담아줄 CameraPosition
   final CameraPosition _startCameraPosition =
-      const CameraPosition(target: LatLng(37.5013068, 127.0396597), zoom: 17.0);
+  const CameraPosition(target: LatLng(37.5013068, 127.0396597), zoom: 17.0);
 
   //지도의 표시될 객체들의 리스트
   List<Place> items = [];
@@ -85,9 +86,16 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  Future<Position> getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    return position;
+  }
+
   //마커를 만드는 메서드
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
-      (cluster) async {
+          (cluster) async {
         int emotion = 0;
         if (cluster.isMultiple) {
           List checklist = [0, 0, 0, 0, 0];
@@ -125,407 +133,408 @@ class _MapPageState extends State<MapPage> {
               builder: (context) {
                 return StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
-                  return DraggableScrollableSheet(
-                    expand: false,
-                    initialChildSize: 0.75,
-                    minChildSize: 0.3,
-                    builder: (context, ScrollController scrollController) => Container(
-                      color: Colors.white,
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      child: ListView(children: <Widget>[
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      '피드 보기',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: const Icon(Icons.close),
-                                      iconSize: 28,
-                                    ),
-                                  ],
-                                ),
+                      return DraggableScrollableSheet(
+                        expand: false,
+                        initialChildSize: 0.75,
+                        minChildSize: 0.3,
+                        builder: (context, ScrollController scrollController) =>
+                            Container(
+                              color: Colors.white,
+                              padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom,
                               ),
-                              Container(
-                                  height: 2,
-                                  margin:
-                                      const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                  color: Colors.purple),
-                              Container(
-                                color: Colors.white,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20, 10, 20, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    '제목입니다~',
-                                                    textAlign: TextAlign.left,
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 5),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    '김짱구',
-                                                    style:
-                                                        TextStyle(fontSize: 10),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Text(
-                                                    '2023년 7월 21일 15:54',
-                                                    style: TextStyle(
-                                                        fontSize: 10,
-                                                        color: Colors.black45),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(likes.toString(),
-                                                  style: const TextStyle(
-                                                      fontSize: 20)),
-                                              const SizedBox(width: 5),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    likes++;
-                                                  });
-                                                },
-                                                child: const Image(
-                                                    image: AssetImage(
-                                                        'assets/images/flower2.png'),
-                                                    height: 30),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20, 0, 20, 0),
-                                      alignment: Alignment.center,
-                                      child: const Image(
-                                          image: AssetImage(
-                                              'assets/images/think.png')),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(width: 20),
-                                        Expanded(
-                                          child: Text(
-                                            '이곳에 글의 내용이 들어갈 예정입니다. 글이 길어지면 어떻게 되는지 보기 위해 긴 글을 작성하고 있습니다. 이 곳은 글이 들어갈 자리입니다.',
-                                            style: TextStyle(height: 1.5),
-                                          ),
-                                        ),
-                                        SizedBox(width: 20),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(width: 20),
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              20, 0, 20, 0),
-                                          child: TextButton(
-                                            onPressed: () => {
-                                              setState(() {
-                                                isVisible = !isVisible;
-                                              })
-                                            },
-                                            style: TextButton.styleFrom(
-                                              minimumSize: Size.zero,
-                                              padding: const EdgeInsets.all(0),
+                              child: ListView(children: <Widget>[
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              '피드 보기',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
                                             ),
-                                            child: Text(
-                                                isVisible
-                                                    ? "댓글 2개 닫기"
-                                                    : "댓글 2개 보기",
-                                                style: const TextStyle(
-                                                    color: Colors.black45)),
-                                          ),
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              icon: const Icon(Icons.close),
+                                              iconSize: 28,
+                                            ),
+                                          ],
                                         ),
-                                        Visibility(
-                                          visible: isVisible,
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20, 0, 20, 0),
-                                            child: Column(
-                                              children: [
-                                                Row(
+                                      ),
+                                      Container(
+                                          height: 2,
+                                          margin:
+                                          const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                                          color: Colors.purple),
+                                      Container(
+                                        color: Colors.white,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.fromLTRB(
+                                                  20, 10, 20, 0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  const Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment.start,
                                                     children: [
-                                                      const Column(
+                                                      Row(
                                                         children: [
-                                                          CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    'assets/images/yuri.jpg'),
-                                                            radius: 25,
+                                                          Text(
+                                                            '제목입니다~',
+                                                            textAlign: TextAlign.left,
+                                                            style:
+                                                            TextStyle(fontSize: 20),
                                                           ),
-                                                          SizedBox(
-                                                            height: 20,
-                                                          )
                                                         ],
                                                       ),
-                                                      const SizedBox(width: 10),
-                                                      Flexible(
-                                                        flex: 1,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            const Row(
-                                                              children: [
-                                                                Text(
-                                                                  '유리',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                                SizedBox(
-                                                                    width: 10),
-                                                                Text('10시간 전',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black45,
-                                                                    )),
-                                                              ],
-                                                            ),
-                                                            const Text(
-                                                              // '짱구가 기분이 좋구나',
-                                                              '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            const SizedBox(
-                                                                width: 20),
-                                                            TextButton(
-                                                              onPressed: () => {
-                                                                setState(() {
-                                                                  writeComment =
-                                                                      !writeComment;
-                                                                })
-                                                              },
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                minimumSize:
-                                                                    Size.zero,
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                tapTargetSize:
-                                                                    MaterialTapTargetSize
-                                                                        .shrinkWrap,
-                                                              ),
-                                                              child: const Text(
-                                                                '답글 달기',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: Colors
-                                                                        .black45),
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 10),
-                                                            const Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                CircleAvatar(
-                                                                  backgroundImage:
-                                                                      AssetImage(
-                                                                          'assets/images/shin.jpg'),
-                                                                  radius: 25,
-                                                                ),
-                                                                SizedBox(
-                                                                    width: 10),
-                                                                Flexible(
-                                                                  flex: 1,
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            '김짱구',
-                                                                            style:
-                                                                                TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          SizedBox(
-                                                                              width: 10),
-                                                                          Text(
-                                                                              '9시간 전',
-                                                                              style: TextStyle(
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black45,
-                                                                              ))
-                                                                        ],
-                                                                      ),
-                                                                      Text(
-                                                                        // '응 좋아 좋아',
-                                                                        '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                14),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          height:
-                                                                              10),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 10),
-                                                          ],
-                                                        ),
+                                                      SizedBox(height: 5),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            '김짱구',
+                                                            style:
+                                                            TextStyle(fontSize: 10),
+                                                          ),
+                                                          SizedBox(width: 10),
+                                                          Text(
+                                                            '2023년 7월 21일 15:54',
+                                                            style: TextStyle(
+                                                                fontSize: 10,
+                                                                color: Colors.black45),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ]),
-                                                Visibility(
-                                                  visible: writeComment,
-                                                  child: const TextField(
-                                                    style: TextStyle(
-                                                        fontSize: 14.0),
-                                                    cursorColor: Colors.black12,
-                                                    cursorWidth: 1.0,
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          EdgeInsets.fromLTRB(
-                                                              10, 0, 10, 0),
-                                                      suffixIcon: Icon(
-                                                          Icons.send,
-                                                          color:
-                                                              Colors.black54),
-                                                      prefixText: '@유리 ',
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      filled: true,
-                                                      fillColor: Colors.black12,
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(likes.toString(),
+                                                          style: const TextStyle(
+                                                              fontSize: 20)),
+                                                      const SizedBox(width: 5),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            likes++;
+                                                          });
+                                                        },
+                                                        child: const Image(
+                                                            image: AssetImage(
+                                                                'assets/images/flower2.png'),
+                                                            height: 30),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 15),
+                                            Container(
+                                              padding: const EdgeInsets.fromLTRB(
+                                                  20, 0, 20, 0),
+                                              alignment: Alignment.center,
+                                              child: const Image(
+                                                  image: AssetImage(
+                                                      'assets/images/think.png')),
+                                            ),
+                                            const SizedBox(height: 15),
+                                            const Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(width: 20),
+                                                Expanded(
+                                                  child: Text(
+                                                    '이곳에 글의 내용이 들어갈 예정입니다. 글이 길어지면 어떻게 되는지 보기 위해 긴 글을 작성하고 있습니다. 이 곳은 글이 들어갈 자리입니다.',
+                                                    style: TextStyle(height: 1.5),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 20),
+                                              ],
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(width: 20),
+                                                Container(
+                                                  padding: const EdgeInsets.fromLTRB(
+                                                      20, 0, 20, 0),
+                                                  child: TextButton(
+                                                    onPressed: () => {
+                                                      setState(() {
+                                                        isVisible = !isVisible;
+                                                      })
+                                                    },
+                                                    style: TextButton.styleFrom(
+                                                      minimumSize: Size.zero,
+                                                      padding: const EdgeInsets.all(0),
                                                     ),
+                                                    child: Text(
+                                                        isVisible
+                                                            ? "댓글 2개 닫기"
+                                                            : "댓글 2개 보기",
+                                                        style: const TextStyle(
+                                                            color: Colors.black45)),
                                                   ),
                                                 ),
                                                 Visibility(
-                                                  visible: !writeComment,
-                                                  child: TextField(
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                    cursorColor: Colors.black12,
-                                                    cursorWidth: 1.0,
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          const EdgeInsets
+                                                  visible: isVisible,
+                                                  child: Container(
+                                                    padding: const EdgeInsets.fromLTRB(
+                                                        20, 0, 20, 0),
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                            crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                            children: [
+                                                              const Column(
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    backgroundImage:
+                                                                    AssetImage(
+                                                                        'assets/images/yuri.jpg'),
+                                                                    radius: 25,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 20,
+                                                                  )
+                                                                ],
+                                                              ),
+                                                              const SizedBox(width: 10),
+                                                              Flexible(
+                                                                flex: 1,
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                                  children: [
+                                                                    const Row(
+                                                                      children: [
+                                                                        Text(
+                                                                          '유리',
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                              14,
+                                                                              fontWeight:
+                                                                              FontWeight
+                                                                                  .bold),
+                                                                        ),
+                                                                        SizedBox(
+                                                                            width: 10),
+                                                                        Text('10시간 전',
+                                                                            style:
+                                                                            TextStyle(
+                                                                              fontSize:
+                                                                              12,
+                                                                              fontWeight:
+                                                                              FontWeight
+                                                                                  .bold,
+                                                                              color: Colors
+                                                                                  .black45,
+                                                                            )),
+                                                                      ],
+                                                                    ),
+                                                                    const Text(
+                                                                      // '짱구가 기분이 좋구나',
+                                                                      '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
+                                                                      style: TextStyle(
+                                                                          fontSize: 14),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        width: 20),
+                                                                    TextButton(
+                                                                      onPressed: () => {
+                                                                        setState(() {
+                                                                          writeComment =
+                                                                          !writeComment;
+                                                                        })
+                                                                      },
+                                                                      style: TextButton
+                                                                          .styleFrom(
+                                                                        minimumSize:
+                                                                        Size.zero,
+                                                                        padding:
+                                                                        EdgeInsets
+                                                                            .zero,
+                                                                        tapTargetSize:
+                                                                        MaterialTapTargetSize
+                                                                            .shrinkWrap,
+                                                                      ),
+                                                                      child: const Text(
+                                                                        '답글 달기',
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                            12,
+                                                                            color: Colors
+                                                                                .black45),
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        height: 10),
+                                                                    const Row(
+                                                                      crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                      children: [
+                                                                        CircleAvatar(
+                                                                          backgroundImage:
+                                                                          AssetImage(
+                                                                              'assets/images/shin.jpg'),
+                                                                          radius: 25,
+                                                                        ),
+                                                                        SizedBox(
+                                                                            width: 10),
+                                                                        Flexible(
+                                                                          flex: 1,
+                                                                          child: Column(
+                                                                            crossAxisAlignment:
+                                                                            CrossAxisAlignment
+                                                                                .start,
+                                                                            children: [
+                                                                              Row(
+                                                                                children: [
+                                                                                  Text(
+                                                                                    '김짱구',
+                                                                                    style:
+                                                                                    TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                      width: 10),
+                                                                                  Text(
+                                                                                      '9시간 전',
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 12,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        color: Colors.black45,
+                                                                                      ))
+                                                                                ],
+                                                                              ),
+                                                                              Text(
+                                                                                // '응 좋아 좋아',
+                                                                                '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
+                                                                                style: TextStyle(
+                                                                                    fontSize:
+                                                                                    14),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                  height:
+                                                                                  10),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        height: 10),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ]),
+                                                        Visibility(
+                                                          visible: writeComment,
+                                                          child: const TextField(
+                                                            style: TextStyle(
+                                                                fontSize: 14.0),
+                                                            cursorColor: Colors.black12,
+                                                            cursorWidth: 1.0,
+                                                            decoration: InputDecoration(
+                                                              contentPadding:
+                                                              EdgeInsets.fromLTRB(
+                                                                  10, 0, 10, 0),
+                                                              suffixIcon: Icon(
+                                                                  Icons.send,
+                                                                  color:
+                                                                  Colors.black54),
+                                                              prefixText: '@유리 ',
+                                                              enabledBorder:
+                                                              OutlineInputBorder(
+                                                                  borderSide:
+                                                                  BorderSide(
+                                                                    color: Colors.black12,
+                                                                    width: 0.0,
+                                                                  )),
+                                                              focusedBorder:
+                                                              OutlineInputBorder(
+                                                                  borderSide:
+                                                                  BorderSide(
+                                                                    color: Colors.black12,
+                                                                    width: 0.0,
+                                                                  )),
+                                                              filled: true,
+                                                              fillColor: Colors.black12,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: !writeComment,
+                                                          child: TextField(
+                                                            style: const TextStyle(
+                                                                fontSize: 14.0),
+                                                            cursorColor: Colors.black12,
+                                                            cursorWidth: 1.0,
+                                                            decoration: InputDecoration(
+                                                              contentPadding:
+                                                              const EdgeInsets
                                                                   .fromLTRB(
-                                                              10, 0, 10, 0),
-                                                      suffixIcon: IconButton(
-                                                          icon: const Icon(
-                                                              Icons.send),
-                                                          color: Colors.black54,
-                                                          onPressed: () {}),
-                                                      hintText:
-                                                          '신짱구(으)로 댓글 달기...',
-                                                      enabledBorder:
-                                                          const OutlineInputBorder(
-                                                              borderSide:
+                                                                  10, 0, 10, 0),
+                                                              suffixIcon: IconButton(
+                                                                  icon: const Icon(
+                                                                      Icons.send),
+                                                                  color: Colors.black54,
+                                                                  onPressed: () {}),
+                                                              hintText:
+                                                              '신짱구(으)로 댓글 달기...',
+                                                              enabledBorder:
+                                                              const OutlineInputBorder(
+                                                                  borderSide:
                                                                   BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      focusedBorder:
-                                                          const OutlineInputBorder(
-                                                              borderSide:
+                                                                    color: Colors.black12,
+                                                                    width: 0.0,
+                                                                  )),
+                                                              focusedBorder:
+                                                              const OutlineInputBorder(
+                                                                  borderSide:
                                                                   BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      filled: true,
-                                                      fillColor: Colors.black12,
+                                                                    color: Colors.black12,
+                                                                    width: 0.0,
+                                                                  )),
+                                                              filled: true,
+                                                              fillColor: Colors.black12,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                            const SizedBox(height: 15),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
-                                  ],
-                                ),
-                              ),
-                            ]),
-                      ]),
-                    ),
-                  );
-                });
+                                      ),
+                                    ]),
+                              ]),
+                            ),
+                      );
+                    });
               },
             );
           },
@@ -540,23 +549,23 @@ class _MapPageState extends State<MapPage> {
       {String? text}) async {
     late String assetPath;
     switch (emotion) {
-      //행복
+    //행복
       case 0:
         assetPath = 'assets/images/flower0.png';
         break;
-      //기쁨
+    //기쁨
       case 1:
         assetPath = 'assets/images/flower1.png';
         break;
-      //평온
+    //평온
       case 2:
         assetPath = 'assets/images/flower2.png';
         break;
-      //화남
+    //화남
       case 3:
         assetPath = 'assets/images/flower3.png';
         break;
-      //슬픔
+    //슬픔
       case 4:
         assetPath = 'assets/images/flower4.png';
         break;
@@ -610,7 +619,7 @@ class _MapPageState extends State<MapPage> {
           .endRecording()
           .toImage(markerSize.toInt(), markerSize.toInt());
       final ByteData? byteData =
-          await markerImage.toByteData(format: ui.ImageByteFormat.png);
+      await markerImage.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) {
         throw Exception("Failed to load image from asset: $assetPath");
       }
@@ -619,7 +628,7 @@ class _MapPageState extends State<MapPage> {
     }
 
     final ByteData? byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
+    await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData == null) {
       throw Exception("Failed to load image from asset: $assetPath");
     }
@@ -647,22 +656,48 @@ class _MapPageState extends State<MapPage> {
           zoomControlsEnabled: false,
           mapToolbarEnabled: false,
         ),
-        Container(
-            padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const WritePage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: const CircleBorder(),
-                padding: const EdgeInsets.all(15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+              child: ElevatedButton(
+                onPressed: () async {
+                  var gps = await getCurrentLocation();
+                  mapController?.animateCamera(
+                      CameraUpdate.newLatLng(LatLng(gps.latitude, gps.longitude)));
+                  print(gps.latitude);
+                  print(gps.longitude);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(15),
+                ),
+                child: const Icon(
+                  Icons.my_location,
+                  color: Colors.black87,
+                ),
               ),
-              child: const Icon(Icons.add, color: Colors.black87),
-            )),
+            ),
+            Container(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const WritePage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(15),
+                  ),
+                  child: const Icon(Icons.add, color: Colors.black87),
+                )),
+          ],
+        )
       ]),
     );
   }
