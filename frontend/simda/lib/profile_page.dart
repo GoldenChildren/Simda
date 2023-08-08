@@ -98,10 +98,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => StatefulBuilder(builder:
-                                  (BuildContext context,
-                                  StateSetter setState) {
-                                return const ProfileEditPage();
-                              })));
+                                      (BuildContext context,
+                                          StateSetter setState) {
+                                    return const ProfileEditPage();
+                                  })));
                     },
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -111,28 +111,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: _profileImg == ""
                           ? Center(
-                        child: Icon(
-                          Icons.account_circle,
-                          size: imageSize,
-                        ),
-                      )
+                              child: Icon(
+                                Icons.account_circle,
+                                size: imageSize,
+                              ),
+                            )
                           : Center(
-                        child: Container(
-                          width: imageSize,
-                          height: imageSize,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.purple,
+                              child: Container(
+                                width: imageSize,
+                                height: imageSize,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 2,
+                                    color: Colors.purple,
+                                  ),
+                                  image: DecorationImage(
+                                    image: NetworkImage(_profileImg),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                             ),
-                            image: DecorationImage(
-                              image: NetworkImage(_profileImg),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                   Expanded(
@@ -209,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   indicatorColor: Colors.purple,
                   labelColor: Colors.purple,
                   labelStyle: TextStyle(
-                    // color: Colors.purple,
+                      // color: Colors.purple,
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                   indicatorWeight: 3,
@@ -355,7 +355,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _navigateToProfileEditPage(BuildContext context) async {
     final updatedData = await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const ProfileEditPage()))
+            MaterialPageRoute(builder: (context) => const ProfileEditPage()))
         .then((value) {
       setState(() {});
     });
@@ -374,7 +374,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-        const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
+            const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
       ),
     );
   }
@@ -384,7 +384,7 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-        const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
+            const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
       ),
     );
   }
