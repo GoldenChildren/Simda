@@ -1,7 +1,5 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:simda/main.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_edit_page.dart';
 import 'package:simda/profile_feed.dart';
@@ -23,14 +21,16 @@ class FriendProfilePage extends StatefulWidget {
 }
 
 class _FriendProfilePageState extends State<FriendProfilePage> {
-  bool _isFollowing = true; // Add a state for follow button toggle
+  bool _isFollowing = false; // Add a state for follow button toggle
   List<UserDto> _followList = [];
   List<UserDto> _followerList = [];
   UserProviders userProvider = UserProviders();
+  int loginUserId = 0;
 
   @override
   void initState() {
     super.initState();
+
     _fetchFollowData();
   }
 
@@ -38,6 +38,8 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
     try {
       List<UserDto> followingList = await userProvider.getFollowData("followings", widget.userDto.userId);
       List<UserDto> followerList = await userProvider.getFollowData("followers", widget.userDto.userId);
+      loginUserId = int.parse((await storage.read(key: 'userId'))!); // 현재 로그인한 유저의 아이디
+      _isFollowing = await userProvider.followCheck(loginUserId, widget.userDto.userId);
 
       setState(() {
         _followList = followingList;
@@ -137,10 +139,19 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                setState(() {
-                                  _isFollowing =
-                                      !_isFollowing; // Toggle the follow button
-                                });
+                                if(_isFollowing) {
+                                  userProvider.deleteFollowUser(loginUserId, widget.userDto.userId);
+                                  setState(() {
+                                    _isFollowing =
+                                    !_isFollowing; // Toggle the follow button
+                                  });
+                                } else {
+
+                                  setState(() {
+                                    _isFollowing =
+                                    !_isFollowing; // Toggle the follow button
+                                  });
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 primary: _isFollowing
@@ -148,7 +159,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                     : Theme.of(context).primaryColor,
                               ),
                               child: Text(
-                                _isFollowing ? 'Following' : 'Follow',
+                                _isFollowing ? 'unFollow' : 'Follow',
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),
@@ -248,27 +259,6 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
     ),
         ),
     );
-  }
-
-  void _navigateToProfileEditPage(BuildContext context) async {
-    final updatedData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfileEditPage(
-          // nickname: widget.nickname,
-          // bio: widget.bio,
-          // pickedFile: widget.profileImage.path,
-        ),
-      ),
-    );
-
-    // if (updatedData != null) {
-    //   setState(() {
-    //     _nickname = updatedData['nickname'];
-    //     _bio = updatedData['bio'];
-    //     _pickedFile = updatedData['pickedFile'];
-    //   });
-    // }
   }
 
   Column createColumns(String title, int count) {
