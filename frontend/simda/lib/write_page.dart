@@ -227,13 +227,12 @@ class _WritePageState extends State<WritePage> {
             ),
             TextButton(
               onPressed: () async {
-                await feedProvider.postFeed(uploadFeed);
-                if (!mounted) return;
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) => const MapPage()),
+                    await feedProvider.postFeed(uploadFeed).then((value) {
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage(0)),
                 );
+                    });
               },
               child: const Text('작성완료'),
             ),
@@ -309,33 +308,40 @@ class _WritePageState extends State<WritePage> {
                         // await feedProvider.postFeed(feedDto);
 
                         //로딩 화면 표시
+                        if (!mounted) return;
                         showDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (context) {
-                            return AlertDialog(
-                              backgroundColor: Colors.white24,
-                              content: Container(
-                                  height : MediaQuery.of(context).size.height,
-                                  width : MediaQuery.of(context).size.width,
+                          barrierColor: null,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                                insetAnimationDuration:
+                                const Duration(seconds: 2),
+                                insetPadding: const EdgeInsets.all(0),
+                                elevation: 0,
+                                backgroundColor: Colors.black45,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.all(Radius.circular(0))),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Image.asset('assets/images/color.gif'), // 로딩 스피너
-                                    SizedBox(height: 20.0),
-                                    Text("로딩 중...", style: TextStyle(fontSize: 16.0)),
+                                    Image.asset('assets/images/color.gif'),
+                                    // 로딩 스피너
+                                    const SizedBox(height: 20.0),
+                                    const Text("로딩 중...",
+                                        style: TextStyle(fontSize: 16.0)),
                                   ],
-                                ),
-                              ),
-                            );
+                                  // ),
+                                ));
                           },
                         );
                         selected = uploadFeed.emotion;
 
                         // 2초 딜레이 후 로딩 화면 닫기 및 다이얼로그 표시
-                        // await Future.delayed(Duration(seconds: 2));
-                        Navigator.of(context).pop(); // 로딩 화면 닫기
+                        await Future.delayed(Duration(seconds: 2));
+                        // Navigator.of(context).pop(); // 로딩 화면 닫기
 
                         if(!mounted) return;
                         _showEmotionDialog(context);
