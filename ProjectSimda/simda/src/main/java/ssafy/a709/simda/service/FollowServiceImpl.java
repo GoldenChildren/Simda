@@ -94,4 +94,20 @@ public class FollowServiceImpl implements FollowService{
 
         return userDtoList;
     }
+
+    @Override
+    public boolean selectUser(int fromUserId, int toUserId) {
+        boolean check = false;
+        try {
+            // toUser,fromUser id를 통해서 값을 가져와야한다
+            if(followRepository.findByToUserIdAndFromUserId(fromUserId, toUserId) != 0) {
+                check = true;
+            }
+        } catch(Exception e) {
+            System.out.println(e);
+            System.out.println("실패");
+        }
+
+        return check;
+    }
 }

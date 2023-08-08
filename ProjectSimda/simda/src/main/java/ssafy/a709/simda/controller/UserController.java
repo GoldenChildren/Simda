@@ -279,4 +279,17 @@ public class UserController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
+    @GetMapping("/followcheck")
+    public ResponseEntity<Boolean> followCheck(@RequestParam int fromUserId, @RequestParam int toUserId) {
+        // fromUserId와 toUserId를 체크해서
+        // 두 값을 만족하면 true, 실패하면 false를 반환해주자
+        boolean check = false;
+        if (followService.selectUser(fromUserId, toUserId)) {
+            check = true;
+            return new ResponseEntity<>(check, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(check, HttpStatus.NO_CONTENT);
+    }
+
+
 }

@@ -21,4 +21,5 @@ public interface FollowService {
     // 팔로워 목록 보기
     List<UserDto> selectFollowerList(int userId);
 
+    boolean selectUser(int fromUserId, int toUserId);
 }

@@ -29,6 +29,9 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
     // FollowId를 찾아서 delete 하는 구문 실행
     void deleteById(int userId);
 
+    @Query("SELECT COUNT(*) FROM Follow f WHERE f.fromUserId.userId = :fromUserId AND f.toUserId.userId = :toUserId")
+    int findByToUserIdAndFromUserId(@Param("fromUserId")int fromUserId, @Param("toUserId")int toUserId);
+
 
 
 }
