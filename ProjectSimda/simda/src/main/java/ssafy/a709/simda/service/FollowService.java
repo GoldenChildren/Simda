@@ -13,7 +13,7 @@ public interface FollowService {
 
     // 팔로우 취소
     // 언팔 성공할 경우 true값 반환
-    boolean deleteFollow(FollowDto followDto);
+    boolean deleteFollow(int fromUserId, int toUserId);
 
     // 팔로우 목록 보기
     List<UserDto> selectFollowList(int userId);

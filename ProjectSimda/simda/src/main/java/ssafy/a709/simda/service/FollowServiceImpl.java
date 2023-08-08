@@ -8,6 +8,7 @@ import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.repository.FollowRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +36,15 @@ public class FollowServiceImpl implements FollowService{
 
     // follow 끊기
     @Override
-    public boolean deleteFollow(FollowDto followDto) {
+    @Transactional
+    public boolean deleteFollow(int fromUserId, int toUserId) {
         // 받아온 FollowDto에서 int형의 follow Id를 가져와서
         // Repo로 보내서 id가 일치하는 녀석을 Delete 해준다
         try {
             // followId를 통해 entity 삭제
-            followRepository.deleteById(followDto.getFollowId());
+            followRepository.deleteFollowByFromUserIdAndToUserId(fromUserId, toUserId);
         } catch(Exception e) {
+            e.printStackTrace();
             System.out.println("실패");
             return false;
         }

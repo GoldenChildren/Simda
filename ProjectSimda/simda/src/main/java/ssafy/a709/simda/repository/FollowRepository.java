@@ -1,6 +1,7 @@
 package ssafy.a709.simda.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -27,7 +28,9 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
     List<User> findByFromUserId(@Param("fromUserId")int userId);
     
     // FollowId를 찾아서 delete 하는 구문 실행
-    void deleteById(int userId);
+    @Modifying
+    @Query("DELETE FROM Follow f WHERE f.fromUserId.userId = :fromUserId AND f.toUserId.userId = :toUserId")
+    void deleteFollowByFromUserIdAndToUserId(@Param("fromUserId")int fromUserId, @Param("toUserId")int toUserId);
 
     @Query("SELECT COUNT(*) FROM Follow f WHERE f.fromUserId.userId = :fromUserId AND f.toUserId.userId = :toUserId")
     int findByToUserIdAndFromUserId(@Param("fromUserId")int fromUserId, @Param("toUserId")int toUserId);

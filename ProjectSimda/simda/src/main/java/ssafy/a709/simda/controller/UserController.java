@@ -242,10 +242,10 @@ public class UserController {
 
     // 언팔로우
     @DeleteMapping("/followers")
-    public ResponseEntity<String> removeFollowUser(@RequestBody FollowDto followDto) {
+    public ResponseEntity<String> removeFollowUser(@RequestParam int fromUserId, @RequestParam int toUserId) {
         // 내가 다른 유저를 unfollow 할 경우,
-        // fromUserId와 내가 일치하는 것만 삭제하면 된다!
-        if (followService.deleteFollow(followDto)) {
+        // fromUserId와 나, toUserId와 상대방이 일치하는 경우 삭제
+        if (followService.deleteFollow(fromUserId, toUserId)) {
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         }
 
