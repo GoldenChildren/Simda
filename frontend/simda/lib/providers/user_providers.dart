@@ -174,4 +174,18 @@ class UserProviders {
     return userList;
   }
 
+  Future<bool> followCheck(int fromUserId, int toUserId) async {
+    final response = await dio.get('$url/followcheck?fromUserId=$fromUserId&toUserId=$toUserId');
+    bool check = false;
+
+    if (response.statusCode == 200) {
+      check = true;
+    }
+    return check;
+  }
+
+  Future<void> deleteFollowUser(int fromUserId, int toUserId) async{
+    final response = await dio.get('$url/followers?fromUserId=$fromUserId&toUserId=$toUserId');
+  }
+
 }
