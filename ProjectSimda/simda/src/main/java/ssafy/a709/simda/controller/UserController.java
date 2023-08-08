@@ -260,7 +260,7 @@ public class UserController {
         // UserList의 size가 0이라면?
         if (userList.getUserList().size() == 0) {
             System.out.println("비어있습니다");
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(userList, HttpStatus.NO_CONTENT);
         }
 
         return new ResponseEntity<>(userList, HttpStatus.OK);
@@ -274,7 +274,7 @@ public class UserController {
         UserList userList = UserList.builder().userList(followService.selectFollowerList(userId)).build();
         if (userList.getUserList().size() == 0) {
             System.out.println("비어있습니다.");
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(userList, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
