@@ -38,7 +38,7 @@ class FeedProviders {
   Future<FeedDto> getEmotion(FeedDto feedDto, String path) async{
     print('getEmotion');
     print(feedDto.title);
-    print(feedDto.nickName);
+    print(feedDto.nickname);
 
     FormData formData = FormData.fromMap({
       'imgfile':
@@ -47,8 +47,8 @@ class FeedProviders {
       'content': feedDto.content,
       'lat': feedDto.lat,
       'lng': feedDto.lng,
-      'userDto.nickName': feedDto.nickName,
-      'userDto.userId': feedDto.userId
+      'nickname': feedDto.nickname,
+      'userId': feedDto.userId
     });
 
     Response response = await dio.post(
@@ -107,9 +107,9 @@ class FeedProviders {
   Future<void> deleteFeed(int feedId) async{
     Response response = await dio.delete(
         '$url/',
-      queryParameters: {
+        queryParameters: {
           'feedId' : feedId
-      }
+        }
     );
 
     print('피드 삭제 : $response');
@@ -138,9 +138,9 @@ class FeedProviders {
 
     final response = await dio.get(
         '$url/follow',
-      queryParameters: {
+        queryParameters: {
           'userId' : userId
-      }
+        }
     );
 
     if (response.statusCode == 200) {

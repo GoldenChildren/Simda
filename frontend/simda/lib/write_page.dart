@@ -19,6 +19,9 @@ class WritePage extends StatefulWidget {
 class _WritePageState extends State<WritePage> {
   int selected = -1;
   XFile? _image;
+  String _title = '';
+  String _content = '';
+
   final ImagePicker picker = ImagePicker();
 
   Future getImage(ImageSource imageSource) async {
@@ -30,15 +33,27 @@ class _WritePageState extends State<WritePage> {
     }
   }
 
-  String _title = '';
-  String _content = '';
 
   final _titleEditController = TextEditingController();
   final _contentEditController = TextEditingController();
 
   FeedProviders feedProvider = FeedProviders();
 
-  void _showEmotionDialog() {
+  FeedDto uploadFeed = FeedDto(
+  content: "",
+  emotion: -1,
+  feedId: -1,
+  img: '',
+  lat: 0,
+  likeCnt: 0,
+  lng: 0,
+  nickname: "",
+  regDate: '',
+  title: "",
+  userId: 0,
+  );
+
+  void _showEmotionDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -211,6 +226,8 @@ class _WritePageState extends State<WritePage> {
             ),
             TextButton(
               onPressed: () async {
+
+                await feedProvider.postFeed(uploadFeed);
                 if (!mounted) return;
                 Navigator.push(
                   context,
@@ -225,35 +242,6 @@ class _WritePageState extends State<WritePage> {
     );
   }
 
-  void loading() {
-    // 로딩 화면 표시
-    FocusManager.instance.primaryFocus?.unfocus();
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white24,
-          content: Container(
-            width: 400.0,
-            height: 400.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment:
-              CrossAxisAlignment.center,
-              children: [
-                Image.asset('assets/images/color.gif'),
-                // 로딩 스피너
-                const SizedBox(height: 20.0),
-                const Text("로딩 중...",
-                    style: TextStyle(fontSize: 16.0)),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -285,47 +273,79 @@ class _WritePageState extends State<WritePage> {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                        onPressed: ()  async {
-                          setState(() {});
-                          print(_titleEditController.text);
-                          print(_contentEditController.text);
-                          print(_image!.path);
-                          print(selected);
-                          // String temp = storage.read(key:'userId');
-                          int userId = int.parse(
-                              await storage.read(key: 'userId') ?? '0');
-                          String nickName =
-                              await storage.read(key: 'nickName') ?? '';
-                          print(userId);
-                          FeedDto feedDto = FeedDto(
-                              content: _content,
-                              emotion: selected,
-                              feedId: 0,
-                              img: '',
-                              lat: 37.5013068,
-                              likeCnt: 0,
-                              lng: 127.0396597,
-                              nickName: nickName,
-                              regDate: '',
-                              title: _title,
-                              userId: userId);
-                          feedDto = await feedProvider.getEmotion(
-                              feedDto, _image!.path);
-                          await feedProvider.postFeed(feedDto);
+                      onPressed: () async {
+                        setState(() {});
 
-                          loading();
-                          // 로딩 화면 닫기
-                          Navigator.of(context).pop();
+                        // 입력된 내용 출력
+                        print(_titleEditController.text);
+                        print(_contentEditController.text);
+                        print(_image!.path);
+                        print(selected);
 
-                          _showEmotionDialog();
-                        },
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Colors.blue.shade200)),
-                        child: const Text(
-                          '분석하기',
-                          style: TextStyle(color: Colors.black87),
-                        )),
+                        // 사용자 정보 가져오기
+                        int userId = int.parse(await storage.read(key: 'userId') ?? '0');
+                        String nickname = await storage.read(key: 'nickname') ?? '';
+                        print(userId);
+
+                        // FeedDto 생성
+                        FeedDto feedDto = FeedDto(
+                          content: _content,
+                          emotion: 0,
+                          feedId: 0,
+                          img: '',
+                          lat: 37.5013068,
+                          likeCnt: 0,
+                          lng: 127.0396597,
+                          nickname: nickname,
+                          regDate: '',
+                          title: _title,
+                          userId: userId,
+                        );
+
+                        // 감정 정보 가져오기 및 피드 게시
+                        uploadFeed = await feedProvider.getEmotion(feedDto, _image!.path);
+
+                        // await feedProvider.postFeed(feedDto);
+
+                        //로딩 화면 표시
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return AlertDialog(
+                              backgroundColor: Colors.white24,
+                              content: Container(
+                                  height : MediaQuery.of(context).size.height,
+                                  width : MediaQuery.of(context).size.width,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset('assets/images/flower.gif'), // 로딩 스피너
+                                    SizedBox(height: 20.0),
+                                    Text("로딩 중...", style: TextStyle(fontSize: 16.0)),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                        selected = uploadFeed.emotion;
+
+                        // 2초 딜레이 후 로딩 화면 닫기 및 다이얼로그 표시
+                        await Future.delayed(Duration(seconds: 2));
+                        Navigator.of(context).pop(); // 로딩 화면 닫기
+
+                        if(!mounted) return;
+                        _showEmotionDialog(context);
+                      },
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(Colors.blue.shade200)),
+                      child: const Text(
+                        '분석하기',
+                        style: TextStyle(color: Colors.black87),
+                      ),
+                    ),
                   ],
                 ),
               ),

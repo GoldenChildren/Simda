@@ -8,7 +8,7 @@ class FeedDto {
   final double lat;
   late int likeCnt;
   final double lng;
-  final String nickName;
+  final String nickname;
   final String regDate;
   final String title;
   final int userId;
@@ -21,7 +21,7 @@ class FeedDto {
     required this.lat,
     required this.likeCnt,
     required this.lng,
-    required this.nickName,
+    required this.nickname,
     required this.regDate,
     required this.title,
     required this.userId,
@@ -36,7 +36,7 @@ class FeedDto {
       lat: json['lat'],
       likeCnt: json['likeCnt'],
       lng: json['lng'],
-      nickName: json['nickName']??'',
+      nickname: json['nickname']??'',
       regDate: json['regDate']??'',
       title: json['title'],
       userId: json['userId'],
@@ -51,7 +51,7 @@ class FeedDto {
       "lat": lat,
       "likeCnt": likeCnt,
       "lng": lng,
-      "nickName": nickName,
+      "nickname": nickname,
       "regDate": regDate,
       "title": title,
       "userId": userId,
