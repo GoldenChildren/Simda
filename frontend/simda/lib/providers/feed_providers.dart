@@ -36,6 +36,10 @@ class FeedProviders {
 
   // Feed 감정 분석 받는 메소드
   Future<FeedDto> getEmotion(FeedDto feedDto, String path) async{
+    print('getEmotion');
+    print(feedDto.title);
+    print(feedDto.nickname);
+
     FormData formData = FormData.fromMap({
       'imgfile':
       await MultipartFile.fromFile(path, filename: 'feed.jpg'),
@@ -43,22 +47,25 @@ class FeedProviders {
       'content': feedDto.content,
       'lat': feedDto.lat,
       'lng': feedDto.lng,
-      'userDto.userId': feedDto.userId
+      'nickname': feedDto.nickname,
+      'userId': feedDto.userId
     });
 
     Response response = await dio.post(
-        'http://i9a709.p.ssafy.io:8000/api/bard',
+        'http://i9a709.p.ssafy.io:8000/bard',
         data : formData,
         options: Options(headers: {'Content-Type': 'multipart/form-data'})
     );
 
-    print(jsonDecode(response.data));
+    // print(jsonDecode(response.data));
+    print(response.statusCode);
+    print(FeedDto.fromJson(response.data));
 
-    return jsonDecode(response.data);
+    return FeedDto.fromJson(response.data);
   }
 
   // Feed를 post하는 메소드
-  Future<int> postFeed(FeedDto feedDto, String path) async {
+  Future<int> postFeed(FeedDto feedDto) async {
 
     // FormData formData = FormData.fromMap({
     //   'imgfile':
@@ -74,8 +81,14 @@ class FeedProviders {
 
     Response response = await dio.post(
       '$url/',
-      data: feedDto
+      data: feedDto.toJson(),
+      options: Options(
+        headers: {'Content-Type': 'application/json'}, // Content-Type 설정
+      ),
     );
+
+    print(response.data);
+    print(response.statusCode);
 
     return response.data;
   }

@@ -41,7 +41,7 @@ class UserProviders {
   }
 
   // 닉네임 체크
-  Future<bool> checkNickName(String nickName) async{
+  Future<bool> checkNickname(String nickname) async{
     final response = await dio.get('$url/check');
 
     print('닉네임 중복? : $response');
@@ -52,8 +52,20 @@ class UserProviders {
   // 회원 정보를 수정한다.
   Future<UserDto> modifyUser(String path, UserDto userDto) async {
     try {
+      MultipartFile? multipartfile;
+
+      print('path : $path');
+
+      if(path.isNotEmpty){
+        multipartfile = await MultipartFile.fromFile(path, filename: 'modified');
+      }else{
+        multipartfile = null;
+      }
+
+      print(multipartfile?.filename?? '왜 null 임?');
+
       FormData formData = FormData.fromMap({
-        'imgfile': await MultipartFile.fromFile(path, filename: 'modified'),
+        'imgfile': multipartfile,
         "bio": userDto.bio,
         "email": userDto.email,
         "nickname": userDto.nickname,
@@ -72,7 +84,7 @@ class UserProviders {
         saveStorage(response.data);
       }
 
-      return json.decode(response.data);
+      return UserDto.fromJson(response.data);
     }catch(error){
       print("유저 정보 수정 에러");
       print(error);
@@ -85,9 +97,9 @@ class UserProviders {
     UserDto userDto;
     Response response = await dio.get(
         '$url/profile',
-      queryParameters: {
+        queryParameters: {
           'userId' : userId
-      }
+        }
     );
     userDto = json.decode(response.data);
 
@@ -96,7 +108,8 @@ class UserProviders {
     return userDto;
   }
 
-  // 검색하는 로직
+
+// 검색하는 로직
   Future<List<UserDto>> getUsers(String check) async {
     final response = await dio.get('$url/search?nickname=$check');
     final List<UserDto> userList = [];
