@@ -87,6 +87,10 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   Future initFeed() async {
     // feed = await feedProvider.getFeed(lat, lng);
     feed = await feedProvider.getFeed();
+    setState(() {
+      isVisible = List.generate(feed.length, (index) => true);
+      writeComment = List.generate(feed.length, (index) => true);
+    });
   }
 
   @override
@@ -166,7 +170,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 alignment: Alignment.center,
                 child:
-                    Image(image: AssetImage(feed[index].img)),
+                    Image(image: NetworkImage(feed[index].img)),
               ),
               const SizedBox(height: 15),
               Row(
