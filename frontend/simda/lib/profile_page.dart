@@ -21,10 +21,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String _email = "";
   String _profileImg = "";
   String _nickname = "";
   String _bio = "";
-  String _email ="";
   int _userId = 0;
 
   @override
@@ -35,16 +35,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> getValueFromSecureStorage() async {
     try {
+      String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
-      String? storeEmail = await storage.read(key: "email");
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
       setState(() {
+        _email = storeEmail ?? "";
         _profileImg = storeProfileImg ?? "";
         _nickname = storeNickname ?? "";
         _bio = storeBio ?? "";
-        _email = storeEmail ?? "";
         _userId = storeUserId;
       });
     } catch (e) {
@@ -74,8 +74,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Text(
                       _nickname,
-                      style:
-                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Builder(
                       builder: (context) => IconButton(
@@ -94,7 +94,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      _navigateToProfileEditPage(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StatefulBuilder(builder:
+                                  (BuildContext context,
+                                  StateSetter setState) {
+                                return const ProfileEditPage();
+                              })));
                     },
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -104,28 +111,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: _profileImg == ""
                           ? Center(
-                              child: Icon(
-                                Icons.account_circle,
-                                size: imageSize,
-                              ),
-                            )
+                        child: Icon(
+                          Icons.account_circle,
+                          size: imageSize,
+                        ),
+                      )
                           : Center(
-                              child: Container(
-                                width: imageSize,
-                                height: imageSize,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Colors.purple,
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(_profileImg),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
+                        child: Container(
+                          width: imageSize,
+                          height: imageSize,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.purple,
                             ),
+                            image: DecorationImage(
+                              image: FileImage(File(_profileImg)),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -202,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   indicatorColor: Colors.purple,
                   labelColor: Colors.purple,
                   labelStyle: TextStyle(
-                      // color: Colors.purple,
+                    // color: Colors.purple,
                       fontWeight: FontWeight.bold,
                       fontSize: 20),
                   indicatorWeight: 3,
@@ -237,7 +244,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(_profileImg),
+                    backgroundImage: FileImage(File(_profileImg)),
                     backgroundColor: Colors.white,
                   ),
                   accountName: Text(_nickname),
@@ -347,16 +354,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _navigateToProfileEditPage(BuildContext context) async {
-    final updatedData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfileEditPage(
-            // nickname: _nickname,
-            // bio: _bio,
-            // pickedFile: _pickedFile,
-            ),
-      ),
-    );
+    final updatedData = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ProfileEditPage()))
+        .then((value) {
+      setState(() {});
+    });
 
     if (updatedData != null) {
       setState(() {
@@ -368,23 +370,23 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _navigateToFollowingListPage(BuildContext context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) =>
-    //     const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+        const FollowingListPage(), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
+      ),
+    );
   }
 
   void _navigateToFollowersListPage(BuildContext context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) =>
-    //     const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+        const FollowersListPage(), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
+      ),
+    );
   }
 
   Column createColumns(String title, int count) {
