@@ -302,13 +302,11 @@ class _WritePageState extends State<WritePage> {
                           userId: userId,
                         );
 
-                        // 감정 정보 가져오기 및 피드 게시
-                        uploadFeed = await feedProvider.getEmotion(feedDto, _image!.path);
-
                         // await feedProvider.postFeed(feedDto);
 
                         //로딩 화면 표시
                         if (!mounted) return;
+                        FocusManager.instance.primaryFocus?.unfocus();
                         showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -337,10 +335,12 @@ class _WritePageState extends State<WritePage> {
                                 ));
                           },
                         );
+                        // 감정 정보 가져오기 및 피드 게시
+                        uploadFeed = await feedProvider.getEmotion(feedDto, _image!.path);
                         selected = uploadFeed.emotion;
 
                         // 2초 딜레이 후 로딩 화면 닫기 및 다이얼로그 표시
-                        await Future.delayed(Duration(seconds: 2));
+                        // await Future.delayed(const Duration(seconds: 2));
                         // Navigator.of(context).pop(); // 로딩 화면 닫기
 
                         if(!mounted) return;
