@@ -117,7 +117,6 @@ class UserProviders {
 
     if (response.statusCode == 200) {
       // API 호출이 성공한 경우
-      print("여기오냐?");
       final Map<String, dynamic> jsonResponse = response.data;
 
       if (jsonResponse.containsKey('userList') &&
@@ -132,7 +131,6 @@ class UserProviders {
     }
     else if (response.statusCode == 204) {
       // 검색 결과 없음
-      print('204');
       userList.clear();
       return userList;
     }
@@ -147,6 +145,33 @@ class UserProviders {
   }
 
   // ---------------- 팔로우 기능 -----------------
+  Future<List<UserDto>> getFollowData(String endpoint, int userId) async {
+    final response = await dio.get('$url/$endpoint?userId=$userId');
+    final List<UserDto> userList = [];
 
+    if (response.statusCode == 200) {
+      // API 호출이 성공한 경우
+      final Map<String, dynamic> jsonResponse = response.data;
+
+      if (jsonResponse.containsKey('userList') &&
+          jsonResponse['userList'] is List) {
+        final List<dynamic> userListJson = jsonResponse['userList'];
+
+        for (var userJson in userListJson) {
+          var userDto = UserDto.fromJson(userJson);
+          userList.add(userDto);
+        }
+      }
+    } else if (response.statusCode == 204) {
+      // 검색 결과 없음
+      userList.clear();
+    } else {
+      // API 호출이 실패한 경우(204 이외의 오류)
+      if (kDebugMode) {
+        print('Failed to fetch data: ${response.statusCode}');
+      }
+    }
+    return userList;
+  }
 
 }

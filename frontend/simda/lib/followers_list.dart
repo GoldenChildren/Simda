@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/friend_profile.dart';
+import 'package:simda/models/UserDto.dart';
 
 class FollowersListPage extends StatelessWidget {
-  const FollowersListPage({super.key});
+  final List<UserDto> userList;
+
+  const FollowersListPage({required this.userList, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,30 +38,28 @@ class FollowersListPage extends StatelessWidget {
             flex: 1,
             child: ListView.builder(
               padding: const EdgeInsets.all(0),
-              itemCount: followerProfiles.length,
+              itemCount: userList.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
                     // 친구 프로필 화면으로 이동
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => FriendProfilePage(
-                    //       nickname: followerProfiles[index].nickname,
-                    //       bio: followerProfiles[index].bio,
-                    //       profileImage: followerProfiles[index].profileImage,
-                    //     ),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FriendProfilePage(
+                          userDto: userList[index],
+                        ),
+                      ),
+                    );
                   },
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundImage:
-                      AssetImage(followerProfiles[index].profileImage.path),
+                          NetworkImage(userList[index].profileImg),
                       radius: 26,
                     ),
-                    title: Text(followerProfiles[index].nickname),
-                    subtitle: Text(followerProfiles[index].bio),
+                    title: Text(userList[index].nickname),
+                    subtitle: Text(userList[index].bio??""),
                   ),
                 );
               },
@@ -70,24 +71,6 @@ class FollowersListPage extends StatelessWidget {
   }
 }
 
-List<UserProfile> followerProfiles = [
-  UserProfile(
-    nickname: '유리',
-    bio: '💙',
-    profileImage: XFile('assets/images/yuri.jpg'),
-  ),
-  UserProfile(
-    nickname: '짱아',
-    bio: '짱아 일기장',
-    profileImage: XFile('assets/images/zzanga.png'),
-  ),
-  UserProfile(
-    nickname: '김짱구',
-    bio: '부리부리부리부리',
-    profileImage: XFile('assets/images/shin.jpg'),
-  ),
-  // 여기에 더 많은 사용자 정보를 추가할 수 있습니다.
-];
 
 class UserProfile {
   final String nickname;
