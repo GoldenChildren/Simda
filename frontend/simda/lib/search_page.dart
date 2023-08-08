@@ -6,7 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:simda/following_list.dart';
 import 'package:simda/friend_profile.dart';
 import 'package:simda/models/UserDto.dart';
+import 'package:simda/profile_page.dart';
 import 'package:simda/providers/user_providers.dart';
+
+import 'main.dart';
+import 'main_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -16,6 +20,26 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  int _userId = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getValueFromSecureStorage();
+  }
+
+  Future<void> getValueFromSecureStorage() async {
+    try {
+      int storeUserId = int.parse((await storage.read(key: "userId"))!);
+
+      setState(() {
+        _userId = storeUserId;
+      });
+    } catch (e) {
+      print("Error reading from secure storage: $e");
+    }
+  }
+
   // Text 컨트롤 위젯
   final TextEditingController _filter = TextEditingController();
 
@@ -172,19 +196,27 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     title: Text(_userList[index].nickname),
                     onTap: () {
-                      UserDto user = _userList[index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FriendProfilePage(
-                            userDto: user,
-                            // userId: user.userId,
-                            // nickname: user.nickname,
-                            // bio: user.bio,
-                            // profileImage: user.profileImg,
-                          ),
-                        ),
-                      );
+                      UserDto user = _userList[
+                          index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
+
+                      user.userId == _userId
+                          ? Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainPage(4)),
+                              (route) => false)
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FriendProfilePage(
+                                  userDto: user,
+                                  // userId: user.userId,
+                                  // nickname: user.nickname,
+                                  // bio: user.bio,
+                                  // profileImage: user.profileImg,
+                                ),
+                              ),
+                            );
                     },
                   );
                 },

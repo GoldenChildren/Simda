@@ -32,7 +32,10 @@ const List<TabItem> items = [
 ];
 
 class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
+
+  int visit;
+
+  MainPage(this.visit, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +45,18 @@ class MainPage extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const BottomNavigationBar(
+      home: BottomNavigationBar(
         title: 'BottomNavigationBar',
+        index: visit ?? 0,
       ),
     );
   }
 }
 
 class BottomNavigationBar extends StatefulWidget {
-  const BottomNavigationBar({super.key, required this.title});
+
+  int index;
+  BottomNavigationBar({super.key, required this.title, required this.index});
 
   final String title;
 
@@ -58,17 +64,14 @@ class BottomNavigationBar extends StatefulWidget {
   State<BottomNavigationBar> createState() => _BottomNavigationBarState();
 }
 
-
-
 class _BottomNavigationBarState extends State<BottomNavigationBar> {
-  int visit = 0;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          body: _page[visit],
+          body: _page[widget.index],
           bottomNavigationBar: Visibility(
             visible: isVisible,
             child: Container(
@@ -83,7 +86,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
                 backgroundColor: Colors.white,
                 color: Colors.black54,
                 colorSelected: Colors.deepPurpleAccent,
-                indexSelected: visit,
+                indexSelected: widget.index,
                 paddingVertical: 20,
                 boxShadow: [
                   BoxShadow(
@@ -93,8 +96,8 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
                     offset: const Offset(0, 7),
                   )
                 ],
-                onTap: (int index) => setState(() {
-                  visit = index;
+                onTap: (int page) => setState(() {
+                  widget.index = page;
                 }),
                 backgroundSelected: Colors.black12,
               ),
