@@ -39,7 +39,7 @@ public class ChatRoomDto{
                 .lChatContent(chatRoom.getChat().getContent())
                 .lChatUserId(chatRoom.getChat().getUser().getUserId())
                 .lChatId(chatRoom.getChat().getChatId())
-                .lChatTime(chatRoom.getChat().getRegDate())
+                .lChatTime(chatRoom.getChat().getRegDate().substring(11,16))
                 .build();
     }
     private int chatRoomId;
