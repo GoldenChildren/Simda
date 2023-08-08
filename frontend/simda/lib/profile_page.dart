@@ -244,7 +244,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   currentAccountPicture: CircleAvatar(
-                    backgroundImage: FileImage(File(_profileImg)),
+                    backgroundImage: NetworkImage(_profileImg),
                     backgroundColor: Colors.white,
                   ),
                   accountName: Text(_nickname),

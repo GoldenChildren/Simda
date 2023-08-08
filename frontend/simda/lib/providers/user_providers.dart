@@ -14,6 +14,7 @@ class UserProviders {
   Dio dio = Dio();
 
   String url = "http://i9a709.p.ssafy.io:8000/user";
+  // static String ip = "http://70.12.247.165:8000";
 
   // 세션 스토리지에 유저 정보를 저장하는 메소드
   Future<void> saveStorage(Map<String, dynamic> map) async {
@@ -136,7 +137,7 @@ class UserProviders {
       return userList;
     }
     else {
-      // API 호출이 실패한 경우(404 이외의 오류)
+      // API 호출이 실패한 경우(204 이외의 오류)
 
       if (kDebugMode) {
         print('Failed to fetch data: ${response.statusCode}');
@@ -144,5 +145,8 @@ class UserProviders {
     }
     return userList;
   }
+
+  // ---------------- 팔로우 기능 -----------------
+
 
 }
