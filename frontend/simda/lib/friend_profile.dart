@@ -2,20 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_edit_page.dart';
 import 'package:simda/profile_feed.dart';
 import 'package:simda/profile_map.dart';
+import 'package:simda/providers/user_providers.dart';
 import 'profile_calendar.dart';
 import 'chat_with_friend.dart';
 
 class FriendProfilePage extends StatefulWidget {
   UserDto userDto;
-  // String nickname;
-  // String bio;
-  // int ? userId;
-  // String profileImage;
 
   FriendProfilePage(
       {Key? key,
@@ -28,6 +24,29 @@ class FriendProfilePage extends StatefulWidget {
 
 class _FriendProfilePageState extends State<FriendProfilePage> {
   bool _isFollowing = true; // Add a state for follow button toggle
+  List<UserDto> _followList = [];
+  List<UserDto> _followerList = [];
+  UserProviders userProvider = UserProviders();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchFollowData();
+  }
+
+  Future<void> _fetchFollowData() async {
+    try {
+      List<UserDto> followingList = await userProvider.getFollowData("followings", widget.userDto.userId);
+      List<UserDto> followerList = await userProvider.getFollowData("followers", widget.userDto.userId);
+
+      setState(() {
+        _followList = followingList;
+        _followerList = followerList;
+      });
+    } catch (e) {
+      print("Error fetching follow data: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +127,8 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            createColumns('following', 150),
-                            createColumns('followers', 271),
+                            createColumns('following', _followList.length),
+                            createColumns('followers', _followerList.length),
                           ],
                         ),
                         const SizedBox(height: 10),
