@@ -96,13 +96,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                           print(_nickname);
                           print(_userId);
                           print(_profileImg);
-                          print(_imgFile!.path);
-                          userProvider.modifyUser(_imgFile!.path, UserDto(
+
+                          userProvider.modifyUser(_imgFile?.path ?? '', UserDto(
                               bio: _bio,
                               email: _email,
                               userId: _userId,
                               nickname: _nickname,
-                              profileImg: _imgFile!.path,
+                              profileImg: _profileImg,
                               userRole: _userRole));
                           Navigator.pop(context);
                         },
@@ -131,17 +131,34 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     minHeight: imageSize,
                     minWidth: imageSize,
                   ),
-                  child: !isChanged
+                  child: isChanged
                       ? CircleAvatar(
-                    radius: imageSize / 2,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: FileImage(File(_profileImg)),
-                  )
-                      : CircleAvatar(
                     radius: imageSize / 2,
                     backgroundColor: Colors.transparent,
                     backgroundImage: FileImage(File(_imgFile!.path)),
                   )
+                      : CircleAvatar(
+                    radius: imageSize / 2,
+                    backgroundColor: Colors.transparent,
+                    backgroundImage: NetworkImage(_profileImg),
+                  )
+
+                // Center(
+                //         child: Container(
+                //           width: imageSize,
+                //           height: imageSize,
+                //           decoration: BoxDecoration(
+                //             shape: BoxShape.circle,
+                //             border: Border.all(
+                //                 width: 2,
+                //                 color: Theme.of(context).colorScheme.primary),
+                //             image: DecorationImage(
+                //               image: FileImage(File(_pickedFile!)),
+                //               fit: BoxFit.cover,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
               ),
             ),
             Padding(
@@ -255,4 +272,3 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
   }
 }
-

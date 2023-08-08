@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:simda/following_list.dart';
+import 'package:simda/friend_profile.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/user_providers.dart';
 
@@ -87,12 +89,11 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: <Widget>[
         const Padding(padding: EdgeInsets.all(30)),
         Container(
-          color: Colors.black,
+          color: Colors.green,
           padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
           child: Row(
             children: <Widget>[
@@ -166,9 +167,25 @@ class _SearchPageState extends State<SearchPage> {
                   return ListTile(
                     leading: CircleAvatar(
                       radius: 25,
-                      backgroundImage: NetworkImage(_userList[index].profileImg),
+                      backgroundImage:
+                          NetworkImage(_userList[index].profileImg),
                     ),
                     title: Text(_userList[index].nickname),
+                    onTap: () {
+                      UserDto user = _userList[index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FriendProfilePage(
+                            userDto: user,
+                            // userId: user.userId,
+                            // nickname: user.nickname,
+                            // bio: user.bio,
+                            // profileImage: user.profileImg,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               )
