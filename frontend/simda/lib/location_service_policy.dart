@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 class LocationServicePolicy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -15,12 +14,10 @@ class LocationServicePolicy extends StatelessWidget {
             icon: const Icon(Icons.arrow_back)),
       ),
       body: Center(
-
         child: Container(
           decoration: const BoxDecoration(
             color: Colors.white,
             // adding borders around the widget
-
           ),
           // SingleChildScrollView should be
           // wrapped in an Expanded Widget

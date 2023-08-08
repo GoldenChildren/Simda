@@ -14,6 +14,7 @@ class UserProviders {
   Dio dio = Dio();
 
   String url = "http://i9a709.p.ssafy.io:8000/user";
+  // static String ip = "http://70.12.247.165:8000";
 
   // 세션 스토리지에 유저 정보를 저장하는 메소드
   Future<void> saveStorage(Map<String, dynamic> map) async {
@@ -41,7 +42,7 @@ class UserProviders {
   }
 
   // 닉네임 체크
-  Future<bool> checkNickName(String nickName) async{
+  Future<bool> checkNickname(String nickname) async{
     final response = await dio.get('$url/check');
 
     print('닉네임 중복? : $response');
@@ -116,7 +117,6 @@ class UserProviders {
 
     if (response.statusCode == 200) {
       // API 호출이 성공한 경우
-      print("여기오냐?");
       final Map<String, dynamic> jsonResponse = response.data;
 
       if (jsonResponse.containsKey('userList') &&
@@ -131,13 +131,42 @@ class UserProviders {
     }
     else if (response.statusCode == 204) {
       // 검색 결과 없음
-      print('204');
       userList.clear();
       return userList;
     }
     else {
-      // API 호출이 실패한 경우(404 이외의 오류)
+      // API 호출이 실패한 경우(204 이외의 오류)
 
+      if (kDebugMode) {
+        print('Failed to fetch data: ${response.statusCode}');
+      }
+    }
+    return userList;
+  }
+
+  // ---------------- 팔로우 기능 -----------------
+  Future<List<UserDto>> getFollowData(String endpoint, int userId) async {
+    final response = await dio.get('$url/$endpoint?userId=$userId');
+    final List<UserDto> userList = [];
+
+    if (response.statusCode == 200) {
+      // API 호출이 성공한 경우
+      final Map<String, dynamic> jsonResponse = response.data;
+
+      if (jsonResponse.containsKey('userList') &&
+          jsonResponse['userList'] is List) {
+        final List<dynamic> userListJson = jsonResponse['userList'];
+
+        for (var userJson in userListJson) {
+          var userDto = UserDto.fromJson(userJson);
+          userList.add(userDto);
+        }
+      }
+    } else if (response.statusCode == 204) {
+      // 검색 결과 없음
+      userList.clear();
+    } else {
+      // API 호출이 실패한 경우(204 이외의 오류)
       if (kDebugMode) {
         print('Failed to fetch data: ${response.statusCode}');
       }

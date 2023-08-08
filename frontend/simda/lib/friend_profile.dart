@@ -2,18 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_edit_page.dart';
+import 'package:simda/profile_feed.dart';
+import 'package:simda/profile_map.dart';
+import 'package:simda/providers/user_providers.dart';
 import 'profile_calendar.dart';
 import 'chat_with_friend.dart';
 
 class FriendProfilePage extends StatefulWidget {
   UserDto userDto;
-  // String nickname;
-  // String bio;
-  // int ? userId;
-  // String profileImage;
 
   FriendProfilePage(
       {Key? key,
@@ -26,6 +24,29 @@ class FriendProfilePage extends StatefulWidget {
 
 class _FriendProfilePageState extends State<FriendProfilePage> {
   bool _isFollowing = true; // Add a state for follow button toggle
+  List<UserDto> _followList = [];
+  List<UserDto> _followerList = [];
+  UserProviders userProvider = UserProviders();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchFollowData();
+  }
+
+  Future<void> _fetchFollowData() async {
+    try {
+      List<UserDto> followingList = await userProvider.getFollowData("followings", widget.userDto.userId);
+      List<UserDto> followerList = await userProvider.getFollowData("followers", widget.userDto.userId);
+
+      setState(() {
+        _followList = followingList;
+        _followerList = followerList;
+      });
+    } catch (e) {
+      print("Error fetching follow data: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,8 +127,8 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            createColumns('following', 150),
-                            createColumns('followers', 271),
+                            createColumns('following', _followList.length),
+                            createColumns('followers', _followerList.length),
                           ],
                         ),
                         const SizedBox(height: 10),
@@ -214,58 +235,12 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
               height: 50,
             ),
           ]),
-      Expanded(
+      const Expanded(
         child: TabBarView(
           children: [
-            const TableCalendarScreen(),
-            // Container(
-            //   width: 10,
-            //   color: const Color.fromRGBO(91, 91, 91, 1),
-            //   child: const Center(
-            //     child: Text(
-            //       '달력',
-            //       style: TextStyle(
-            //           color: Colors.white,
-            //           fontSize: 56,
-            //           fontWeight: FontWeight.bold),
-            //     ),
-            //   ),
-            // ),
-            ListView.builder(
-                key: const PageStorageKey("피드"),
-                itemCount: 1000,
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(
-                        "List View $index",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.accents[index % 15],
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  );
-                }),
-
-
-
-
-            Container(
-              width: 10,
-              color: const Color.fromRGBO(91, 91, 91, 1),
-              child: const Center(
-                child: Text(
-                  '지도',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 56,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            TableCalendarScreen(),
+            ProfileFeedPage(),
+            ProfileMapPage(),
           ],
         ),),
       ],
