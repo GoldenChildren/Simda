@@ -38,12 +38,11 @@ class _WritePageState extends State<WritePage> {
 
   FeedProviders feedProvider = FeedProviders();
 
-
   void _showEmotionDialog() {
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(builder:
-          (BuildContext context, StateSetter setState) {
+      builder: (context) => StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
         return AlertDialog(
           title: const Text(
             '나의 감정은?',
@@ -57,8 +56,7 @@ class _WritePageState extends State<WritePage> {
               Container(height: 2, color: Colors.purple),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment:
-                MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -67,22 +65,17 @@ class _WritePageState extends State<WritePage> {
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(
-                          5, 5, 5, 5),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       width: 65,
                       decoration: BoxDecoration(
                         borderRadius:
-                        const BorderRadius.all(
-                            Radius.circular(5)),
-                        color: selected == 0
-                            ? Colors.black12
-                            : Colors.transparent,
+                            const BorderRadius.all(Radius.circular(5)),
+                        color:
+                            selected == 0 ? Colors.black12 : Colors.transparent,
                       ),
                       child: const Column(
                         children: [
-                          Image(
-                              image: AssetImage(
-                                  'assets/images/flower0.png')),
+                          Image(image: AssetImage('assets/images/flower0.png')),
                           SizedBox(height: 5),
                           Text('행복')
                         ],
@@ -97,23 +90,18 @@ class _WritePageState extends State<WritePage> {
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(
-                          5, 5, 5, 5),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       width: 65,
                       // color: _colors[1],
                       decoration: BoxDecoration(
                         borderRadius:
-                        const BorderRadius.all(
-                            Radius.circular(5)),
-                        color: selected == 1
-                            ? Colors.black12
-                            : Colors.transparent,
+                            const BorderRadius.all(Radius.circular(5)),
+                        color:
+                            selected == 1 ? Colors.black12 : Colors.transparent,
                       ),
                       child: const Column(
                         children: [
-                          Image(
-                              image: AssetImage(
-                                  'assets/images/flower1.png')),
+                          Image(image: AssetImage('assets/images/flower1.png')),
                           SizedBox(height: 5),
                           Text('신남')
                         ],
@@ -128,22 +116,17 @@ class _WritePageState extends State<WritePage> {
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(
-                          5, 5, 5, 5),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       width: 65,
                       decoration: BoxDecoration(
                         borderRadius:
-                        const BorderRadius.all(
-                            Radius.circular(5)),
-                        color: selected == 2
-                            ? Colors.black12
-                            : Colors.transparent,
+                            const BorderRadius.all(Radius.circular(5)),
+                        color:
+                            selected == 2 ? Colors.black12 : Colors.transparent,
                       ),
                       child: const Column(
                         children: [
-                          Image(
-                              image: AssetImage(
-                                  'assets/images/flower2.png')),
+                          Image(image: AssetImage('assets/images/flower2.png')),
                           SizedBox(height: 5),
                           Text('평온')
                         ],
@@ -154,8 +137,7 @@ class _WritePageState extends State<WritePage> {
               ),
               const SizedBox(height: 20),
               Row(
-                mainAxisAlignment:
-                MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
                     onTap: () {
@@ -164,22 +146,17 @@ class _WritePageState extends State<WritePage> {
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(
-                          5, 5, 5, 5),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       width: 65,
                       decoration: BoxDecoration(
                         borderRadius:
-                        const BorderRadius.all(
-                            Radius.circular(5)),
-                        color: selected == 3
-                            ? Colors.black12
-                            : Colors.transparent,
+                            const BorderRadius.all(Radius.circular(5)),
+                        color:
+                            selected == 3 ? Colors.black12 : Colors.transparent,
                       ),
                       child: const Column(
                         children: [
-                          Image(
-                              image: AssetImage(
-                                  'assets/images/flower3.png')),
+                          Image(image: AssetImage('assets/images/flower3.png')),
                           SizedBox(height: 5),
                           Text('화남')
                         ],
@@ -194,22 +171,17 @@ class _WritePageState extends State<WritePage> {
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.fromLTRB(
-                          5, 5, 5, 5),
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       width: 65,
                       decoration: BoxDecoration(
                         borderRadius:
-                        const BorderRadius.all(
-                            Radius.circular(5)),
-                        color: selected == 4
-                            ? Colors.black12
-                            : Colors.transparent,
+                            const BorderRadius.all(Radius.circular(5)),
+                        color:
+                            selected == 4 ? Colors.black12 : Colors.transparent,
                       ),
                       child: const Column(
                         children: [
-                          Image(
-                              image: AssetImage(
-                                  'assets/images/flower4.png')),
+                          Image(image: AssetImage('assets/images/flower4.png')),
                           SizedBox(height: 5),
                           Text('슬픔')
                         ],
@@ -217,12 +189,10 @@ class _WritePageState extends State<WritePage> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(
-                        5, 5, 5, 5),
+                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                     width: 65,
                     decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(5)),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
                       color: Colors.transparent,
                     ),
                   ),
@@ -244,8 +214,7 @@ class _WritePageState extends State<WritePage> {
                 if (!mounted) return;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>  MainPage()),
+                  MaterialPageRoute(builder: (context) => const MainPage()),
                 );
               },
               child: const Text('작성완료'),
@@ -253,6 +222,36 @@ class _WritePageState extends State<WritePage> {
           ],
         );
       }),
+    );
+  }
+
+  void loading() {
+    // 로딩 화면 표시
+    FocusManager.instance.primaryFocus?.unfocus();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white24,
+          content: Container(
+            width: 400.0,
+            height: 400.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment:
+              CrossAxisAlignment.center,
+              children: [
+                Image.asset('assets/images/color.gif'),
+                // 로딩 스피너
+                const SizedBox(height: 20.0),
+                const Text("로딩 중...",
+                    style: TextStyle(fontSize: 16.0)),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -283,70 +282,48 @@ class _WritePageState extends State<WritePage> {
                     const Text(
                       '글 작성하기',
                       style:
-                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                        onPressed: () async {
+                        onPressed: ()  async {
                           setState(() {});
-                          // 로딩 화면 표시
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          var loadingDialog = showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.white24,
-                                content: Container(
-                                  width: 400.0,
-                                  height: 400.0,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Image.asset('assets/images/color.gif'), // 로딩 스피너
-                                      SizedBox(height: 20.0),
-                                      Text("로딩 중...", style: TextStyle(fontSize: 16.0)),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-
                           print(_titleEditController.text);
                           print(_contentEditController.text);
                           print(_image!.path);
                           print(selected);
                           // String temp = storage.read(key:'userId');
-                          int userId = int.parse(await storage.read(key: 'userId')??'0');
-                          String nickName = await storage.read(key:'nickName')?? '';
+                          int userId = int.parse(
+                              await storage.read(key: 'userId') ?? '0');
+                          String nickName =
+                              await storage.read(key: 'nickName') ?? '';
                           print(userId);
                           FeedDto feedDto = FeedDto(
-                          content: _content,
-                          emotion: 0,
-                          feedId: 0,
-                          img: '',
-                          lat: 37.5013068,
-                          likeCnt: 0,
-                          lng: 127.0396597,
-                          nickName: nickName,
-                          regDate: '',
-                          title: _title,
-                          userId: userId);
+                              content: _content,
+                              emotion: selected,
+                              feedId: 0,
+                              img: '',
+                              lat: 37.5013068,
+                              likeCnt: 0,
+                              lng: 127.0396597,
+                              nickName: nickName,
+                              regDate: '',
+                              title: _title,
+                              userId: userId);
                           feedDto = await feedProvider.getEmotion(
-                          feedDto, _image!.path);
+                              feedDto, _image!.path);
                           await feedProvider.postFeed(feedDto);
-                          // 로딩 화면 닫기
-                          Navigator.of(loadingDialog as BuildContext).pop();
 
-                          FocusManager.instance.primaryFocus?.unfocus();
+                          loading();
+                          // 로딩 화면 닫기
+                          Navigator.of(context).pop();
+
                           _showEmotionDialog();
                         },
                         style: ButtonStyle(
                             backgroundColor:
-                            MaterialStatePropertyAll(Colors.blue.shade200)),
+                                MaterialStatePropertyAll(Colors.blue.shade200)),
                         child: const Text(
-                          '작성하기',
+                          '분석하기',
                           style: TextStyle(color: Colors.black87),
                         )),
                   ],
@@ -375,14 +352,14 @@ class _WritePageState extends State<WritePage> {
                       hintText: '제목을 입력하세요',
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 0.0,
-                          )),
+                        color: Colors.white,
+                        width: 0.0,
+                      )),
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 0.0,
-                          )),
+                        color: Colors.white,
+                        width: 0.0,
+                      )),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -405,14 +382,14 @@ class _WritePageState extends State<WritePage> {
                       hintText: '내용을 입력하세요',
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 0.0,
-                          )),
+                        color: Colors.white,
+                        width: 0.0,
+                      )),
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 0.0,
-                          )),
+                        color: Colors.white,
+                        width: 0.0,
+                      )),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -435,9 +412,9 @@ class _WritePageState extends State<WritePage> {
                 decoration: const BoxDecoration(
                     border: Border(
                         top: BorderSide(
-                          color: Colors.black12,
-                          width: 1,
-                        ))),
+                  color: Colors.black12,
+                  width: 1,
+                ))),
                 width: double.infinity,
                 child: Row(
                   children: [
@@ -457,17 +434,17 @@ class _WritePageState extends State<WritePage> {
   Widget _buildImageArea() {
     return _image != null
         ? Container(
-      margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
-      width: 300,
-      height: 300,
-      child: Image.file(File(_image!.path)),
-    )
+            margin: const EdgeInsets.fromLTRB(20, 20, 20, 60),
+            width: 300,
+            height: 300,
+            child: Image.file(File(_image!.path)),
+          )
         : Container(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
-      width: 300,
-      height: 300,
-      color: Colors.red,
-    );
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
+            width: 300,
+            height: 300,
+            color: Colors.red,
+          );
   }
 
   @override
@@ -477,4 +454,3 @@ class _WritePageState extends State<WritePage> {
     super.dispose();
   }
 }
-
