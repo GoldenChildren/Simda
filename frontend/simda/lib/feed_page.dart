@@ -127,7 +127,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         Row(
                           children: [
                             Text(
-                              feed[index].nickname,
+                              feed[index].nickName,
                               style: const TextStyle(fontSize: 10),
                             ),
                             const SizedBox(width: 10),

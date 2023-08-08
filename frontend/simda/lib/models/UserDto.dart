@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class UserDto {
-  final String bio;
+  final String ? bio;
   final String email;
   final String nickname;
   final String profileImg;
@@ -9,7 +9,7 @@ class UserDto {
   final int userRole;
 
   UserDto({
-    required this.bio,
+    this.bio,
     required this.email,
     required this.nickname,
     required this.profileImg,
