@@ -36,8 +36,8 @@ class FeedDto {
       lat: json['lat'],
       likeCnt: json['likeCnt'],
       lng: json['lng'],
-      nickName: json['nickName'],
-      regDate: json['regDate'],
+      nickName: json['nickName']??'',
+      regDate: json['regDate']??'',
       title: json['title'],
       userId: json['userId'],
     );}
