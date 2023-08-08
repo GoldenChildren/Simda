@@ -68,15 +68,28 @@ public class ApiServiceImpl implements ApiService{
 
     // 바드 API 호출
     @Override
-    public int bardApi(String content){
+    public int bardApi(String caption, String title, String content){
         System.out.println("ApiController - BardApi 호출");
         // 게시글의 Content를 받아서 Ptyhon의 Bard API로 정보를 전달한다
         int emotion = 0; // 감정 기본 값은 0으로 고정
         try {
-            System.out.println(content);
+            System.out.println("caption : "+caption);
+            System.out.println("content : "+content);
+            System.out.println("title : "+title);
+            caption = caption.replaceAll("(\r\n|\r|\n|\n\r)", " ");
+            title = title.replaceAll("(\r\n|\r|\n|\n\r)", " ");
             content = content.replaceAll("(\r\n|\r|\n|\n\r)", " ");
             AIClient client = new GoogleBardClient("Ygj5yW4U7eHBq5WAD5CPYQlzJ-Bi0nrNSdAkri99eP1VIqXc4gzGainsORoV0sgLpsolPw.");
-            Answer answer = client.ask("다음 문장의 전체 분위기를 반환해. 형식을 맞춰서"+content+"(이)라는 문장은 다음 보기 중 어디에 가장 가까워? 0 : 행복, 1 : 기쁨, 2 : 평온, 3 : 화남, 4 : 슬픔. 대답은 다음과 같은 형식으로만 대답해. ex) 답 : 1");
+//            Answer answer = client.ask("다음 문장의 전체 분위기를 반환해. 형식을 맞춰서"+content+"(이)라는 문장은 다음 보기 중 어디에 가장 가까워? 0 : 행복, 1 : 기쁨, 2 : 평온, 3 : 화남, 4 : 슬픔. 대답은 다음과 같은 형식으로만 대답해. ex) 답 : 1");
+            String query = "다음 게시글의 전체 분위기를 형식에 맞춰서 대답해. 게시글은 이미지와 제목, 내용으로 이루어져 있어. 게시한 이미지는 영어로 설명할게. 이미지 설명 : \""
+                    +caption+
+                    "\" 게시글 제목 : \""
+                    +title+
+                    "\" 게시글 내용 : \""
+                    +content+
+                    "\" 위 게시글의 게시자의 감정은 다음 보기 중 어디에 가장 가까워? 0 : 행복, 1 : 기쁨, 2 : 평온, 3 : 화남, 4 : 슬픔. 대답은 꼭 다음과 같은 형식으로만 대답해야해. ex) 답 : 1";
+            System.out.println(query);
+            Answer answer = client.ask(query);
             String output = answer.getChosenAnswer();
             System.out.println(output);
 

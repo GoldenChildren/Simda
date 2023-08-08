@@ -9,7 +9,7 @@ public interface ApiService {
     String getEmailByAccessToken(TokenDto tokenDto) throws JsonProcessingException;
 
     //
-    int bardApi(String content);
+    int bardApi(String caption, String title, String content);
 
     String imageCaptioningApi(String imageUrl);
 

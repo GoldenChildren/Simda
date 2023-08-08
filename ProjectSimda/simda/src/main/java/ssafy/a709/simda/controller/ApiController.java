@@ -51,7 +51,7 @@ public class ApiController {
         try {
             // 경로
             String caption = apiService.imageCaptioningApi(feedDto.getImg());
-            emotion = apiService.bardApi(caption + " " + feedDto.getContent());
+            emotion = apiService.bardApi(caption, feedDto.getTitle(), feedDto.getContent());
         } catch (Exception e) {
             System.out.println("Bard API 전송 오류");
             feedDto.setEmotion(-1);
