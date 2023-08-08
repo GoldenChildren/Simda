@@ -70,7 +70,7 @@ public class Feed {
     public static Feed changeToFeed(FeedDto feedDto){
         return Feed.builder()
                 .feedId(feedDto.getFeedId())
-                .user(User.builder().userId(feedDto.getUserId()).build())
+                .user(User.builder().userId(feedDto.getUserId()).nickname(feedDto.getNickname()).build())
                 .title(feedDto.getTitle())
                 .emotion(feedDto.getEmotion())
                 .content(feedDto.getContent())

@@ -34,7 +34,7 @@ public class FeedDto {
     // Regist Date
     private String regDate;
     //Writer Nick
-    private String nickName;
+    private String nickname;
     //Writer id
     private int userId;
     // Feed(Entity)를 FeedDto로 변환
@@ -43,7 +43,7 @@ public class FeedDto {
                 .feedId(feed.getFeedId())
                 .title(feed.getTitle())
                 .emotion(feed.getEmotion())
-                .nickName(user.getNickname())
+                .nickname(user.getNickname())
                 .userId(user.getUserId())
                 .content(feed.getContent())
                 .img(feed.getImg())
