@@ -82,7 +82,9 @@ class _MapPageState extends State<MapPage> {
   void _updateMarkers(Set<Marker> markers) {
     print('Updated ${markers.length} markers');
     setState(() {
-      this.markers = markers;
+      if (mounted) {
+        this.markers = markers;
+      }
     });
   }
 
