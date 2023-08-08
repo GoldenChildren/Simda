@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
+import 'package:simda/main_page.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
@@ -66,240 +67,273 @@ class _WritePageState extends State<WritePage> {
                       TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     TextButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          print(_titleEditController.text);
+                          print(_contentEditController.text);
+                          print(_image!.path);
+                          print(selected);
+                          // String temp = storage.read(key:'userId');
+                          int userId = int.parse(await storage.read(key: 'userId')??'0');
+                          print(userId);
+                          FeedDto feedDto = FeedDto(
+                              content: _content,
+                              emotion: 0,
+                              feedId: 0,
+                              img: '',
+                              lat: 37.5013068,
+                              likeCnt: 0,
+                              lng: 127.0396597,
+                              nickName: '',
+                              regDate: '',
+                              title: _title,
+                              userId: userId);
+                          feedProvider.postFeed(
+                              feedDto, _image!.path);
+
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.white24,
+                                content: Container(
+                                  width: 400.0, // 원하는 가로 크기
+                                  height: 400.0, // 원하는 세로 크기
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset('assets/images/flower.gif'), // 로딩 스피너
+                                      SizedBox(height: 20.0),
+                                      Text("로딩 중...", style: TextStyle(fontSize: 16.0)),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          // 로딩이 완료되었다고 가정하고, 백엔드에서 emotion 값을 받아옴
+                          int receivedEmotion = 2; // 예시로 2로 설정
+
+                          Navigator.of(context).pop(); // 로딩 화면 닫기
+
+
                           FocusManager.instance.primaryFocus?.unfocus();
                           showDialog<String>(
-                            context: context,
                             builder: (context) => StatefulBuilder(builder:
-                                (BuildContext context, StateSetter setState) {
-                              return AlertDialog(
-                                title: const Text(
-                                  '나의 감정은?',
-                                  style: TextStyle(),
-                                  textAlign: TextAlign.center,
-                                ),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(height: 2, color: Colors.purple),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                            context: context,
+                                    (BuildContext context, StateSetter setState) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                      '나의 감정은?',
+                                      style: TextStyle(),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              selected = 0;
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                5, 5, 5, 5),
-                                            width: 65,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(5)),
-                                              color: selected == 0
-                                                  ? Colors.black12
-                                                  : Colors.transparent,
+                                        Container(height: 2, color: Colors.purple),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selected = 0;
+                                                });
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.fromLTRB(
+                                                    5, 5, 5, 5),
+                                                width: 65,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
+                                                  color: selected == 0
+                                                      ? Colors.black12
+                                                      : Colors.transparent,
+                                                ),
+                                                child: const Column(
+                                                  children: [
+                                                    Image(
+                                                        image: AssetImage(
+                                                            'assets/images/flower0.png')),
+                                                    SizedBox(height: 5),
+                                                    Text('행복')
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            child: const Column(
-                                              children: [
-                                                Image(
-                                                    image: AssetImage(
-                                                        'assets/images/flower1.png')),
-                                                SizedBox(height: 5),
-                                                Text('신남')
-                                              ],
+                                            const SizedBox(width: 10),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selected = 1;
+                                                });
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.fromLTRB(
+                                                    5, 5, 5, 5),
+                                                width: 65,
+                                                // color: _colors[1],
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
+                                                  color: selected == 1
+                                                      ? Colors.black12
+                                                      : Colors.transparent,
+                                                ),
+                                                child: const Column(
+                                                  children: [
+                                                    Image(
+                                                        image: AssetImage(
+                                                            'assets/images/flower1.png')),
+                                                    SizedBox(height: 5),
+                                                    Text('신남')
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            const SizedBox(width: 10),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selected = 2;
+                                                });
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.fromLTRB(
+                                                    5, 5, 5, 5),
+                                                width: 65,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
+                                                  color: selected == 2
+                                                      ? Colors.black12
+                                                      : Colors.transparent,
+                                                ),
+                                                child: const Column(
+                                                  children: [
+                                                    Image(
+                                                        image: AssetImage(
+                                                            'assets/images/flower2.png')),
+                                                    SizedBox(height: 5),
+                                                    Text('평온')
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(width: 10),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              selected = 1;
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                5, 5, 5, 5),
-                                            width: 65,
-                                            // color: _colors[1],
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(5)),
-                                              color: selected == 1
-                                                  ? Colors.black12
-                                                  : Colors.transparent,
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selected = 3;
+                                                });
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.fromLTRB(
+                                                    5, 5, 5, 5),
+                                                width: 65,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
+                                                  color: selected == 3
+                                                      ? Colors.black12
+                                                      : Colors.transparent,
+                                                ),
+                                                child: const Column(
+                                                  children: [
+                                                    Image(
+                                                        image: AssetImage(
+                                                            'assets/images/flower3.png')),
+                                                    SizedBox(height: 5),
+                                                    Text('화남')
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            child: const Column(
-                                              children: [
-                                                Image(
-                                                    image: AssetImage(
-                                                        'assets/images/flower2.png')),
-                                                SizedBox(height: 5),
-                                                Text('평온')
-                                              ],
+                                            const SizedBox(width: 10),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selected = 4;
+                                                });
+                                              },
+                                              child: Container(
+                                                padding: const EdgeInsets.fromLTRB(
+                                                    5, 5, 5, 5),
+                                                width: 65,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
+                                                  color: selected == 4
+                                                      ? Colors.black12
+                                                      : Colors.transparent,
+                                                ),
+                                                child: const Column(
+                                                  children: [
+                                                    Image(
+                                                        image: AssetImage(
+                                                            'assets/images/flower4.png')),
+                                                    SizedBox(height: 5),
+                                                    Text('슬픔')
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              selected = 2;
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                5, 5, 5, 5),
-                                            width: 65,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(5)),
-                                              color: selected == 2
-                                                  ? Colors.black12
-                                                  : Colors.transparent,
+                                            Container(
+                                              padding: const EdgeInsets.fromLTRB(
+                                                  5, 5, 5, 5),
+                                              width: 65,
+                                              decoration: const BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5)),
+                                                color: Colors.transparent,
+                                              ),
                                             ),
-                                            child: const Column(
-                                              children: [
-                                                Image(
-                                                    image: AssetImage(
-                                                        'assets/images/flower4.png')),
-                                                SizedBox(height: 5),
-                                                Text('슬픔')
-                                              ],
-                                            ),
-                                          ),
+                                            const SizedBox(width: 10),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              selected = 3;
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                5, 5, 5, 5),
-                                            width: 65,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(5)),
-                                              color: selected == 3
-                                                  ? Colors.black12
-                                                  : Colors.transparent,
-                                            ),
-                                            child: const Column(
-                                              children: [
-                                                Image(
-                                                    image: AssetImage(
-                                                        'assets/images/flower0.png')),
-                                                SizedBox(height: 5),
-                                                Text('행복')
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              selected = 4;
-                                            });
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                5, 5, 5, 5),
-                                            width: 65,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(5)),
-                                              color: selected == 4
-                                                  ? Colors.black12
-                                                  : Colors.transparent,
-                                            ),
-                                            child: const Column(
-                                              children: [
-                                                Image(
-                                                    image: AssetImage(
-                                                        'assets/images/flower3.png')),
-                                                SizedBox(height: 5),
-                                                Text('화남')
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              5, 5, 5, 5),
-                                          width: 65,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5)),
-                                            color: Colors.transparent,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {});
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('저장하기'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      setState(() {});
-                                      // Navigator.of(context)
-                                      //     .pop(); // 나중에는 글 최종 작성하는 버튼으로!!!!
-                                      print(_titleEditController.text);
-                                      print(_contentEditController.text);
-                                      print(_image!.path);
-                                      print(selected);
-                                      // String temp = storage.read(key:'userId');
-                                      int userId = int.parse(await storage.read(key: 'userId')??'0');
-                                      print(userId);
-                                      FeedDto feedDto = FeedDto(
-                                          content: _content,
-                                          emotion: 0,
-                                          feedId: 0,
-                                          img: '',
-                                          lat: 37.5013068,
-                                          likeCnt: 0,
-                                          lng: 127.0396597,
-                                          nickName: '',
-                                          regDate: '',
-                                          title: _title,
-                                          userId: userId);
-                                      feedProvider.postFeed(
-                                          feedDto, _image!.path);
-                                    },
-                                    child: const Text('작성완료'),
-                                  ),
-                                ],
-                              );
-                            }),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {});
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('저장하기'),
+                                      ),
+                                      TextButton(
+                                        onPressed: ()  async {
+                                          if (!mounted) return;
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>  const MainPage()),
+                                          );
+                                        },
+                                        child: const Text('작성완료'),
+                                      ),
+                                    ],
+                                  );
+                                }),
                           );
+
                         },
                         style: ButtonStyle(
                             backgroundColor:
@@ -436,4 +470,3 @@ class _WritePageState extends State<WritePage> {
     super.dispose();
   }
 }
-
