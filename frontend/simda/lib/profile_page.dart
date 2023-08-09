@@ -247,6 +247,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ]),
               const Expanded(
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     TableCalendarScreen(),
                     ProfileFeedPage(),
