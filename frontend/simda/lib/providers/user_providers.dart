@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:simda/models/FollowDto.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:dio/dio.dart';
 
@@ -185,7 +186,29 @@ class UserProviders {
   }
 
   Future<void> deleteFollowUser(int fromUserId, int toUserId) async{
-    final response = await dio.get('$url/followers?fromUserId=$fromUserId&toUserId=$toUserId');
+    final response = await dio.delete('$url/followers?fromUserId=$fromUserId&toUserId=$toUserId');
+  }
+
+  Future<void> createFollowUser(int fromUserId, UserDto toUserDto) async{
+    // userId만 집어넣어서 찾을 수 있을까?
+    final fromUserDtoResponse = await dio.get('$url/profile?userId=$fromUserId');
+    print(fromUserDtoResponse.statusCode);
+
+    if (fromUserDtoResponse.statusCode == 200) {
+      final fromUserDto = UserDto.fromJson(fromUserDtoResponse.data);
+      print(fromUserDto.nickname);
+      print(toUserDto.nickname);
+
+      final followDto = FollowDto(
+        fromUserId: fromUserDto,
+        toUserId: toUserDto,
+      );
+
+      final response = await dio.post('$url/followers', data: followDto,
+          options: Options(contentType: 'application/json'));
+    } else {
+      print("안돼");
+    }
   }
 
 }

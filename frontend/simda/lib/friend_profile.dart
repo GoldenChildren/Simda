@@ -143,13 +143,13 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                   userProvider.deleteFollowUser(loginUserId, widget.userDto.userId);
                                   setState(() {
                                     _isFollowing =
-                                    !_isFollowing; // Toggle the follow button
+                                    false;
                                   });
                                 } else {
-
+                                  userProvider.createFollowUser(loginUserId, widget.userDto);
                                   setState(() {
                                     _isFollowing =
-                                    !_isFollowing; // Toggle the follow button
+                                    true; // Toggle the follow button
                                   });
                                 }
                               },
