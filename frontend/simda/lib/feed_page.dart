@@ -404,7 +404,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
 
                                       });
                                       CommentDto commentDto = CommentDto(
-                                          commentList: [],
+                                          cCommentList: [],
                                           cmtId: 0,
                                           content: _commentContent,
                                           feedId: feed[index].feedId,
