@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           canvasColor: Colors.transparent,
         ),
-        // home: viewModel.isLoggedIn == 1 ? MainPage(0) : const LoginPage(),
-        home:  MainPage(0),
+        home: viewModel.isLoggedIn == 1 ? MainPage(0) : const LoginPage(),
+        // home:  MainPage(0),
       ),
     );
   }

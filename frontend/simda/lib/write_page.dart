@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
-import 'package:simda/map_page.dart';
-import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
 import 'main_page.dart';
@@ -34,24 +32,23 @@ class _WritePageState extends State<WritePage> {
     }
   }
 
-
   final _titleEditController = TextEditingController();
   final _contentEditController = TextEditingController();
 
   FeedProviders feedProvider = FeedProviders();
 
   FeedDto uploadFeed = FeedDto(
-  content: "",
-  emotion: -1,
-  feedId: -1,
-  img: '',
-  lat: 0,
-  likeCnt: 0,
-  lng: 0,
-  nickname: "",
-  regDate: '',
-  title: "",
-  userId: 0,
+    content: "",
+    emotion: -1,
+    feedId: -1,
+    img: '',
+    lat: 0,
+    likeCnt: 0,
+    lng: 0,
+    nickname: "",
+    regDate: '',
+    title: "",
+    userId: 0,
   );
 
   void _showEmotionDialog(BuildContext context) {
@@ -74,29 +71,40 @@ class _WritePageState extends State<WritePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selected = 0;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                      width: 65,
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5)),
-                        color:
-                            selected == 0 ? Colors.black12 : Colors.transparent,
+                  Column(
+                    children: [
+                      const Text('AI가 분석한 내 감정', style: TextStyle(
+                        color: Colors.black45,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 6,
+                      ),),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selected = 0;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          width: 75,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5)),
+                            color:
+                                selected == 0 ? Colors.black12 : Colors.transparent,
+                          ),
+                          child: const Column(
+                            children: [
+
+                              SizedBox(height: 3),
+                              Image(image: AssetImage('assets/images/flower0.png')),
+                              SizedBox(height: 5),
+                              Text('행복')
+                            ],
+                          ),
+                        ),
                       ),
-                      child: const Column(
-                        children: [
-                          Image(image: AssetImage('assets/images/flower0.png')),
-                          SizedBox(height: 5),
-                          Text('행복')
-                        ],
-                      ),
-                    ),
+                    ],
                   ),
                   const SizedBox(width: 10),
                   GestureDetector(
@@ -227,12 +235,12 @@ class _WritePageState extends State<WritePage> {
             ),
             TextButton(
               onPressed: () async {
-                    await feedProvider.postFeed(uploadFeed).then((value) {
-                Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MainPage(0)),
-                );
-                    });
+                await feedProvider.postFeed(uploadFeed).then((value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainPage(0)),
+                  );
+                });
               },
               child: const Text('작성완료'),
             ),
@@ -241,7 +249,6 @@ class _WritePageState extends State<WritePage> {
       }),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -283,8 +290,10 @@ class _WritePageState extends State<WritePage> {
                         print(selected);
 
                         // 사용자 정보 가져오기
-                        int userId = int.parse(await storage.read(key: 'userId') ?? '0');
-                        String nickname = await storage.read(key: 'nickname') ?? '';
+                        int userId =
+                            int.parse(await storage.read(key: 'userId') ?? '0');
+                        String nickname =
+                            await storage.read(key: 'nickname') ?? '';
                         print(userId);
 
                         // FeedDto 생성
@@ -314,13 +323,13 @@ class _WritePageState extends State<WritePage> {
                           builder: (BuildContext context) {
                             return Dialog(
                                 insetAnimationDuration:
-                                const Duration(seconds: 2),
+                                    const Duration(seconds: 2),
                                 insetPadding: const EdgeInsets.all(0),
                                 elevation: 0,
                                 backgroundColor: Colors.black45,
                                 shape: const RoundedRectangleBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(0))),
+                                        BorderRadius.all(Radius.circular(0))),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -336,18 +345,20 @@ class _WritePageState extends State<WritePage> {
                           },
                         );
                         // 감정 정보 가져오기 및 피드 게시
-                        uploadFeed = await feedProvider.getEmotion(feedDto, _image!.path);
+                        uploadFeed = await feedProvider.getEmotion(
+                            feedDto, _image!.path);
                         selected = uploadFeed.emotion;
 
                         // 2초 딜레이 후 로딩 화면 닫기 및 다이얼로그 표시
                         // await Future.delayed(const Duration(seconds: 2));
                         // Navigator.of(context).pop(); // 로딩 화면 닫기
 
-                        if(!mounted) return;
+                        if (!mounted) return;
                         _showEmotionDialog(context);
                       },
                       style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(Colors.blue.shade200)),
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.blue.shade200)),
                       child: const Text(
                         '분석하기',
                         style: TextStyle(color: Colors.black87),
