@@ -6,14 +6,14 @@ import 'package:simda/providers/user_providers.dart';
 import 'main.dart';
 import 'main_page.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class ChattingSearchPage extends StatefulWidget {
+  const ChattingSearchPage({super.key});
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<ChattingSearchPage> createState() => _ChattingSearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _ChattingSearchPageState extends State<ChattingSearchPage> {
   int _userId = 0;
 
   @override
@@ -49,7 +49,7 @@ class _SearchPageState extends State<SearchPage> {
   UserProviders userProviders = UserProviders();
 
   // SearchPage에 대한 상태관리
-  _SearchPageState() {
+  _ChattingSearchPageState() {
     _filter.addListener(() {
       // filter가 상태를 상태 변화를 감지
       setState(() {
@@ -62,7 +62,7 @@ class _SearchPageState extends State<SearchPage> {
   // getUsers 메서드를 사용하여 API 데이터 가져오기
   Future<void> _fetchData() async {
     if (_searchText.isNotEmpty) {
-      final userList = await userProviders.getUsers(_searchText);
+      final userList = await userProviders.getUsers(_searchText); // 바꿔줘야함
       setState(() {
         _userList = userList;
       });
@@ -77,13 +77,24 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
+      child: Scaffold(
+          body: Column(
         children: <Widget>[
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
             child: Row(
               children: <Widget>[
+                const SizedBox(width: 10),
+                SizedBox(
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    iconSize: 28,
+                  ),
+                ),
                 Expanded(
                   flex: 7,
                   child: TextField(
@@ -129,15 +140,15 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
                 ),
-               Expanded(flex: 0, child: Container()),
+                Expanded(flex: 0, child: Container()),
               ],
             ),
           ),
           // nickname이 비어있지 않으면 결과를 출력
           _userList.isNotEmpty
               ? Container(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: _userList.length,
                     itemBuilder: (context, index) {
@@ -173,12 +184,12 @@ class _SearchPageState extends State<SearchPage> {
                       );
                     },
                   ),
-              )
+                )
               : Container(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                   child: const Text('결과 없음')), // 닉네임이 빈 경우 결과 없음을 출력
         ],
-      ),
+      )),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simda/chat_with_friend.dart';
+import 'package:simda/chatting_search_page.dart';
 import 'package:simda/main.dart';
 import 'package:simda/providers/chatroom_providers.dart';
 
@@ -50,7 +51,12 @@ class _ChattingPageState extends State<ChattingPage> {
                         style:
                             TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      IconButton(onPressed: () {},
+                      IconButton(onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ChattingSearchPage()),
+                        );
+                      },
                       icon: const Icon(Icons.add), iconSize: 28,),
                     ],
                   ),
