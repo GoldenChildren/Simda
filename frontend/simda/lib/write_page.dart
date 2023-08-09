@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
 import 'package:simda/providers/feed_providers.dart';
@@ -365,17 +363,19 @@ class _WritePageState extends State<WritePage> {
                           barrierDismissible: false,
                           barrierColor: null,
                           builder: (BuildContext buildContext) {
-                            Future.delayed(const Duration(seconds: 2), () async {
+                            Future.delayed(const Duration(seconds: 0), () async {
                               // 감정 정보 받아오기
                               uploadFeed = await feedProvider.getEmotion(
                                   feedDto, _image!.path);
+                              selected = uploadFeed.emotion;
+                              emotion = uploadFeed.emotion;
                               if(!mounted) return;
                               Navigator.of(buildContext).pop(); // 로딩 화면 닫기
                               _showEmotionDialog(buildContext); // 감정 선택 화면 열기
                             });
                             return Dialog(
-                                insetAnimationDuration:
-                                    const Duration(seconds: 2),
+                                // insetAnimationDuration:
+                                //     const Duration(seconds: 2),
                                 insetPadding: const EdgeInsets.all(0),
                                 elevation: 0,
                                 backgroundColor: Colors.black45,
@@ -396,11 +396,9 @@ class _WritePageState extends State<WritePage> {
                                 ));
                           },
                         );
-                        selected = uploadFeed.emotion;
-                        emotion = uploadFeed.emotion;
 
                         // 2초 딜레이 후 로딩 화면 닫기 및 다이얼로그 표시
-                        await Future.delayed(const Duration(seconds: 2));
+                        // await Future.delayed(const Duration(seconds: 2));
                       },
                       style: ButtonStyle(
                           backgroundColor:
