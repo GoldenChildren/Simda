@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/user_providers.dart';
-import 'informaion_policy.dart';
-import 'location_service_policy.dart';
 import 'main.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
@@ -62,8 +60,8 @@ class _ProfilePageState extends State<ProfilePage> {
         _userId = storeUserId;
         _followList = followings;
         _followerList = followers;
-        _followCount = _followList.length;
-        _followerCount = _followerList.length;
+        _followCount = followings?.length ?? 0;
+        _followerCount = followers?.length ?? 0;
       });
     } catch (e) {
       print("Error reading from secure storage: $e");
@@ -363,38 +361,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
-
-                ListTile(
-                  leading: const Icon(
-                    Icons.info,
-                    color: Colors.blueGrey,
-                  ),
-                  title: const Text('개인정보처리방침'),
-                  onTap: () async {
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => InformationPolicy()),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.location_on,
-                    color: Colors.blueGrey,
-                  ),
-                  title: const Text('위치기반서비스이용약관'),
-                  onTap: () async {
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>  LocationServicePolicy()),
-                    );
-                  },
-                ),
-
               ],
             ),
           ),

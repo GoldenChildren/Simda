@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simda/chat_with_friend.dart';
+import 'package:simda/chatting_search_page.dart';
 import 'package:simda/main.dart';
 import 'package:simda/providers/chatroom_providers.dart';
 
@@ -18,8 +19,10 @@ class _ChattingPageState extends State<ChattingPage> {
   ChatRoomProviders chatroomprovider = ChatRoomProviders();
 
   Future initChatRoom() async {
-    // chatroom = await chatroomprovider.getChatRoom(user);
+     chatroom = await chatroomprovider.getChatRoom(8);
+     setState(() {});
   }
+
 
   @override
   void initState() {
@@ -48,7 +51,12 @@ class _ChattingPageState extends State<ChattingPage> {
                         style:
                             TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      IconButton(onPressed: () {},
+                      IconButton(onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ChattingSearchPage()),
+                        );
+                      },
                       icon: const Icon(Icons.add), iconSize: 28,),
                     ],
                   ),
@@ -67,16 +75,16 @@ class _ChattingPageState extends State<ChattingPage> {
 // final List<String> friends = <String>['맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아', '맹구', '철수', '유리', '짱아'];
 
 class ListViewBuilder extends StatefulWidget {
-
+  List<ChatRoomDto> chatroom;
   ListViewBuilder({required this.chatroom, super.key});
 
-  List<ChatRoomDto> chatroom;
 
   @override
   State<ListViewBuilder> createState() => _ListViewBuilderState();
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -96,9 +104,9 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const CircleAvatar(
+                 CircleAvatar(
                   // backgroundImage: AssetImage(widget.chatroom.user1.img),
-                  backgroundImage: AssetImage('assets/images/yuri.jpg'),
+                  backgroundImage: NetworkImage(widget.chatroom[index].user2Img),
                   radius: 30,
                 ),
                 const SizedBox(width: 10),
@@ -111,34 +119,28 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            friends[index],
+                            widget.chatroom[index].user2nickName,
                             style: const TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 5),
-                          const Text('내일 축구 안할거야?',
+                          Text(widget.chatroom[index].lChatContent,
                           style: TextStyle(fontSize: 15),),
                         ],
                       ),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text('오후 4:30'),
+                            Text(widget.chatroom[index].lChatTime,),
                             const SizedBox(height: 5),
                             Container(
-                              height: 25,
-                              width: 25,
+                              height: 15,
+                              width: 15,
                               decoration: const BoxDecoration(
                                   color: Colors.redAccent,
                                   shape: BoxShape.circle),
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '10',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
                               ),
                             )
                           ]),
