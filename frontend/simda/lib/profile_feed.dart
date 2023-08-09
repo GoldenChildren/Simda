@@ -39,6 +39,8 @@ class ListViewBuilderState extends State<ListViewBuilder> {
   int _userId = 0;
   UserProviders userProvider = UserProviders();
 
+  double lat = 37.5013068;
+  double lng = 127.0396597;
   List<FeedDto> feed = [];
   bool isLoading = true;
 
@@ -47,23 +49,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
   List<bool> isVisible = [];
   List<bool> writeComment = [];
 
-  // List<bool> isVisible = List.filled(feed.length, false);
-  // List<bool> writeComment = List.filled(feed.length, false);
-
-  Future<void> getValueFromSecureStorage() async {
-    try {
-      int storeUserId = int.parse((await storage.read(key: "userId"))!);
-
-      setState(() {
-        _userId = storeUserId;
-      });
-    } catch (e) {
-      print("Error reading from secure storage: $e");
-    }
-  }
-
   Future initFeed() async {
-    // feed = await feedProvider.getFeed(lat, lng);
     feed = await feedProvider.getUserFeedList(_userId);
     setState(() {
       isVisible = List.generate(feed.length, (index) => true);
@@ -74,10 +60,21 @@ class ListViewBuilderState extends State<ListViewBuilder> {
   @override
   void initState() {
     super.initState();
+    _userId = 0;
     getValueFromSecureStorage();
-    initFeed();
   }
 
+  Future<void> getValueFromSecureStorage() async {
+    try {
+      int storeUserId = int.parse((await storage.read(key: "userId"))!);
+      setState(() {
+        _userId = storeUserId;
+      });
+      initFeed();
+    } catch (e) {
+      print("Error reading from secure storage: $e");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

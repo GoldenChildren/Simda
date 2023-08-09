@@ -122,7 +122,7 @@ class FeedProviders {
     final response = await dio.get('$url/$userId');
 
     if (response.statusCode == 200) {
-      feed = jsonDecode(response.data)['feedList'].map<FeedDto>((feeds) {
+      feed = response.data['feedList'].map<FeedDto>((feeds) {
         return FeedDto.fromJson(feeds);
       }).toList();
     }
