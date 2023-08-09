@@ -1,9 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/user_providers.dart';
-import 'informaion_policy.dart';
-import 'location_service_policy.dart';
 import 'main.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
@@ -23,10 +22,16 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String _email = "";
   String _profileImg = "";
   String _nickname = "";
   String _bio = "";
   int _userId = 0;
+  int _followCount = 0;
+  int _followerCount = 0;
+  List<UserDto> _followList = [];
+  List<UserDto> _followerList = [];
+  UserProviders userProvider = UserProviders();
 
   @override
   void initState() {
@@ -36,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> getValueFromSecureStorage() async {
     try {
+      String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
@@ -47,17 +53,20 @@ class _ProfilePageState extends State<ProfilePage> {
       await userProvider.getFollowData("followers", storeUserId);
 
       setState(() {
+        _email = storeEmail ?? "";
         _profileImg = storeProfileImg ?? "";
         _nickname = storeNickname ?? "";
         _bio = storeBio ?? "";
         _userId = storeUserId;
+        _followList = followings;
+        _followerList = followers;
+        _followCount = followings?.length ?? 0;
+        _followerCount = followers?.length ?? 0;
       });
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
   }
-
-  UserProviders userProvider = UserProviders();
 
   final viewModel = MainViewModel(KakaoLogin());
 
@@ -79,8 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Text(
                       _nickname,
-                      style:
-                      const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Builder(
                       builder: (context) => IconButton(
@@ -149,17 +158,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                _navigateToFollowingListPage(
-                                    context); // 팔로잉 숫자를 누르면 팔로잉 목록 페이지로 이동
+                                _navigateToFollowingList(
+                                  context,
+                                  _followList,
+                                ); // 팔로잉 숫자를 누르면 팔로잉 목록 페이지로 이동
                               },
-                              child: createColumns('following', 1120),
+                              child: createColumns('following', _followCount),
                             ),
                             GestureDetector(
                               onTap: () {
-                                _navigateToFollowersListPage(
-                                    context); // 팔로워 숫자를 누르면 팔로워 목록 페이지로 이동
+                                _navigateToFollowersListPage(context,
+                                    _followerList); // 팔로워 숫자를 누르면 팔로워 목록 페이지로 이동
                               },
-                              child: createColumns('followers', 12000),
+                              child: createColumns('followers', _followerCount),
                             ),
                           ],
                         )
@@ -208,8 +219,8 @@ class _ProfilePageState extends State<ProfilePage> {
               // Container(
               //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               //   alignment: Alignment.center,
-              //   child: const Image(image: AssetImage('assets/images/promap.PNG')),
-              // )
+              //   child: Image(image: NetworkImage(_profileImg)),
+              // ),
               const TabBar(
                   indicatorColor: Colors.purple,
                   labelColor: Colors.purple,
@@ -248,12 +259,12 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  currentAccountPicture: const CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/shin.jpg'),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(_profileImg),
                     backgroundColor: Colors.white,
                   ),
-                  accountName: const Text('SHIN'),
-                  accountEmail: const Text('shin@ssafy.com'),
+                  accountName: Text(_nickname),
+                  accountEmail: Text(_email),
                   decoration: BoxDecoration(
                       color: Colors.purple[200],
                       borderRadius: const BorderRadius.only(
@@ -289,12 +300,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       builder: (BuildContext context) {
                         return AlertDialog(
                           title: const Text('SIMDA에 문의사항이 있으십니까?'),
-                          content: const Text('simda@gmail.com 으로 문의주세요!'),
+                          content: const Text('simda709@gmail.com 으로 문의주세요!'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Clipboard.setData(const ClipboardData(
-                                    text: "simda@gmail.com"));
+                                    text: "simda709@gmail.com"));
                                 Navigator.of(context).pop(); // 다이얼로그를 닫음
                               },
                               child: const Text("복사하기"),
@@ -303,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("알겠습니다."),
+                              child: const Text("닫기"),
                             ),
                           ],
                         );
@@ -349,68 +360,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     );
                   },
-                ), ListTile(
-                  leading: const Icon(
-                    Icons.info,
-                    color: Colors.blueGrey,
-                  ),
-                  title: const Text('개인정보처리방침'),
-                  onTap: () async {
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => InformationPolicy()),
-                    );
-                  },
                 ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.location_on,
-                    color: Colors.blueGrey,
-                  ),
-                  title: const Text('위치기반서비스이용약관'),
-                  onTap: () async {
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LocationServicePolicy()),
-                    );
-                  },
-                ),
-
-                ListTile(
-                  leading: const Icon(
-                    Icons.info,
-                    color: Colors.blueGrey,
-                  ),
-                  title: const Text('개인정보처리방침'),
-                  onTap: () async {
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => InformationPolicy()),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(
-                    Icons.location_on,
-                    color: Colors.blueGrey,
-                  ),
-                  title: const Text('위치기반서비스이용약관'),
-                  onTap: () async {
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>  LocationServicePolicy()),
-                    );
-                  },
-                ),
-
               ],
             ),
           ),
@@ -435,22 +385,23 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _navigateToFollowingListPage(BuildContext context) {
+  void _navigateToFollowingList(BuildContext context, List<UserDto> userList) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-        const FollowingListPage(userList: [],), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
+            FollowingListPage(userList: userList), // FollowingListPage는 팔로잉 목록을 보여주는 새로운 페이지입니다.
       ),
     );
   }
 
-  void _navigateToFollowersListPage(BuildContext context) {
+  void _navigateToFollowersListPage(
+      BuildContext context, List<UserDto> userList) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
-        const FollowersListPage(userList: [],), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
+            FollowersListPage(userList: userList), // FollowersListPage는 팔로워 목록을 보여주는 새로운 페이지입니다.
       ),
     );
   }
