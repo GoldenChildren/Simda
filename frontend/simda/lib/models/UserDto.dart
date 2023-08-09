@@ -27,4 +27,15 @@ class UserDto {
       userRole: json['userRole'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'bio': bio,
+      'email': email,
+      'nickname': nickname,
+      'profileImg': profileImg,
+      'userId': userId,
+      'userRole': userRole,
+    };
+  }
 }

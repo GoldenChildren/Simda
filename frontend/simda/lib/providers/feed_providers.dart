@@ -13,7 +13,7 @@ class FeedProviders {
 
 
   // 내 주변, 24시간 이내의 피드를 가져오는 메소드
-  Future<List<FeedDto>> getFeed() async {
+  Future<List<FeedDto>> getFeed(double lat, double lng) async {
     // Future<List<Feed>> getFeed(double lat, double lng) async {
     List<FeedDto> feed = [];
 
@@ -21,8 +21,8 @@ class FeedProviders {
     final response = await dio.get(
         '$url/',
         queryParameters: {
-          'lat' : 37.5013068,
-          'lng' : 127.0396597
+          'lat' : lat,
+          'lng' : lng
         });
     if (response.statusCode == 200) {
       print(response.data);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simda/KakaoLogin/sign_up.dart';
 import 'package:simda/main.dart';
 import 'package:simda/main_page.dart';
+import 'package:social_login_buttons/social_login_buttons.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -99,7 +100,20 @@ class _LoginPageState extends State<LoginPage> {
                       image: AssetImage(
                           'assets/images/kakao_login_large_wide.png'))),
             ),
-
+            const SizedBox(height: 10),
+            SocialLoginButton(
+              height: 46,
+              backgroundColor: Colors.white,
+              text: '구글 로그인',
+              fontSize: 18,
+              borderRadius: 5,
+              width: 350,
+              buttonType: SocialLoginButtonType.google,
+              onPressed: () async {
+                print("로그인 클릭");
+                // Once signed in, return the UserCredential
+              },
+            ),
             Text(
               '${viewModel.isLoggedIn}',
             ),
