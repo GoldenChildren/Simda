@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/user_providers.dart';
+import 'informaion_policy.dart';
+import 'location_service_policy.dart';
 import 'main.dart';
+import 'models/UserDto.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
 import 'KakaoLogin/login_page.dart';
@@ -67,6 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
       print("Error reading from secure storage: $e");
     }
   }
+
 
   final viewModel = MainViewModel(KakaoLogin());
 
@@ -245,6 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ]),
               const Expanded(
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     TableCalendarScreen(),
                     ProfileFeedPage(),
@@ -358,6 +363,35 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         );
                       },
+                    );
+                  },
+                ), ListTile(
+                  leading: const Icon(
+                    Icons.info,
+                    color: Colors.blueGrey,
+                  ),
+                  title: const Text('개인정보처리방침'),
+                  onTap: () async {
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InformationPolicy()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.location_on,
+                    color: Colors.blueGrey,
+                  ),
+                  title: const Text('위치기반서비스이용약관'),
+                  onTap: () async {
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => LocationServicePolicy()),
                     );
                   },
                 ),
