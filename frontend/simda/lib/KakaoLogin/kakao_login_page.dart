@@ -9,6 +9,7 @@ class KakaoLoginPage extends StatefulWidget {
   State<KakaoLoginPage> createState() => _KakaoLoginPageState();
 }
 
+
 class _KakaoLoginPageState extends State<KakaoLoginPage> {
   final viewModel = MainViewModel(KakaoLogin());
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:simda/KakaoLogin/social_login.dart';
@@ -136,6 +137,17 @@ class KakaoLogin implements SocialLogin {
       // print(response.data);
 
       saveStorage(response.data);
+      String? storeEmail = await storage.read(key: "email");
+      String? storeProfileImg = await storage.read(key: "profileImg");
+      String? storeNickname = await storage.read(key: "nickname");
+      print("여기야");
+      print(response.data);
+      DatabaseReference ref = FirebaseDatabase.instance.ref("users").child(storeNickname!);
+      await ref.set({
+        "nickname": storeNickname,
+        "userEmail" : storeEmail,
+        "profileImg": storeProfileImg,
+      });
 
       print('회원가입 성공!');
       return true;
