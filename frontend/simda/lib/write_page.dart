@@ -274,13 +274,11 @@ class _WritePageState extends State<WritePage> {
             TextButton(
               onPressed: () async {
                 if(!mounted) return;
-                Navigator.of(context).pop();
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                         builder: (context) => MainPage(0)),
                         (route) => false);
-
                 await feedProvider.postFeed(uploadFeed);
               },
               child: const Text('작성완료'),
