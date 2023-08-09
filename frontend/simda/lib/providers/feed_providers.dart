@@ -29,6 +29,7 @@ class FeedProviders {
       feed = response.data['feedList'].map<FeedDto>((feeds) {
         return FeedDto.fromJson(feeds);
       }).toList();
+      print("여기야");
       print(feed);
     }
     return feed;

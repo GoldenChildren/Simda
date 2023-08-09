@@ -35,6 +35,8 @@ class _MapPageState extends State<MapPage> {
   Future initFeed() async {
     var gps = await getCurrentLocation();
     feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
+    print("feed 개수: ${feed.length}개 입니다");
+    print("첫번째 피드 작성자: ${feed[0].nickname}");
     setState(() {
       // isVisible = List.generate(feed.length, (index) => true);
       // writeComment = List.generate(feed.length, (index) => true);
@@ -57,6 +59,7 @@ class _MapPageState extends State<MapPage> {
 
   //예시데이터를 파싱해온 list를  item리스트에 담는 메서드
   void _addMarkers() {
+    print("마커를 추가해보겠습니다. ${feed.length}");
     for (int i = 0; i < feed.length; i++) {
       items.add(Place(
         feedId: feed[i].feedId,
@@ -65,26 +68,18 @@ class _MapPageState extends State<MapPage> {
       ));
       print("${feed[i].feedId}번 글 제목: ${feed[i].title}");
     }
-    // for (var feed in feeds) {
-    //   items.add(Place(
-    //     feedId: feed.['feedId'],
-    //     emotion: feed['emotion'],
-    //     latLng: LatLng(feed['lat'], feed['lng']),
-    //   ));
-    // }
   }
+
+
+
 
   //State초기화메서드
   @override
   void initState() {
+    print("init state");
     super.initState();
     _getUserLocation();
     initFeed();
-    print("feed 개수: ${feed.length}");
-    //list에 데이터를 먼저 넣어줌
-    _addMarkers();
-    //클러스터 매니저 초기화
-    _manager = _initClusterManager();
   }
 
   //클러스터 매니저 초기화 메서드
@@ -93,11 +88,6 @@ class _MapPageState extends State<MapPage> {
     return ClusterManager<Place>(items, _updateMarkers,
         markerBuilder: _markerBuilder);
   }
-
-//지도가 생성되었을 때 컨트롤러를 받아옴
-//   void _onMapCreated(GoogleMapController controller) {
-//     _controller.complete(controller);
-//   }
 
 //마커 업데이트 메서드
   void _updateMarkers(Set<Marker> markers) {
@@ -680,6 +670,12 @@ class _MapPageState extends State<MapPage> {
     // //지도의 초기 위치를 담아줄 CameraPosition
     // CameraPosition startCameraPosition =
     // CameraPosition(target: LatLng(gps.latitude, gps.longitude), zoom: 17.0);
+
+    items = [];
+    _addMarkers();
+    print("marker 개수: ${items.length}");
+
+    _manager = _initClusterManager();
 
     return SafeArea(
       child: Stack(alignment: AlignmentDirectional.bottomEnd, children: [
