@@ -26,6 +26,8 @@ public class CommentDto {
 
     private int pCmtId;
 
+    private String regTime;
+
     // Content
     private String content;
     private List<CommentDto> cCommentList;

@@ -1,9 +1,11 @@
 package ssafy.a709.simda.domain;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import ssafy.a709.simda.dto.CommentDto;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,10 @@ public class Comment {
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "p_cmt_id", referencedColumnName = "cmt_id")
     private Comment pComment;
+
+    @CreationTimestamp
+    @Column(name = "reg_time", nullable = false, columnDefinition = "timestamp DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp regTime;
 
     // CommentDto를 Comment(Entity)로 변환
     public static Comment changeToComment(CommentDto commentDto, User user, Feed feed, Comment pComment){
