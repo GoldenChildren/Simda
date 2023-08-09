@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _MapPageState extends State<MapPage> {
   //지도의 표시될 객체들의 리스트
   List<Place> items = [];
 
-  //예시데이터를 파싱해온 list를  item리스트에 담는 메서드
+  // 예시데이터를 파싱해온 list를  item리스트에 담는 메서드
   void _addMarkers() {
     print("마커를 추가해보겠습니다. ${feed.length}");
     for (int i = 0; i < feed.length; i++) {
@@ -69,9 +70,6 @@ class _MapPageState extends State<MapPage> {
       print("${feed[i].feedId}번 글 제목: ${feed[i].title}");
     }
   }
-
-
-
 
   //State초기화메서드
   @override
@@ -89,7 +87,7 @@ class _MapPageState extends State<MapPage> {
         markerBuilder: _markerBuilder);
   }
 
-//마커 업데이트 메서드
+// 마커 업데이트 메서드
   void _updateMarkers(Set<Marker> markers) {
     print('Updated ${markers.length} markers');
     setState(() {

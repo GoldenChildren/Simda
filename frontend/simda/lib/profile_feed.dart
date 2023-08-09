@@ -52,8 +52,8 @@ class ListViewBuilderState extends State<ListViewBuilder> {
   Future initFeed() async {
     feed = await feedProvider.getUserFeedList(_userId);
     setState(() {
-      isVisible = List.generate(feed.length, (index) => true);
-      writeComment = List.generate(feed.length, (index) => true);
+      isVisible = List.generate(feed.length, (reversedIndex) => true);
+      writeComment = List.generate(feed.length, (reversedIndex) => true);
     });
   }
 
@@ -84,6 +84,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
       // scrollDirection: Axis.,
       itemCount: feed.length,
       itemBuilder: (context, int index) {
+        int reversedIndex = feed.length - index - 1;
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           width: MediaQuery.of(context).size.width,
@@ -102,7 +103,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                         Row(
                           children: [
                             Text(
-                              feed[index].title,
+                              feed[reversedIndex].title,
                               textAlign: TextAlign.left,
                               style: const TextStyle(fontSize: 20),
                             ),
@@ -112,12 +113,12 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                         Row(
                           children: [
                             Text(
-                              feed[index].nickname,
+                              feed[reversedIndex].nickname,
                               style: const TextStyle(fontSize: 10),
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              feed[index].regDate,
+                              feed[reversedIndex].regDate,
                               style: const TextStyle(
                                   fontSize: 10, color: Colors.black45),
                             ),
@@ -127,18 +128,18 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                     Row(
                       children: [
-                        Text(feed[index].likeCnt.toString(),
+                        Text(feed[reversedIndex].likeCnt.toString(),
                             style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
                             setState(() {
-                              feed[index].likeCnt++;
+                              feed[reversedIndex].likeCnt++;
                             });
                           },
                           child: Image(
                               image:
-                              AssetImage('assets/images/flower${feed[index].emotion}.png'),
+                              AssetImage('assets/images/flower${feed[reversedIndex].emotion}.png'),
                               height: 30),
                         ),
                       ],
@@ -151,7 +152,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 alignment: Alignment.center,
                 child:
-                Image(image: NetworkImage(feed[index].img)),
+                Image(image: NetworkImage(feed[reversedIndex].img)),
               ),
               const SizedBox(height: 15),
               Row(
@@ -160,7 +161,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                   const SizedBox(width: 20),
                   Expanded(
                     child: Text(
-                      feed[index].content,
+                      feed[reversedIndex].content,
                       style: const TextStyle(height: 1.5),),
                   ),
                   const SizedBox(width: 20),
@@ -175,19 +176,19 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                     child: TextButton(
                       onPressed: () => {
                         setState(() {
-                          isVisible[index] = !isVisible[index];
+                          isVisible[reversedIndex] = !isVisible[reversedIndex];
                         })
                       },
                       style: TextButton.styleFrom(
                         minimumSize: Size.zero,
                         padding: const EdgeInsets.all(0),
                       ),
-                      child: Text(isVisible[index] ? "댓글 2개 닫기" : "댓글 2개 보기",
+                      child: Text(isVisible[reversedIndex] ? "댓글 2개 닫기" : "댓글 2개 보기",
                           style: const TextStyle(color: Colors.black45)),
                     ),
                   ),
                   Visibility(
-                    visible: isVisible[index],
+                    visible: isVisible[reversedIndex],
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Column(
@@ -240,8 +241,8 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                                       TextButton(
                                         onPressed: () => {
                                           setState(() {
-                                            writeComment[index] =
-                                            !writeComment[index];
+                                            writeComment[reversedIndex] =
+                                            !writeComment[reversedIndex];
                                           })
                                         },
                                         style: TextButton.styleFrom(
@@ -310,7 +311,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                                 ),
                               ]),
                           Visibility(
-                            visible: writeComment[index],
+                            visible: writeComment[reversedIndex],
                             child: const TextField(
                               style: TextStyle(fontSize: 14.0),
                               cursorColor: Colors.black12,
@@ -337,7 +338,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                             ),
                           ),
                           Visibility(
-                            visible: !writeComment[index],
+                            visible: !writeComment[reversedIndex],
                             child: TextField(
                               style: const TextStyle(fontSize: 14.0),
                               cursorColor: Colors.black12,
