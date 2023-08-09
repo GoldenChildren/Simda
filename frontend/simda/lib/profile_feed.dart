@@ -49,11 +49,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
   List<bool> isVisible = [];
   List<bool> writeComment = [];
 
-  // List<bool> isVisible = List.filled(feed.length, false);
-  // List<bool> writeComment = List.filled(feed.length, false);
-
   Future initFeed() async {
-    // feed = await feedProvider.getFeed(lat, lng);
     feed = await feedProvider.getUserFeedList(_userId);
     setState(() {
       isVisible = List.generate(feed.length, (index) => true);
@@ -64,16 +60,17 @@ class ListViewBuilderState extends State<ListViewBuilder> {
   @override
   void initState() {
     super.initState();
-    initFeed();
+    _userId = 0;
     getValueFromSecureStorage();
   }
+
   Future<void> getValueFromSecureStorage() async {
     try {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
-
       setState(() {
         _userId = storeUserId;
       });
+      initFeed();
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
