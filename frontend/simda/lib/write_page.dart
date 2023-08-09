@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
 import 'package:simda/providers/feed_providers.dart';
@@ -9,7 +12,9 @@ import 'main_page.dart';
 import 'models/FeedDto.dart';
 
 class WritePage extends StatefulWidget {
-  const WritePage({super.key});
+  LatLng latLng;
+
+  WritePage(this.latLng, {super.key});
 
   @override
   State<WritePage> createState() => _WritePageState();
@@ -320,6 +325,7 @@ class _WritePageState extends State<WritePage> {
                     ),
                     TextButton(
                       onPressed: () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
                         setState(() {});
 
                         // 입력된 내용 출력
@@ -341,9 +347,9 @@ class _WritePageState extends State<WritePage> {
                           emotion: 0,
                           feedId: 0,
                           img: '',
-                          lat: 37.5013068,
+                          lat: widget.latLng.latitude,
                           likeCnt: 0,
-                          lng: 127.0396597,
+                          lng: widget.latLng.longitude,
                           nickname: nickname,
                           regDate: '',
                           title: _title,
@@ -354,7 +360,6 @@ class _WritePageState extends State<WritePage> {
 
                         //로딩 화면 표시
                         if (!mounted) return;
-                        FocusManager.instance.primaryFocus?.unfocus();
                         showDialog(
                           context: context,
                           barrierDismissible: false,

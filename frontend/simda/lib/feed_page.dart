@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:simda/models/FeedDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
@@ -10,8 +11,6 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-
-  int visit = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +35,13 @@ class ListViewBuilder extends StatefulWidget {
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
 
-  double lat = 37.5013068;
-  double lng = 127.0396597;
+  Future<Position> getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
+
   List<FeedDto> feed = [];
   bool isLoading = true;
   FeedProviders feedProvider = FeedProviders();
@@ -49,8 +53,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   // List<bool> writeComment = List.filled(feed.length, false);
 
   Future initFeed() async {
-    // feed = await feedProvider.getFeed(lat, lng);
-    feed = await feedProvider.getFeed();
+    var gps = await getCurrentLocation();
+    feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
     setState(() {
       isVisible = List.generate(feed.length, (index) => true);
       writeComment = List.generate(feed.length, (index) => true);

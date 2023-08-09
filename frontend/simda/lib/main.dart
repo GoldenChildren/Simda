@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'package:simda/KakaoLogin/kakao_login.dart';
@@ -20,6 +22,11 @@ Future<void> main() async {
   // 달력 한국 시각
   await initializeDateFormatting();
 
+  final GoogleMapsFlutterPlatform mapsImplementation =
+      GoogleMapsFlutterPlatform.instance;
+  if (mapsImplementation is GoogleMapsFlutterAndroid) {
+    mapsImplementation.useAndroidViewSurface = true;
+  }
   runApp(const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyApp()));
