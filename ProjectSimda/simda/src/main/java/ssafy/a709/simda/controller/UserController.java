@@ -201,9 +201,10 @@ public class UserController {
             userDto.setProfileImg(fileUrl);
             userService.createUser(userDto);
         }
-
         System.out.println("UserController 158 : 회원가입 성공!");
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        //파이어베이스 이중 저장을 위한 데이터 반환
+        List<UserDto> resultList=userService.selectUsers(userDto.getNickname());
+        return new ResponseEntity<>(resultList.get(0), HttpStatus.OK);
     }
 
 
