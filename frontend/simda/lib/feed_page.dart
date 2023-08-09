@@ -11,7 +11,7 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
 
-  int visit = 0;
+  // int visit = 0;
 
   @override
   Widget build(BuildContext context) {
