@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/user_providers.dart';
 import 'informaion_policy.dart';
 import 'location_service_policy.dart';
