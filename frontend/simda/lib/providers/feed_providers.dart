@@ -5,7 +5,8 @@ import 'package:simda/models/FeedDto.dart';
 
 class FeedProviders {
   Dio dio = Dio();
-  String url = "http://i9a709.p.ssafy.io:8000/feed";
+  // String url = "http://i9a709.p.ssafy.io:8000/feed";
+  String url = "http://70.12.247.215:8000/feed";
 
 
   // Uri uri = Uri.parse(
@@ -65,7 +66,7 @@ class FeedProviders {
   }
 
   // Feed를 post하는 메소드
-  Future<int> postFeed(FeedDto feedDto) async {
+  Future<String> postFeed(FeedDto feedDto) async {
 
     // FormData formData = FormData.fromMap({
     //   'imgfile':

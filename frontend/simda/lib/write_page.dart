@@ -284,7 +284,7 @@ class _WritePageState extends State<WritePage> {
                         print(selected);
 
                         // 사용자 정보 가져오기
-                        int userId = int.parse(await storage.read(key: 'userId') ?? '0');
+                        int userId = int.parse(await storage.read(key: 'userId') ?? '1');
                         String nickname = await storage.read(key: 'nickname') ?? '';
                         print(userId);
 

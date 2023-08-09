@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:simda/main.dart';
+import 'package:simda/models/CommentDto.dart';
 import 'package:simda/models/FeedDto.dart';
+import 'package:simda/models/UserDto.dart';
+import 'package:simda/providers/comment_providers.dart';
 import 'package:simda/providers/feed_providers.dart';
 
 class FeedPage extends StatefulWidget {
@@ -27,6 +31,42 @@ class _FeedPageState extends State<FeedPage> {
   }
 }
 
+// final List<String> arr = <String>[
+//   '오늘은 기분이 좋아',
+//   '랄랄라 랄랄랄랄라',
+//   '저 하늘 높이',
+//   '날개를 펴고',
+//   '날아갈 것 같아요',
+//   '오늘은 기분이 좋아',
+//   '랄랄라 랄랄랄랄라',
+//   '마음 속 깊이',
+//   '간직한 꿈이',
+//   '이루어질 것 같아요',
+//   '꽃들이 너무 예뻐요',
+//   '이 세상 모두가 눈이 부셔요',
+//   '착한 마음으로 세상을 보면',
+//   '모두가 아름다워요',
+//   '오늘은 기분이 좋아',
+//   '랄랄라 랄랄랄랄라',
+//   '오래전부터',
+//   '바라던 꿈이',
+//   '이루어질 것 같아요',
+//   '미안해 솔직하지 못한 내가',
+//   '지금 이 순간이 꿈이라면',
+//   '살며시 너에게로 다가가',
+//   '모든걸 고백할텐데',
+//   '전화도 할 수 없는 밤이 오면',
+//   '자꾸만 설레이는 내 마음',
+//   '동화속 마법의 세계로',
+//   '손짓하는 저 달빛',
+//   '밤하늘 저 멀리서 빛나고 있는',
+//   '꿈결같은 우리의 사랑',
+//   '수없이 많은 별들 중에서',
+//   '당신을 만날 수 있는건',
+//   '결코 우연이라 할 수 없어',
+//   '기적의 세일러문'
+// ];
+
 class ListViewBuilder extends StatefulWidget {
   const ListViewBuilder({super.key});
 
@@ -39,8 +79,12 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   double lat = 37.5013068;
   double lng = 127.0396597;
   List<FeedDto> feed = [];
+  // List<List<CommentDto>> comments = [];
   bool isLoading = true;
   FeedProviders feedProvider = FeedProviders();
+  CommentProviders commentProviders = CommentProviders();
+  String _commentContent = '';
+  UserDto? _loginUser;
 
   List<bool> isVisible = [];
   List<bool> writeComment = [];
@@ -52,9 +96,32 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
     // feed = await feedProvider.getFeed(lat, lng);
     feed = await feedProvider.getFeed();
     setState(() {
-      isVisible = List.generate(feed.length, (index) => true);
-      writeComment = List.generate(feed.length, (index) => true);
+      isVisible = List.generate(feed.length, (index) => false);
+      writeComment = List.generate(feed.length, (index) => false);
     });
+  }
+
+  Future<void> getValueFromSecureStorage() async {
+    try {
+      String? storeEmail = await storage.read(key: "email");
+      String? storeProfileImg = await storage.read(key: "profileImg");
+      String? storeNickname = await storage.read(key: "nickname");
+      String? storeBio = await storage.read(key: "bio");
+      int storeUserId = int.parse((await storage.read(key: "userId"))!);
+      int storeUserRole = int.parse((await storage.read(key: "userRole"))!);
+
+      setState(() async{
+        _loginUser = UserDto(
+            email: (await storage.read(key: 'email'))!,
+            nickname: (await storage.read(key:'nickname'))!,
+            profileImg: (await storage.read(key:'profileImg'))!,
+            userId: int.parse((await storage.read(key:'userId'))!),
+            userRole: int.parse((await storage.read(key:'userRole'))!)
+        );
+      });
+    } catch (e) {
+      print("Error reading from secure storage: $e");
+    }
   }
 
   @override
@@ -121,7 +188,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           },
                           child: Image(
                               image:
-                                  AssetImage('assets/images/flower${feed[index].emotion}.png'),
+                              AssetImage('assets/images/flower${feed[index].emotion}.png'),
                               height: 30),
                         ),
                       ],
@@ -134,7 +201,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 alignment: Alignment.center,
                 child:
-                    Image(image: NetworkImage(feed[index].img)),
+                Image(image: NetworkImage(feed[index].img)),
               ),
               const SizedBox(height: 15),
               Row(
@@ -144,7 +211,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   Expanded(
                     child: Text(
                       feed[index].content,
-                    style: const TextStyle(height: 1.5),),
+                      style: const TextStyle(height: 1.5),),
                   ),
                   const SizedBox(width: 20),
                 ],
@@ -182,7 +249,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   children: [
                                     CircleAvatar(
                                       backgroundImage:
-                                          AssetImage('assets/images/yuri.jpg'),
+                                      AssetImage('assets/images/yuri.jpg'),
                                       radius: 25,
                                     ),
                                     SizedBox(
@@ -195,12 +262,12 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   flex: 1,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       const Row(
                                         children: [
                                           Text(
-                                            '유리',
+                                            '',
                                             style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold),
@@ -216,7 +283,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       ),
                                       const Text(
                                         // '짱구가 기분이 좋구나',
-                                        '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
+        ""
+                                        ,
                                         style: TextStyle(fontSize: 14),
                                       ),
                                       const SizedBox(width: 20),
@@ -224,14 +292,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         onPressed: () => {
                                           setState(() {
                                             writeComment[index] =
-                                                !writeComment[index];
+                                            !writeComment[index];
                                           })
                                         },
                                         style: TextButton.styleFrom(
                                           minimumSize: Size.zero,
                                           padding: EdgeInsets.zero,
                                           tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                         ),
                                         child: const Text(
                                           '답글 달기',
@@ -254,7 +322,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                             flex: 1,
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
@@ -263,14 +331,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                       style: TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
-                                                              FontWeight.bold),
+                                                          FontWeight.bold),
                                                     ),
                                                     SizedBox(width: 10),
                                                     Text('9시간 전',
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                          FontWeight.bold,
                                                           color: Colors.black45,
                                                         ))
                                                   ],
@@ -279,7 +347,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                   // '응 좋아 좋아',
                                                   '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
                                                   style:
-                                                      TextStyle(fontSize: 14),
+                                                  TextStyle(fontSize: 14),
                                                 ),
                                                 SizedBox(height: 10),
                                               ],
@@ -300,20 +368,20 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                               cursorWidth: 1.0,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 suffixIcon:
-                                    Icon(Icons.send, color: Colors.black54),
+                                Icon(Icons.send, color: Colors.black54),
                                 prefixText: '@유리 ',
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 filled: true,
                                 fillColor: Colors.black12,
                               ),
@@ -327,25 +395,42 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                               cursorWidth: 1.0,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 suffixIcon: IconButton(
                                     icon: const Icon(Icons.send),
                                     color: Colors.black54,
-                                    onPressed: () {}),
+                                    onPressed: () async{
+                                      setState(() {
+
+                                      });
+                                      CommentDto commentDto = CommentDto(
+                                          commentList: [],
+                                          cmtId: 0,
+                                          content: _commentContent,
+                                          feedId: feed[index].feedId,
+                                          pcmtId: null,
+                                          regTime: '',
+                                        userDto: _loginUser!
+                                      );
+                                      commentProviders.postComment(commentDto);
+                                    }),
                                 hintText: '신짱구(으)로 댓글 달기...',
                                 enabledBorder: const OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 focusedBorder: const OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 filled: true,
                                 fillColor: Colors.black12,
                               ),
+                              onChanged: (text){
+                                _commentContent = text;
+                              },
                             ),
                           ),
                         ],
