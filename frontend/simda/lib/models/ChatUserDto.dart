@@ -8,7 +8,7 @@ class ChatUserDto {
     required this.profileImg,
   });
 
-  factory ChatUserDto.fromJson(Map<String, dynamic> json) {
+  factory ChatUserDto.fromJson(Map<dynamic, dynamic> json) {
     return ChatUserDto(
       nickname: json['nickname'] ?? "",
       profileImg: json['profileImg'] ?? "",

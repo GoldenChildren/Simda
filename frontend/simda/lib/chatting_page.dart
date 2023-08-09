@@ -19,17 +19,14 @@ class _ChattingPageState extends State<ChattingPage> {
   List<ChatRoomDto> chatroom = [];
   ChatRoomProviders chatroomprovider = ChatRoomProviders();
 
-  Future initChatRoom() async {
-
-     print("채팅 목록 수 :${chatroom.length}");
-     setState(() {});
-  }
   void listenForChatRoomUpdates() {
+
     Query starCountRef =
     FirebaseDatabase.instance.ref('chatrooms')
         .orderByChild("participants/" +userId.toString())
         .equalTo(true);
     starCountRef.onValue.listen((DatabaseEvent event) {
+      chatroom=[];
       final data = event.snapshot.value;
       if (data == null) {
         return;
@@ -46,20 +43,22 @@ class _ChattingPageState extends State<ChattingPage> {
             ChatRoomDto rchatRoom = ChatRoomDto.fromJson(roomData);
             print("여기까지 옴");
             chatroom.add(rchatRoom);
+            print(rchatRoom);
+
             print("여기까지 못옴");
           }
         });
       }
-      setState(() {
-
-      });
+      setState(() {if (mounted) {
+        // 여기서 setState() 호출
+      }});
+      print("끝");
     });
   }
 
   @override
   void initState() {
     super.initState();
-    initChatRoom();
     getValueFromSecureStorage();
     listenForChatRoomUpdates();
   }
@@ -69,6 +68,7 @@ class _ChattingPageState extends State<ChattingPage> {
 
       setState(() {
         userId = storeUserId;
+        print(storeUserId);
       });
     } catch (e) {
       print("Error reading from secure storage: $e");
@@ -95,7 +95,7 @@ class _ChattingPageState extends State<ChattingPage> {
                         style:
                             TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      IconButton(onPressed: () {chatroomprovider.createChatRoom(8, 4);},
+                      IconButton(onPressed: () {chatroomprovider.createChatRoom(8, 6);},
                       icon: const Icon(Icons.add), iconSize: 28,),
                     ],
                   ),
@@ -116,33 +116,67 @@ class _ChattingPageState extends State<ChattingPage> {
 class ListViewBuilder extends StatefulWidget {
   List<ChatRoomDto> chatroom;
   int userId;
-  ListViewBuilder({required this.chatroom, super.key, required this.userId});
 
-
+  ListViewBuilder({required this.chatroom, required this.userId,});
   @override
   State<ListViewBuilder> createState() => _ListViewBuilderState();
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
+   List<ChatUserDto> contacts=[];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<List<ChatUserDto>> fetchContacts() async {
+    List<ChatUserDto> updatedContacts = [];
+
+    print("작동 1");
+    for (int index = 0; index < widget.chatroom.length; index++) {
+      ChatRoomDto chatRoom = widget.chatroom[index];
+      String userId1 = chatRoom.participants.keys.first;
+      String userId2 = chatRoom.participants.keys.last;
+      ChatRoomProviders chatRoomProviders = ChatRoomProviders();
+      ChatUserDto? contact;
+      print(userId2);
+      if (userId2 == widget.userId.toString()) {
+        contact = await chatRoomProviders.getChatUser(int.parse(userId1));
+        print("작동 2");
+      } else {
+        contact = await chatRoomProviders.getChatUser(int.parse(userId2));
+        print("작동 2");
+      }
+
+      if (contact != null) {
+        print("작동 3");
+        updatedContacts.add(contact);
+      }
+    }
+    // 상태 갱신
+    return updatedContacts;
+  }
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+        future: fetchContacts(),
+        builder: (context, snapshot){
+    if (snapshot.connectionState == ConnectionState.waiting) {
+    return Center();
+    } else
+      if (snapshot.hasError) {
+    return Center(
+    child: Text("Error: ${snapshot.error}"),
+    );
+    } else {
+    contacts = snapshot.data as List<ChatUserDto>;
+
     return ListView.separated(
       itemCount: widget.chatroom.length,
       itemBuilder: (BuildContext context, int index) {
-        print("여기3");
-        ChatRoomDto chatRoom = widget.chatroom[index]; // 해당 인덱스의 채팅방 데이터
-        String userId1 = chatRoom.participants.keys.first;
-        String userId2 = chatRoom.participants.keys.last;
-        ChatRoomProviders chatRoomProviders = ChatRoomProviders();
-        ChatUserDto? contact;
-        if(userId2 == widget.userId.toString()){
-          print("여기1");
-          contact= await chatRoomProviders.getChatUser(int.parse(userId1)) as ChatUserDto?;
-        }else{
-          print("여기2");
-          contact= chatRoomProviders.getChatUser(int.parse(userId2)) as ChatUserDto?;
-        }
+        ChatUserDto contact = contacts[index]; // 가져온 데이터 사용
 
         return GestureDetector(
           onTap: () {
@@ -151,16 +185,13 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               MaterialPageRoute(
                   builder: (context) => ChatWithFriend(index)),
             );
-            isVisible = !isVisible;
           },
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 CircleAvatar(
-                  // backgroundImage: AssetImage(widget.chatroom.user1.img),
-                   //프로필 이미지
+                CircleAvatar(
                   backgroundImage: NetworkImage(contact.profileImg),
                   radius: 30,
                 ),
@@ -179,14 +210,16 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                 fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 5),
-                          Text("여기다가 마지막 채팅 내용",
-                          style: TextStyle(fontSize: 15),),
+                          Text(
+                            "여기다가 마지막 채팅 내용",
+                            style: TextStyle(fontSize: 15),
+                          ),
                         ],
                       ),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text("04:23",),
+                            Text("04:23"),
                             const SizedBox(height: 5),
                             Container(
                               height: 15,
@@ -212,5 +245,9 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
         color: Colors.black45,
       ),
     );
+    }
+        },
+    );
   }
 }
+

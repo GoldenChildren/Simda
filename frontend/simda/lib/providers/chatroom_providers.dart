@@ -58,6 +58,7 @@ class ChatRoomProviders {
     final snapshot = await refer.child(userId1.toString()).get();
     if (snapshot.exists) {
       dynamic data = snapshot.value;
+      print(data);
       if(snapshot.value is Map) {
         ChatUserDto chatUserDto = ChatUserDto.fromJson(data);
         return chatUserDto;
