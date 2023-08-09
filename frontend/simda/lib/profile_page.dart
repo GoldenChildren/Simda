@@ -71,7 +71,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  UserProviders userProvider = UserProviders();
 
   final viewModel = MainViewModel(KakaoLogin());
 
