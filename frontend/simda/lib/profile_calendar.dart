@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:simda/providers/feed_providers.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import 'main.dart';
 
 class TableCalendarScreen extends StatefulWidget {
   const TableCalendarScreen({Key? key}) : super(key: key);
@@ -9,46 +12,62 @@ class TableCalendarScreen extends StatefulWidget {
 }
 
 class _TableCalendarScreenState extends State<TableCalendarScreen> {
-  late final Image _flowerGreen;
-  late final Image _flowerYellow;
-  late final Image _flowerPurple;
-  late final Image _flowerPink;
-  late final Image _flowerBlue;
+  int _emotion = 0;
+  int _userId = 0;
+  String _regDate = "";
+  FeedProviders feedProviders = FeedProviders();
+  //
+  // late final Image _flowerGreen;
+  // late final Image _flowerYellow;
+  // late final Image _flowerPurple;
+  // late final Image _flowerPink;
+  // late final Image _flowerBlue;
 
   final Map<DateTime, List<Widget>> _markers = {};
 
   @override
   void initState() {
     super.initState();
-    _flowerGreen = Image.asset('assets/images/flower0.png', width: 20, height: 17);
-    _flowerYellow = Image.asset('assets/images/flower1.png', width: 20, height: 17);
-    _flowerPurple = Image.asset('assets/images/flower2.png', width: 20, height: 17);
-    _flowerPink = Image.asset('assets/images/flower3.png', width: 20, height: 17);
-    _flowerBlue = Image.asset('assets/images/flower4.png', width: 20, height: 17);
-
+    // _flowerGreen = Image.asset('assets/images/flower0.png', width: 20, height: 17);
+    // _flowerYellow = Image.asset('assets/images/flower1.png', width: 20, height: 17);
+    // _flowerPurple = Image.asset('assets/images/flower2.png', width: 20, height: 17);
+    // _flowerPink = Image.asset('assets/images/flower3.png', width: 20, height: 17);
+    // _flowerBlue = Image.asset('assets/images/flower4.png', width: 20, height: 17);
+    //
 
     _markers.addAll({
-      DateTime.utc(2023, 7, 1): [_flowerPink],
-      DateTime.utc(2023, 7, 3): [_flowerGreen],
-      DateTime.utc(2023, 7, 4): [_flowerGreen],
-      DateTime.utc(2023, 7, 5): [_flowerBlue],
-      DateTime.utc(2023, 7, 6): [_flowerGreen],
-      DateTime.utc(2023, 7, 9): [_flowerBlue],
-      DateTime.utc(2023, 7, 11): [_flowerGreen],
-      DateTime.utc(2023, 7, 14): [_flowerPurple],
-      DateTime.utc(2023, 7, 15): [_flowerYellow],
-      DateTime.utc(2023, 7, 16): [_flowerYellow],
-      DateTime.utc(2023, 7, 18): [_flowerYellow],
-      DateTime.utc(2023, 7, 20): [_flowerPurple],
-      DateTime.utc(2023, 7, 21): [_flowerYellow],
-      DateTime.utc(2023, 7, 22): [_flowerYellow],
-      DateTime.utc(2023, 7, 23): [_flowerYellow],
-      DateTime.utc(2023, 7, 25): [_flowerGreen],
-      DateTime.utc(2023, 7, 28): [_flowerPurple],
-      DateTime.utc(2023, 7, 31): [_flowerGreen],
+      // DateTime.utc(2023, 7, 1): [_flowerPink],
+      // DateTime.utc(2023, 7, 3): [_flowerGreen],
+      // DateTime.utc(2023, 7, 4): [_flowerGreen],
+      // DateTime.utc(2023, 7, 5): [_flowerBlue],
+      // DateTime.utc(2023, 7, 6): [_flowerGreen],
+      // DateTime.utc(2023, 7, 9): [_flowerBlue],
+      // DateTime.utc(2023, 7, 11): [_flowerGreen],
+      // DateTime.utc(2023, 7, 14): [_flowerPurple],
+      // DateTime.utc(2023, 7, 15): [_flowerYellow],
+      // DateTime.utc(2023, 7, 16): [_flowerYellow],
+      // DateTime.utc(2023, 7, 18): [_flowerYellow],
+      // DateTime.utc(2023, 7, 20): [_flowerPurple],
+      // DateTime.utc(2023, 7, 21): [_flowerYellow],
+      // DateTime.utc(2023, 7, 22): [_flowerYellow],
+      // DateTime.utc(2023, 7, 23): [_flowerYellow],
+      // DateTime.utc(2023, 7, 25): [_flowerGreen],
+      // DateTime.utc(2023, 7, 28): [_flowerPurple],
+      // DateTime.utc(2023, 7, 31): [_flowerGreen],
     });
   }
+  Future<void> getValueFromSecureStorage() async {
+    try {
+      int storeUserId = int.parse((await storage.read(key: "userId"))!);
 
+      setState(() {
+        _userId = storeUserId;
+
+      });
+    } catch (e) {
+      print("Error reading from secure storage: $e");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
