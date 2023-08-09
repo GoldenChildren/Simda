@@ -18,8 +18,8 @@ Future<void> main() async {
   KakaoSdk.init(
     nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b',
   );
-
   // 달력 한국 시각
+
   await initializeDateFormatting();
 
   final GoogleMapsFlutterPlatform mapsImplementation =
@@ -52,8 +52,8 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           canvasColor: Colors.transparent,
         ),
-        home: viewModel.isLoggedIn == 1 ? MainPage(0) : const LoginPage(),
-        // home:  MainPage(0),
+        // home: viewModel.isLoggedIn == 1 ? MainPage(0) : const LoginPage(),
+        home:  MainPage(0),
       ),
     );
   }
