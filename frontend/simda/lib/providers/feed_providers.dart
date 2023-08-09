@@ -107,9 +107,9 @@ class FeedProviders {
   Future<void> deleteFeed(int feedId) async{
     Response response = await dio.delete(
         '$url/',
-      queryParameters: {
+        queryParameters: {
           'feedId' : feedId
-      }
+        }
     );
 
     print('피드 삭제 : $response');
@@ -138,9 +138,9 @@ class FeedProviders {
 
     final response = await dio.get(
         '$url/follow',
-      queryParameters: {
+        queryParameters: {
           'userId' : userId
-      }
+        }
     );
 
     if (response.statusCode == 200) {

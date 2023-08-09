@@ -40,6 +40,12 @@ class _ProfilePageState extends State<ProfilePage> {
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
+
+      List<UserDto>? followings =
+      await userProvider.getFollowData("followings", storeUserId);
+      List<UserDto>? followers =
+      await userProvider.getFollowData("followers", storeUserId);
+
       setState(() {
         _profileImg = storeProfileImg ?? "";
         _nickname = storeNickname ?? "";
@@ -93,7 +99,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      _navigateToProfileEditPage(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StatefulBuilder(builder:
+                                  (BuildContext context,
+                                  StateSetter setState) {
+                                return const ProfileEditPage();
+                              })));
                     },
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -366,6 +379,38 @@ class _ProfilePageState extends State<ProfilePage> {
                     );
                   },
                 ),
+
+                ListTile(
+                  leading: const Icon(
+                    Icons.info,
+                    color: Colors.blueGrey,
+                  ),
+                  title: const Text('개인정보처리방침'),
+                  onTap: () async {
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => InformationPolicy()),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.location_on,
+                    color: Colors.blueGrey,
+                  ),
+                  title: const Text('위치기반서비스이용약관'),
+                  onTap: () async {
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>  LocationServicePolicy()),
+                    );
+                  },
+                ),
+
               ],
             ),
           ),
@@ -375,16 +420,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _navigateToProfileEditPage(BuildContext context) async {
-    final updatedData = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfileEditPage(
-          // nickname: _nickname,
-          // bio: _bio,
-          // pickedFile: _pickedFile,
-        ),
-      ),
-    );
+    final updatedData = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ProfileEditPage()))
+        .then((value) {
+      setState(() {});
+    });
 
     if (updatedData != null) {
       setState(() {
