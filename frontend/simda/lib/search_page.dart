@@ -129,7 +129,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
                 ),
-               Expanded(flex: 0, child: Container()),
+                Expanded(flex: 0, child: Container()),
               ],
             ),
           ),
@@ -137,8 +137,8 @@ class _SearchPageState extends State<SearchPage> {
           // nickname이 비어있지 않으면 결과를 출력
           _userList.isNotEmpty
               ? Container(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: _userList.length,
                     itemBuilder: (context, index) {
@@ -174,7 +174,7 @@ class _SearchPageState extends State<SearchPage> {
                       );
                     },
                   ),
-              )
+                )
               : Container(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                   child: const Text('결과 없음')), // 닉네임이 빈 경우 결과 없음을 출력
