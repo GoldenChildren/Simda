@@ -60,6 +60,7 @@ class _MapPageState extends State<MapPage> {
 
   // 예시데이터를 파싱해온 list를  item리스트에 담는 메서드
   void _addMarkers() {
+    print("63 : addMarkers 실행");
     print("마커를 추가해보겠습니다. ${feed.length}");
     for (int i = 0; i < feed.length; i++) {
       items.add(Place(
@@ -89,9 +90,11 @@ class _MapPageState extends State<MapPage> {
 
 // 마커 업데이트 메서드
   void _updateMarkers(Set<Marker> markers) {
+    print("92 : updateMarkers 실행");
     print('Updated ${markers.length} markers');
     setState(() {
       if (mounted) {
+        print("marker 초기화가 이루어지나?");
         this.markers = markers;
       }
     });
@@ -100,8 +103,11 @@ class _MapPageState extends State<MapPage> {
   LatLng currentPosition = const LatLng(37.5013068, 127.0396597);
 
   void _getUserLocation() async {
+    print("104 getUserLocation 실행");
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+    print("lat : ${position.latitude}");
+    print("long : ${position.longitude}");
     setState(() {
       currentPosition = LatLng(position.latitude, position.longitude);
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -112,7 +118,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<Position> getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
+    // LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     return position;
