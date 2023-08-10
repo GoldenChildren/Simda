@@ -105,7 +105,7 @@ class FeedProviders {
   }
 
   Future<void> addLikes(FeedDto feedDto) async {
-    Response response = await dio.put(
+    await dio.put(
       '$url/like',
       data: feedDto.toJson(),
     );

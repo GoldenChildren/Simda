@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -112,7 +111,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<Position> getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
+    // LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     return position;
