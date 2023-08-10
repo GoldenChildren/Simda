@@ -79,7 +79,10 @@ public class ApiServiceImpl implements ApiService{
             caption = caption.replaceAll("(\r\n|\r|\n|\n\r)", " ");
             title = title.replaceAll("(\r\n|\r|\n|\n\r)", " ");
             content = content.replaceAll("(\r\n|\r|\n|\n\r)", " ");
-            AIClient client = new GoogleBardClient("Ygj5yW4U7eHBq5WAD5CPYQlzJ-Bi0nrNSdAkri99eP1VIqXc4gzGainsORoV0sgLpsolPw.");
+            String token = "ZwiE7kxBEGDDh0_dxOcNM3u4rXmlZpSBs_5U7Fe8Osk_bzijxeopPIfHMYexDVEYEXHGPQ.";
+
+            AIClient client = new GoogleBardClient(token);
+
 //            Answer answer = client.ask("다음 문장의 전체 분위기를 반환해. 형식을 맞춰서"+content+"(이)라는 문장은 다음 보기 중 어디에 가장 가까워? 0 : 행복, 1 : 기쁨, 2 : 평온, 3 : 화남, 4 : 슬픔. 대답은 다음과 같은 형식으로만 대답해. ex) 답 : 1");
             String query = "다음 게시글의 전체 분위기를 형식에 맞춰서 대답해. 게시글은 이미지와 제목, 내용으로 이루어져 있어. 게시한 이미지는 영어로 설명할게. 이미지 설명 : \""
                     +caption+
