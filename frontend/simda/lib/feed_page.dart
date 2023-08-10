@@ -98,13 +98,13 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           children: [
                             Text(
                               feed[index].nickname,
-                              style: const TextStyle(fontSize: 10),
+                              style: const TextStyle(fontSize: 12),
                             ),
                             const SizedBox(width: 10),
                             Text(
                               feed[index].regDate,
                               style: const TextStyle(
-                                  fontSize: 10, color: Colors.black45),
+                                  fontSize: 12, color: Colors.black45),
                             ),
                           ],
                         ),
