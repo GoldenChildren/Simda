@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:simda/main.dart';
+import 'package:simda/models/CommentDto.dart';
 import 'package:simda/models/FeedDto.dart';
+import 'package:simda/models/UserDto.dart';
+import 'package:simda/providers/comment_providers.dart';
 import 'package:simda/providers/feed_providers.dart';
 
 class FeedPage extends StatefulWidget {
@@ -43,6 +47,10 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   List<FeedDto> feed = [];
   bool isLoading = true;
   FeedProviders feedProvider = FeedProviders();
+  CommentProviders commentProviders = CommentProviders();
+  String _commentContent = '';
+  UserDto? _loginUser;
+  List<int> _cur = [-1,-1];
 
   List<bool> isVisible = [];
   List<bool> writeComment = [];
@@ -51,15 +59,62 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
     var gps = await getCurrentLocation();
     feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
     setState(() {
-      isVisible = List.generate(feed.length, (index) => true);
-      writeComment = List.generate(feed.length, (index) => true);
+      isVisible = List.generate(feed.length, (index) => false);
+      writeComment = List.generate(feed.length, (index) => false);
     });
+  }
+
+  String formatDate(String regTime) {
+    print(regTime);
+    DateTime time = DateTime.parse(regTime);
+    print(time);
+    final now = DateTime.now().add(Duration(hours: 9));
+    print(now);
+    final difference = now.difference(time);
+    print(difference);
+    if (difference.inMinutes < 1) {
+      return '방금 전';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes} 분전';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours} 시간 전';
+    } else if (difference.inDays < 7){
+      return '${difference.inDays} 일 전';
+    }else{
+      return regTime;
+    }
+  }
+
+  Future<void> getValueFromSecureStorage() async {
+    try {
+      // String? storeEmail = await storage.read(key: "email");
+      // String? storeProfileImg = await storage.read(key: "profileImg");
+      // String? storeNickname = await storage.read(key: "nickname");
+      // String? storeBio = await storage.read(key: "bio");
+      // int storeUserId = int.parse((await storage.read(key: "userId"))!);
+      // int storeUserRole = int.parse((await storage.read(key: "userRole"))!);
+
+        var temp = UserDto(
+            email: (await storage.read(key: 'email'))!,
+            nickname: (await storage.read(key:'nickname'))!,
+            profileImg: (await storage.read(key:'profileImg'))!,
+            userId: int.parse((await storage.read(key:'userId'))!),
+            userRole: int.parse((await storage.read(key:'userRole'))!)
+        );
+
+        setState(() {
+          _loginUser = temp;
+        });
+    } catch (e) {
+      print("Error reading from secure storage: $e");
+    }
   }
 
   @override
   void initState() {
     super.initState();
     initFeed();
+    getValueFromSecureStorage();
   }
 
   @override
@@ -180,13 +235,17 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                       onPressed: () => {
                         setState(() {
                           isVisible[index] = !isVisible[index];
+                          if(isVisible[index]) {
+                            _cur[0] = index;
+                            _cur[1] = -1;
+                          }
                         })
                       },
                       style: TextButton.styleFrom(
                         minimumSize: Size.zero,
                         padding: const EdgeInsets.all(0),
                       ),
-                      child: Text(isVisible[index] ? "댓글 2개 닫기" : "댓글 2개 보기",
+                      child: Text(isVisible[index] ? "댓글 ${feed[index].comments?.length??0}개 닫기" : "댓글 ${feed[index].comments?.length??0}개 보기",
                           style: const TextStyle(color: Colors.black45)),
                     ),
                   ),
@@ -194,19 +253,24 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     visible: isVisible[index],
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      child: Column(
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        itemCount: feed[index].comments?.length??0,
+                        itemBuilder: (context, i){
+                        return Column(
                         children: [
                           Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Column(
+                                Column(
                                   children: [
                                     CircleAvatar(
                                       backgroundImage:
-                                          AssetImage('assets/images/yuri.jpg'),
+                                      NetworkImage(feed[index].comments![i].userDto.profileImg),
                                       radius: 25,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     )
                                   ],
@@ -216,43 +280,49 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   flex: 1,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
-                                      const Row(
+                                      Row(
                                         children: [
                                           Text(
-                                            '유리',
-                                            style: TextStyle(
+                                            feed[index].comments![i].userDto.nickname,
+                                            style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          SizedBox(width: 10),
-                                          Text('10시간 전',
-                                              style: TextStyle(
+                                          const SizedBox(width: 10),
+                                          Text(formatDate(feed[index].comments![i].regTime),
+                                              style: const TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black45,
                                               )),
                                         ],
                                       ),
-                                      const Text(
+                                      Text(
                                         // '짱구가 기분이 좋구나',
-                                        '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
-                                        style: TextStyle(fontSize: 14),
+                                        feed[index].comments![i].content
+                                        ,
+                                        style: const TextStyle(fontSize: 14),
                                       ),
                                       const SizedBox(width: 20),
                                       TextButton(
                                         onPressed: () => {
                                           setState(() {
-                                            writeComment[index] =
-                                                !writeComment[index];
+                                            if(_cur[0] == index && _cur[1] == i){
+                                              _cur[0] = -1;
+                                              _cur[1] = -1;
+                                            }else{
+                                              _cur[0] = index;
+                                              _cur[1] = i;
+                                            }
                                           })
                                         },
                                         style: TextButton.styleFrom(
                                           minimumSize: Size.zero,
                                           padding: EdgeInsets.zero,
                                           tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
+                                          MaterialTapTargetSize.shrinkWrap,
                                         ),
                                         child: const Text(
                                           '답글 달기',
@@ -262,121 +332,168 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         ),
                                       ),
                                       const SizedBox(height: 10),
-                                      const Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      // 댓글
+                                      ListView.builder(
+                                          shrinkWrap: true,
+                                          physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: feed[index].comments![i].cCommentList?.length??0,
+                                          itemBuilder: (context, j){
+                                            return Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                'assets/images/shin.jpg'),
+                                            backgroundImage: NetworkImage(
+                                                feed[index].comments![i].cCommentList![j].userDto.profileImg),
                                             radius: 25,
                                           ),
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                           Flexible(
                                             flex: 1,
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      '김짱구',
-                                                      style: TextStyle(
+                                                      feed[index].comments![i].cCommentList![j].userDto.nickname,
+                                                      style: const TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
-                                                              FontWeight.bold),
+                                                          FontWeight.bold),
                                                     ),
-                                                    SizedBox(width: 10),
-                                                    Text('9시간 전',
-                                                        style: TextStyle(
+                                                    const SizedBox(width: 10),
+                                                    Text(formatDate(feed[index].comments![i].cCommentList![j].regTime),
+                                                        style: const TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
-                                                              FontWeight.bold,
+                                                          FontWeight.bold,
                                                           color: Colors.black45,
                                                         ))
                                                   ],
                                                 ),
                                                 Text(
                                                   // '응 좋아 좋아',
-                                                  '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
+                                                  feed[index].comments![i].cCommentList![j].content,
                                                   style:
-                                                      TextStyle(fontSize: 14),
+                                                  const TextStyle(fontSize: 14),
                                                 ),
-                                                SizedBox(height: 10),
+                                                const SizedBox(height: 10),
                                               ],
                                             ),
                                           ),
                                         ],
-                                      ),
+                                            );}),
+                                      // 댓글 출력 끝
                                       const SizedBox(height: 10),
-                                    ],
-                                  ),
-                                ),
-                              ]),
                           Visibility(
-                            visible: writeComment[index],
-                            child: const TextField(
-                              style: TextStyle(fontSize: 14.0),
-                              cursorColor: Colors.black12,
-                              cursorWidth: 1.0,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                suffixIcon:
-                                    Icon(Icons.send, color: Colors.black54),
-                                prefixText: '@유리 ',
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
-                                filled: true,
-                                fillColor: Colors.black12,
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: !writeComment[index],
+                            visible: isVisible[index] && _cur[0] == index && _cur[1] == i,
                             child: TextField(
                               style: const TextStyle(fontSize: 14.0),
                               cursorColor: Colors.black12,
                               cursorWidth: 1.0,
                               decoration: InputDecoration(
                                 contentPadding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 suffixIcon: IconButton(
                                     icon: const Icon(Icons.send),
                                     color: Colors.black54,
-                                    onPressed: () {}),
-                                hintText: '신짱구(으)로 댓글 달기...',
+                                    onPressed: () async{
+                                      if(_commentContent != null && _commentContent.isNotEmpty) {
+                                        CommentDto commentDto = CommentDto(
+                                            cCommentList: [],
+                                            cmtId: 0,
+                                            content: _commentContent,
+                                            feedId: feed[index].feedId,
+                                            pcmtId: feed[index].comments![i]
+                                                .cmtId,
+                                            regTime: '',
+                                            userDto: _loginUser!
+                                        );
+                                        commentProviders.postComment(
+                                            commentDto);
+                                      }
+                                      await initFeed();
+                                    }),
+                                prefixText: (_cur[0] == index && _cur[1] != -1)?'@${feed[_cur[0]].comments![_cur[1]].userDto.nickname} ':'',
+                                hintText: '${_loginUser?.nickname??''}(으)로 댓글 달기...',
                                 enabledBorder: const OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 focusedBorder: const OutlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.black12,
-                                  width: 0.0,
-                                )),
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
                                 filled: true,
                                 fillColor: Colors.black12,
                               ),
+                                onChanged: (text){
+                                  _commentContent = text;
+                                },
                             ),
                           ),
+                                    ],
+                                  ),
+                                ),
+                              ]),
                         ],
-                      ),
+                      );}),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 15),
+                          Visibility(
+                            visible: isVisible[index] && _cur[0] == index && _cur[1] == -1,
+                            child: TextField(
+                              style: const TextStyle(fontSize: 14.0),
+                              cursorColor: Colors.black12,
+                              cursorWidth: 1.0,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                suffixIcon: IconButton(
+                                    icon: const Icon(Icons.send),
+                                    color: Colors.black54,
+                                    onPressed: () async {
+                                      if (_commentContent != null &&
+                                          _commentContent.isNotEmpty) {
+                                        CommentDto commentDto = CommentDto(
+                                            cCommentList: [],
+                                            cmtId: 0,
+                                            content: _commentContent,
+                                            feedId: feed[index].feedId,
+                                            pcmtId: null,
+                                            regTime: '',
+                                            userDto: _loginUser!
+                                        );
+                                        commentProviders.postComment(
+                                            commentDto);
+                                        await initFeed();
+                                      }
+                                    }),
+                                hintText: '${_loginUser?.nickname??''}(으)로 댓글 달기...',
+                                enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
+                                focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.black12,
+                                      width: 0.0,
+                                    )),
+                                filled: true,
+                                fillColor: Colors.black12,
+                              ),
+                              onChanged: (text){
+                                _commentContent = text;
+                              },
+                            ),
+                          ),
             ],
           ),
         );

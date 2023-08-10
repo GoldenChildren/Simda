@@ -5,8 +5,9 @@ import 'package:simda/models/CommentDto.dart';
 
 class CommentProviders{
 
-  String url = "http://i9a709.p.ssafy.io:8000/comment";
   Dio dio = Dio();
+  // String url = "http://i9a709.p.ssafy.io:8000/comment";
+  String url = "http://70.12.247.215:8000/comment";
 
   Future<List<CommentDto>> getComment(int feedId) async {
     // Future<List<Feed>> getFeed(double lat, double lng) async {
@@ -29,15 +30,16 @@ class CommentProviders{
     return comment;
   }
 
-  Future<int> postComment(CommentDto feedDto) async {
+  Future<void> postComment(CommentDto commentDto) async {
     // Dio dio = Dio();
 
     final response = await dio.post(
       "$url/",
-      data: feedDto
+      data: commentDto.toJson(),
+      options: Options(headers: {'Content-Type': 'application/json'})
     );
 
-    return response.data;
+    // return response.data;
   }
 
   Future<void> deleteComment(int commentId) async{

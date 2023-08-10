@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:simda/models/CommentDto.dart';
 import 'package:simda/models/FeedDto.dart';
 
 class FeedProviders {
@@ -32,6 +33,17 @@ class FeedProviders {
       print("여기야");
       print(feed);
     }
+
+    for(FeedDto feedDto in feed){
+      print('feedId : ${feedDto.feedId}');
+      for(CommentDto commentDto in feedDto.comments??[]){
+        print('cmt id : ${commentDto.cmtId}');
+        for(CommentDto cCommentDto in commentDto.cCommentList??[]){
+          print('ccmt id : ${cCommentDto.cmtId} : ${cCommentDto.content}');
+        }
+      }
+    }
+
     return feed;
   }
 
@@ -66,7 +78,7 @@ class FeedProviders {
   }
 
   // Feed를 post하는 메소드
-  Future<int> postFeed(FeedDto feedDto) async {
+  Future<String> postFeed(FeedDto feedDto) async {
 
     // FormData formData = FormData.fromMap({
     //   'imgfile':

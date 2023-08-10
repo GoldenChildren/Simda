@@ -1,3 +1,5 @@
+import 'package:simda/models/CommentDto.dart';
+
 import 'UserDto.dart';
 
 class FeedDto {
@@ -12,6 +14,7 @@ class FeedDto {
   final String regDate;
   final String title;
   final int userId;
+  late List<CommentDto>? comments = [];
 
   FeedDto({
     required this.content,
@@ -25,9 +28,19 @@ class FeedDto {
     required this.regDate,
     required this.title,
     required this.userId,
+    this.comments
   });
 
   factory FeedDto.fromJson(Map<String, dynamic> json) {
+    List<CommentDto> comments = [];
+    if(json['comments'] != null){
+      print('comments not null');
+      json['comments'].forEach((commentJson){
+        comments.add(CommentDto.fromJson(commentJson));
+      });
+    }
+    print('comments null');
+
     return FeedDto(
       content: json['content'],
       emotion: json['emotion'],
@@ -40,6 +53,7 @@ class FeedDto {
       regDate: json['regDate']??'',
       title: json['title'],
       userId: json['userId'],
+      comments: comments,
     );}
 
   Map<String, dynamic> toJson() {
@@ -55,6 +69,7 @@ class FeedDto {
       "regDate": regDate,
       "title": title,
       "userId": userId,
+      "comments" : comments!.map((comment) => comment.toJson()).toList(),
     };
   }
 }
