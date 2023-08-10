@@ -11,7 +11,6 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-
   @override
   Widget build(BuildContext context) {
     return const SafeArea(
@@ -34,7 +33,6 @@ class ListViewBuilder extends StatefulWidget {
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
-
   Future<Position> getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
@@ -114,18 +112,34 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                     Row(
                       children: [
-                        Text(feed[index].likeCnt.toString(),
+                        Text(
+                            feed[index].likeCnt > 999
+                                ? "999+"
+                                : feed[index].likeCnt.toString(),
                             style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
+                            FeedDto feedDto = FeedDto(
+                                content: feed[index].content,
+                                emotion: feed[index].emotion,
+                                feedId: feed[index].feedId,
+                                img: feed[index].img,
+                                lat: feed[index].lat,
+                                likeCnt: feed[index].likeCnt + 1,
+                                lng: feed[index].lng,
+                                nickname: feed[index].nickname,
+                                regDate: feed[index].regDate,
+                                title: feed[index].title,
+                                userId: feed[index].userId);
+                            feedProvider.addLikes(feedDto);
                             setState(() {
                               feed[index].likeCnt++;
                             });
                           },
                           child: Image(
-                              image:
-                                  AssetImage('assets/images/flower${feed[index].emotion}.png'),
+                              image: AssetImage(
+                                  'assets/images/flower${feed[index].emotion}.png'),
                               height: 30),
                         ),
                       ],
@@ -137,8 +151,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 alignment: Alignment.center,
-                child:
-                    Image(image: NetworkImage(feed[index].img)),
+                child: Image(image: NetworkImage(feed[index].img)),
               ),
               const SizedBox(height: 15),
               Row(
@@ -148,7 +161,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   Expanded(
                     child: Text(
                       feed[index].content,
-                    style: const TextStyle(height: 1.5),),
+                      style: const TextStyle(height: 1.5),
+                    ),
                   ),
                   const SizedBox(width: 20),
                 ],
@@ -246,7 +260,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       ),
                                       const SizedBox(height: 10),
                                       const Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           CircleAvatar(
                                             backgroundImage: AssetImage(
