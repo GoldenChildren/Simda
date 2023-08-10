@@ -59,6 +59,8 @@ dependencies:
   firebase_database: ^10.2.4
   google_sign_in: ^6.1.4
   google_sign_in_mocks: ^0.3.0
+  google_maps_flutter_android: ^2.4.15
+  google_maps_flutter_platform_interface: ^2.4.0
 
 dev_dependencies:
   flutter_test:

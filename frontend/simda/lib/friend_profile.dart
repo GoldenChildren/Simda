@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:simda/main.dart';
 import 'package:simda/models/UserDto.dart';
-import 'package:simda/profile_edit_page.dart';
-import 'package:simda/profile_feed.dart';
 import 'package:simda/profile_map.dart';
 import 'package:simda/providers/user_providers.dart';
+import 'friend_profile_calendar.dart';
+import 'friend_profile_feed.dart';
 import 'profile_calendar.dart';
 import 'chat_with_friend.dart';
 
@@ -150,7 +150,6 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                     setState(() {
                                       _isFollowing = false;
                                     });
-
                                   } else {
                                     await userProvider.createFollowUser(
                                         loginUserId, widget.userDto);
@@ -224,14 +223,6 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              // Container(
-              //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-              //   alignment: Alignment.center,
-              //   child: const Image(image: AssetImage('assets/images/promap.PNG')),
-              // )
               const TabBar(
                   indicatorColor: Colors.purple,
                   labelColor: Colors.purple,
@@ -254,12 +245,13 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                       height: 50,
                     ),
                   ]),
-              const Expanded(
+              Expanded(
                 child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    TableCalendarScreen(),
-                    ProfileFeedPage(),
-                    ProfileMapPage(),
+                    FriendProfileCalendarPage(widget.userDto.userId),
+                    FriendProfileFeedPage(widget.userDto.userId),
+                    const ProfileMapPage(),
                   ],
                 ),
               ),

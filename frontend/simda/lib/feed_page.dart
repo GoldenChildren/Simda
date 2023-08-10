@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:simda/models/FeedDto.dart';
 import 'package:simda/providers/feed_providers.dart';
 
@@ -10,9 +11,6 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-
-  int visit = 0;
-
   @override
   Widget build(BuildContext context) {
     return const SafeArea(
@@ -35,9 +33,13 @@ class ListViewBuilder extends StatefulWidget {
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
+  Future<Position> getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
 
-  double lat = 37.5013068;
-  double lng = 127.0396597;
   List<FeedDto> feed = [];
   bool isLoading = true;
   FeedProviders feedProvider = FeedProviders();
@@ -45,12 +47,9 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   List<bool> isVisible = [];
   List<bool> writeComment = [];
 
-  // List<bool> isVisible = List.filled(feed.length, false);
-  // List<bool> writeComment = List.filled(feed.length, false);
-
   Future initFeed() async {
-    // feed = await feedProvider.getFeed(lat, lng);
-    feed = await feedProvider.getFeed();
+    var gps = await getCurrentLocation();
+    feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
     setState(() {
       isVisible = List.generate(feed.length, (index) => true);
       writeComment = List.generate(feed.length, (index) => true);
@@ -66,7 +65,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      // scrollDirection: Axis.,
       itemCount: feed.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
@@ -82,27 +80,35 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              feed[index].title,
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ],
+                        Container(
+                          width: MediaQuery.of(context).size.width / 100 * 73,
+                          padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                          child: Row(
+                            children: [
+                              // const SizedBox(width: 20),
+                              Expanded(
+                                child: Text(
+                                  feed[index].title,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              // const SizedBox(width: 20),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Row(
                           children: [
                             Text(
                               feed[index].nickname,
-                              style: const TextStyle(fontSize: 10),
+                              style: const TextStyle(fontSize: 12),
                             ),
                             const SizedBox(width: 10),
                             Text(
                               feed[index].regDate,
                               style: const TextStyle(
-                                  fontSize: 10, color: Colors.black45),
+                                  fontSize: 12, color: Colors.black45),
                             ),
                           ],
                         ),
@@ -110,18 +116,33 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                     Row(
                       children: [
-                        Text(feed[index].likeCnt.toString(),
+                        Text(feed[index].likeCnt > 99
+                                ? "99+"
+                                : feed[index].likeCnt.toString(),
                             style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
+                            FeedDto feedDto = FeedDto(
+                                content: feed[index].content,
+                                emotion: feed[index].emotion,
+                                feedId: feed[index].feedId,
+                                img: feed[index].img,
+                                lat: feed[index].lat,
+                                likeCnt: feed[index].likeCnt + 1,
+                                lng: feed[index].lng,
+                                nickname: feed[index].nickname,
+                                regDate: feed[index].regDate,
+                                title: feed[index].title,
+                                userId: feed[index].userId);
+                            feedProvider.addLikes(feedDto);
                             setState(() {
                               feed[index].likeCnt++;
                             });
                           },
                           child: Image(
-                              image:
-                                  AssetImage('assets/images/flower${feed[index].emotion}.png'),
+                              image: AssetImage(
+                                  'assets/images/flower${feed[index].emotion}.png'),
                               height: 30),
                         ),
                       ],
@@ -133,8 +154,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 alignment: Alignment.center,
-                child:
-                    Image(image: NetworkImage(feed[index].img)),
+                child: Image(image: NetworkImage(feed[index].img)),
               ),
               const SizedBox(height: 15),
               Row(
@@ -144,7 +164,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   Expanded(
                     child: Text(
                       feed[index].content,
-                    style: const TextStyle(height: 1.5),),
+                      style: const TextStyle(height: 1.5),
+                    ),
                   ),
                   const SizedBox(width: 20),
                 ],
@@ -242,7 +263,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       ),
                                       const SizedBox(height: 10),
                                       const Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           CircleAvatar(
                                             backgroundImage: AssetImage(

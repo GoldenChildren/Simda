@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
 import 'package:simda/KakaoLogin/sign_up.dart';
 import 'package:simda/main.dart';
 import 'package:simda/main_page.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
-import 'package:simda/providers/user_providers.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -15,7 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  UserProviders userProvider = UserProviders();
+
   String email = "";
   String profileImg =
       "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
@@ -129,9 +126,13 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(),
+                  //   borderRadius: BorderRadius.circular(7.5),
+                  // ),
                   child: const Image(
                       image: AssetImage(
-                          'assets/images/kakao_login_large_wide.png'))),
+                          'assets/images/kakao_login_large_wide.png'),height: 53,)),
             ),
             const SizedBox(height: 10),
             SocialLoginButton(
@@ -164,14 +165,39 @@ class _LoginPageState extends State<LoginPage> {
                 }
               },
             ),
-            Text(
-              '${viewModel.isLoggedIn}',
-            ),
-
-            ElevatedButton(
-              onPressed: () async {
-                await viewModel.logout();
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: () async {
+                await viewModel.login();
+                // Navigator.pushAndRemoveUntil(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => const MainPage()), (route) => false
+                // );
                 setState(() {});
+                if (!mounted) return;
+                // 화면 이동
+                if (viewModel.isLoggedIn == 0) {
+                  print('회원가입 화면으로 이동합니다.');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUp()),
+                  );
+                }
+                // 카카오 로그인 오류
+                else if (viewModel.isLoggedIn == -1) {
+                  print('구글 로그인 오류');
+                }
+                else {
+                  print('로그인 성공');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MainPage(0)), (route) => false
+                  );
+                }
+
+                getValueFromSecureStorage();
               },
               child: const Text('Logout'),
             )
@@ -181,4 +207,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-

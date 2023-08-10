@@ -4,21 +4,23 @@ import 'package:simda/providers/feed_providers.dart';
 import 'package:simda/providers/user_providers.dart';
 import 'main.dart';
 
-class ProfileFeedPage extends StatefulWidget {
-  const ProfileFeedPage({Key? key}) : super(key: key);
+class FriendProfileFeedPage extends StatefulWidget {
+
+  final int userId;
+  const FriendProfileFeedPage(this.userId, {Key? key}) : super(key: key);
 
   @override
-  State<ProfileFeedPage> createState() => _ProfileFeedState();
+  State<StatefulWidget> createState() => _FriendProfileFeedState();
 }
 
-class _ProfileFeedState extends State<ProfileFeedPage> {
+class _FriendProfileFeedState extends State<FriendProfileFeedPage> {
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
-            Expanded(child: ListViewBuilder()),
+            Expanded(child: ListViewBuilder(widget.userId)),
           ],
         ),
       ),
@@ -27,7 +29,9 @@ class _ProfileFeedState extends State<ProfileFeedPage> {
 }
 
 class ListViewBuilder extends StatefulWidget {
-  const ListViewBuilder({super.key});
+
+  final int userId;
+  const ListViewBuilder(this.userId, {super.key});
 
   @override
   State<ListViewBuilder> createState() => ListViewBuilderState();
@@ -35,6 +39,7 @@ class ListViewBuilder extends StatefulWidget {
 
 class ListViewBuilderState extends State<ListViewBuilder> {
   int _userId = 0;
+  int _loginUserId = 0;
   UserProviders userProvider = UserProviders();
 
   List<FeedDto> feed = [];
@@ -56,7 +61,8 @@ class ListViewBuilderState extends State<ListViewBuilder> {
   @override
   void initState() {
     super.initState();
-    _userId = 0;
+    _userId = widget.userId;
+    print("친구 아이디: $_userId");
     getValueFromSecureStorage();
   }
 
@@ -64,7 +70,7 @@ class ListViewBuilderState extends State<ListViewBuilder> {
     try {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
       setState(() {
-        _userId = storeUserId;
+        _loginUserId = storeUserId;
       });
       initFeed();
     } catch (e) {

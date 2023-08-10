@@ -13,7 +13,7 @@ class FeedProviders {
 
 
   // 내 주변, 24시간 이내의 피드를 가져오는 메소드
-  Future<List<FeedDto>> getFeed() async {
+  Future<List<FeedDto>> getFeed(double lat, double lng) async {
     // Future<List<Feed>> getFeed(double lat, double lng) async {
     List<FeedDto> feed = [];
 
@@ -21,14 +21,15 @@ class FeedProviders {
     final response = await dio.get(
         '$url/',
         queryParameters: {
-          'lat' : 37.5013068,
-          'lng' : 127.0396597
+          'lat' : lat,
+          'lng' : lng
         });
     if (response.statusCode == 200) {
       print(response.data);
       feed = response.data['feedList'].map<FeedDto>((feeds) {
         return FeedDto.fromJson(feeds);
       }).toList();
+      print("여기야");
       print(feed);
     }
     return feed;
@@ -103,6 +104,13 @@ class FeedProviders {
     print('피드 수정 : $response');
   }
 
+  Future<void> addLikes(FeedDto feedDto) async {
+    await dio.put(
+      '$url/like',
+      data: feedDto.toJson(),
+    );
+  }
+
   // feed 삭제 메소드
   Future<void> deleteFeed(int feedId) async{
     Response response = await dio.delete(
@@ -122,7 +130,7 @@ class FeedProviders {
     final response = await dio.get('$url/$userId');
 
     if (response.statusCode == 200) {
-      feed = jsonDecode(response.data)['feedList'].map<FeedDto>((feeds) {
+      feed = response.data['feedList'].map<FeedDto>((feeds) {
         return FeedDto.fromJson(feeds);
       }).toList();
     }

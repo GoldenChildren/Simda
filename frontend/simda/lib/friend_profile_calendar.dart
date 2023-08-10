@@ -6,16 +6,18 @@ import 'package:table_calendar/table_calendar.dart';
 import 'main.dart';
 import 'models/FeedDto.dart';
 
-class ProfileCalendarPage extends StatefulWidget {
+class FriendProfileCalendarPage extends StatefulWidget {
 
-  const ProfileCalendarPage({Key? key}) : super(key: key);
+  final int userId;
+  const FriendProfileCalendarPage(this.userId, {Key? key}) : super(key: key);
 
   @override
-  State<ProfileCalendarPage> createState() => _ProfileCalendarPageState();
+  State<FriendProfileCalendarPage> createState() => _FriendProfileCalendarPageState();
 }
 
-class _ProfileCalendarPageState extends State<ProfileCalendarPage> {
+class _FriendProfileCalendarPageState extends State<FriendProfileCalendarPage> {
   int _userId = 0;
+  int _loginUserId = 0;
   UserProviders userProvider = UserProviders();
 
   List<FeedDto> feed = [];
@@ -55,7 +57,7 @@ class _ProfileCalendarPageState extends State<ProfileCalendarPage> {
   @override
   void initState() {
     super.initState();
-    _userId = 0;
+    _userId = widget.userId;
     getValueFromSecureStorage();
   }
 
@@ -63,7 +65,7 @@ class _ProfileCalendarPageState extends State<ProfileCalendarPage> {
     try {
       final storeUserId = int.parse(await storage.read(key: "userId") ?? "");
       setState(() {
-        _userId = storeUserId;
+        _loginUserId = storeUserId;
         initFeed();
       });
     } catch (e) {
@@ -103,7 +105,7 @@ class _ProfileCalendarPageState extends State<ProfileCalendarPage> {
               }
               return children.isNotEmpty
                   ? Positioned(bottom: 1, child: Row(children: children))
-                  : const SizedBox.shrink();
+                  : SizedBox.shrink();
             },
           ),
         ),
