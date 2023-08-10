@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simda/main.dart';
+import 'package:simda/models/ChatUserDto.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_edit_page.dart';
 import 'package:simda/profile_feed.dart';
@@ -173,11 +174,18 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                               const SizedBox(width: 10),
                               ElevatedButton(
                                 onPressed: () {
+                                  ChatUserDto contact = ChatUserDto(
+                                      userId: widget.userDto.userId.toString(),
+                                      nickname: widget.userDto.nickname,
+                                      profileImg: widget.userDto.profileImg
+                                  );
+
+
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const ChatWithFriend(2)),
+                                             ChatWithFriend(contact: contact,)),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(

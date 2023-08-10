@@ -41,7 +41,7 @@ class _ChattingPageState extends State<ChattingPage> {
           print(roomData is Map<dynamic, dynamic>);
           if (roomData is Map<dynamic, dynamic>) { // Map 타입 확인
             print("data가 Map<String, dynamic>이야!");
-            ChatRoomDto rchatRoom = ChatRoomDto.fromJson(roomData);
+            ChatRoomDto rchatRoom = ChatRoomDto.fromJson(roomData,roomId);
             print("여기까지 옴");
             chatroom.add(rchatRoom);
             print(rchatRoom);
@@ -189,7 +189,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ChatWithFriend(index)),
+                  builder: (context) => ChatWithFriend(contact: contact,)),
             );
           },
           child: Container(

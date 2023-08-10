@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:simda/friend_profile.dart';
+import 'package:simda/models/ChatUserDto.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/user_providers.dart';
 
+import 'chat_with_friend.dart';
 import 'main.dart';
 import 'main_page.dart';
 
@@ -162,10 +164,14 @@ class _ChattingSearchPageState extends State<ChattingSearchPage> {
                           ),
                           title: Text(_userList[index].nickname),
                           onTap: () {
-                            UserDto user = _userList[
-                                index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
-
-                            user.userId == _userId
+                            // UserDto user = _userList[
+                            //     index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
+                            ChatUserDto contact= ChatUserDto(
+                                userId: _userList[index].userId.toString(),
+                                nickname: _userList[index].nickname,
+                                profileImg: _userList[index].profileImg
+                            );
+                            contact.userId == _userId
                                 ? Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
@@ -174,8 +180,8 @@ class _ChattingSearchPageState extends State<ChattingSearchPage> {
                                 : Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => FriendProfilePage(
-                                        userDto: user,
+                                      builder: (context) => ChatWithFriend(
+                                        contact: contact,
                                       ),
                                     ),
                                   );
