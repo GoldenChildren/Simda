@@ -38,7 +38,11 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     for (var i = 0; i < feed.length; i++) {
       final feedItem = feed[i];
       final emotion = feedItem.emotion;
-      final date = DateTime.parse(feedItem.regDate);
+      // final date = DateTime.parse(feedItem.regDate);
+      final year = int.parse(feedItem.regDate.substring(0, 4)); // 년 추출
+      final month = int.parse(feedItem.regDate.substring(5, 7)); // 월 추출
+      final day = int.parse(feedItem.regDate.substring(8, 10)); // 일 추출
+      final date = DateTime(year, month, day); // DateTime 객체 생성
       _emotionMap[date] = emotion;
     }
   }
