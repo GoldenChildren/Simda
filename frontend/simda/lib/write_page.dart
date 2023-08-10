@@ -59,236 +59,315 @@ class _WritePageState extends State<WritePage> {
   void _showEmotionDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: const Text(
-                '나의 감정은?',
-                style: TextStyle(),
-                textAlign: TextAlign.center,
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(height: 2, color: Colors.purple),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      builder: (context) =>
+          StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return AlertDialog(
+                  title: const Text(
+                    '나의 감정은?',
+                    style: TextStyle(),
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
+                      Container(height: 2, color: Colors.purple),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('AI가 분석한 내 감정', style: TextStyle(
-                            color: emotion == 0 && selected == 0 ? Colors.redAccent : Colors.transparent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 8,
-                          ),),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selected = 0;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              width: 75,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                                color:
-                                selected == 0 ? Colors.black12 : Colors.transparent,
+                          Column(
+                            children: [
+                              Text(
+                                'AI가 분석한 내 감정',
+                                style: TextStyle(
+                                  color: emotion == 0 && selected == 0
+                                      ? Colors.redAccent
+                                      : Colors.transparent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 8,
+                                ),
                               ),
-                              child: const Column(
-                                children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selected = 0;
+                                  });
 
-                                  SizedBox(height: 3),
-                                  Image(image: AssetImage('assets/images/flower0.png')),
-                                  SizedBox(height: 5),
-                                  Text('행복')
-                                ],
+                                  print("selected: $selected");
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10, 5, 10, 5),
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 6 + 5,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    const BorderRadius.all(Radius.circular(5)),
+                                    color: selected == 0
+                                        ? Colors.black12
+                                        : Colors.transparent,
+                                  ),
+                                  child: const Column(
+                                    children: [
+                                      SizedBox(height: 3),
+                                      Image(
+                                          image:
+                                          AssetImage(
+                                              'assets/images/flower0.png')),
+                                      SizedBox(height: 5),
+                                      Text('행복')
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            children: [
+                              Text(
+                                'AI가 분석한 내 감정',
+                                style: TextStyle(
+                                  color: emotion == 1 && selected == 1
+                                      ? Colors.redAccent
+                                      : Colors.transparent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 8,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selected = 1;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10, 5, 10, 5),
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 6 + 5,
+                                  // color: _colors[1],
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    const BorderRadius.all(Radius.circular(5)),
+                                    color: selected == 1
+                                        ? Colors.black12
+                                        : Colors.transparent,
+                                  ),
+                                  child: const Column(
+                                    children: [
+                                      Image(
+                                          image:
+                                          AssetImage(
+                                              'assets/images/flower1.png')),
+                                      SizedBox(height: 5),
+                                      Text('신남')
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            children: [
+                              Text(
+                                'AI가 분석한 내 감정',
+                                style: TextStyle(
+                                  color: emotion == 2 && selected == 2
+                                      ? Colors.redAccent
+                                      : Colors.transparent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 8,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selected = 2;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10, 5, 10, 5),
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 6 + 5,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    const BorderRadius.all(Radius.circular(5)),
+                                    color: selected == 2
+                                        ? Colors.black12
+                                        : Colors.transparent,
+                                  ),
+                                  child: const Column(
+                                    children: [
+                                      Image(
+                                          image:
+                                          AssetImage(
+                                              'assets/images/flower2.png')),
+                                      SizedBox(height: 5),
+                                      Text('평온')
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(width: 10),
-                      Column(
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('AI가 분석한 내 감정', style: TextStyle(
-                            color: emotion == 1 && selected == 1 ? Colors.redAccent : Colors.transparent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 8,
-                          ),),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selected = 1;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              width: 75,
-                              // color: _colors[1],
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                                color:
-                                selected == 1 ? Colors.black12 : Colors.transparent,
+                          Column(
+                            children: [
+                              Text(
+                                'AI가 분석한 내 감정',
+                                style: TextStyle(
+                                  color: emotion == 3 && selected == 3
+                                      ? Colors.redAccent
+                                      : Colors.transparent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 8,
+                                ),
                               ),
-                              child: const Column(
-                                children: [
-                                  Image(image: AssetImage('assets/images/flower1.png')),
-                                  SizedBox(height: 5),
-                                  Text('신남')
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selected = 3;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10, 5, 10, 5),
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 6 + 5,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    const BorderRadius.all(Radius.circular(5)),
+                                    color: selected == 3
+                                        ? Colors.black12
+                                        : Colors.transparent,
+                                  ),
+                                  child: const Column(
+                                    children: [
+                                      Image(
+                                          image:
+                                          AssetImage(
+                                              'assets/images/flower3.png')),
+                                      SizedBox(height: 5),
+                                      Text('화남')
+                                    ],
+                                  ),
+                                ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            children: [
+                              Text(
+                                'AI가 분석한 내 감정',
+                                style: TextStyle(
+                                  color: emotion == 4 && selected == 4
+                                      ? Colors.redAccent
+                                      : Colors.transparent,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 8,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selected = 4;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      10, 5, 10, 5),
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 6 + 5,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                    const BorderRadius.all(Radius.circular(5)),
+                                    color: selected == 4
+                                        ? Colors.black12
+                                        : Colors.transparent,
+                                  ),
+                                  child: const Column(
+                                    children: [
+                                      Image(
+                                          image:
+                                          AssetImage(
+                                              'assets/images/flower4.png')),
+                                      SizedBox(height: 5),
+                                      Text('슬픔')
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                            width: 65,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  5)),
+                              color: Colors.transparent,
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        children: [
-                          Text('AI가 분석한 내 감정', style: TextStyle(
-                            color: emotion == 2 && selected == 2 ? Colors.redAccent : Colors.transparent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 8,
-                          ),),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selected = 2;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              width: 75,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                                color:
-                                selected == 2 ? Colors.black12 : Colors.transparent,
-                              ),
-                              child: const Column(
-                                children: [
-                                  Image(image: AssetImage('assets/images/flower2.png')),
-                                  SizedBox(height: 5),
-                                  Text('평온')
-                                ],
-                              ),
-                            ),
-                          ),
+                          const SizedBox(width: 10),
                         ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        children: [
-                          Text('AI가 분석한 내 감정', style: TextStyle(
-                            color: emotion == 3 && selected == 3 ? Colors.redAccent : Colors.transparent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 8,
-                          ),),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selected = 3;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              width: 75,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                                color:
-                                selected == 3 ? Colors.black12 : Colors.transparent,
-                              ),
-                              child: const Column(
-                                children: [
-                                  Image(image: AssetImage('assets/images/flower3.png')),
-                                  SizedBox(height: 5),
-                                  Text('화남')
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        children: [
-                          Text('AI가 분석한 내 감정', style: TextStyle(
-                            color: emotion == 4 && selected == 4 ? Colors.redAccent : Colors.transparent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 8,
-                          ),),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selected = 4;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              width: 75,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                                color:
-                                selected == 4 ? Colors.black12 : Colors.transparent,
-                              ),
-                              child: const Column(
-                                children: [
-                                  Image(image: AssetImage('assets/images/flower4.png')),
-                                  SizedBox(height: 5),
-                                  Text('슬픔')
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-                        width: 65,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                          color: Colors.transparent,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    setState(() {});
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('저장하기'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    if(!mounted) return;
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MainPage(0)),
-                            (route) => false);
-                    await feedProvider.postFeed(uploadFeed);
-                  },
-                  child: const Text('작성완료'),
-                ),
-              ],
-            );
-          }),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        setState(() {});
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('저장하기'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        if (!mounted) return;
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MainPage(0)),
+                                (route) => false);
+                        uploadFeed = FeedDto(content: uploadFeed.content,
+                            emotion: selected,
+                            feedId: uploadFeed.feedId,
+                            img: uploadFeed.img,
+                            lat: uploadFeed.lat,
+                            likeCnt: uploadFeed.likeCnt,
+                            lng: uploadFeed.lng,
+                            nickname: uploadFeed.nickname,
+                            regDate: uploadFeed.regDate,
+                            title: uploadFeed.title,
+                            userId: uploadFeed.userId);
+                        await feedProvider.postFeed(uploadFeed);
+                      },
+                      child: const Text('작성완료'),
+                    ),
+                  ],
+                );
+              }),
     );
   }
 
@@ -363,16 +442,20 @@ class _WritePageState extends State<WritePage> {
                           barrierDismissible: false,
                           barrierColor: null,
                           builder: (BuildContext buildContext) {
-                            Future.delayed(const Duration(seconds: 0), () async {
-                              // 감정 정보 받아오기
-                              uploadFeed = await feedProvider.getEmotion(
-                                  feedDto, _image!.path);
-                              selected = uploadFeed.emotion;
-                              emotion = uploadFeed.emotion;
-                              if(!mounted) return;
-                              Navigator.of(buildContext).pop(); // 로딩 화면 닫기
-                              _showEmotionDialog(buildContext); // 감정 선택 화면 열기
-                            });
+                            Future.delayed(const Duration(seconds: 1),
+                                    () async {
+                                  // 감정 정보 받아오기
+                                  uploadFeed = await feedProvider.getEmotion(
+                                      feedDto, _image!.path);
+                                  selected = uploadFeed.emotion;
+                                  emotion = uploadFeed.emotion;
+                                  if (!mounted) return;
+                                  Navigator.of(buildContext).pop(); // 로딩 화면 닫기
+                                  _showEmotionDialog(
+                                      buildContext); // 감정 선택 화면 열기
+                                  print("AI가 분석한 감정: $emotion");
+                                  print("선택된 감정: $selected");
+                                });
                             return Dialog(
                               // insetAnimationDuration:
                               //     const Duration(seconds: 2),
@@ -418,7 +501,10 @@ class _WritePageState extends State<WritePage> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery
+                    .of(context)
+                    .viewInsets
+                    .bottom,
               ),
               child: Column(
                 children: [
@@ -489,7 +575,10 @@ class _WritePageState extends State<WritePage> {
           child: Padding(
             // padding: const EdgeInsets.all(0),
             padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+                bottom: MediaQuery
+                    .of(context)
+                    .viewInsets
+                    .bottom),
             child: Container(
                 decoration: const BoxDecoration(
                     border: Border(

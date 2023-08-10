@@ -23,34 +23,23 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   bool isLoading = true;
   List<bool> isVisible = [];
 
+  Map<DateTime, int> _emotionMap = {};
+
   Future<void> initFeed() async {
     feed = await feedProvider.getUserFeedList(_userId);
     setState(() {
       isVisible = List.generate(feed.length, (index) => true);
-      // _generateMarkers();
+      _generateMarkers();
     });
-    await _generateMarkers(); // Wait for images to be precached
   }
 
-  Map<DateTime, List<Widget>> _markers = {};
-
   Future<void> _generateMarkers() async {
-    _markers = {};
+    _emotionMap = {};
     for (var i = 0; i < feed.length; i++) {
       final feedItem = feed[i];
       final emotion = feedItem.emotion;
       final date = DateTime.parse(feedItem.regDate);
-      // final date = DateTime.utc(feedItem.regDate.year, feedItem.regDate.month, feedItem.regDate.day);
-
-      final image = Image.asset('assets/images/flower$emotion.png', width: 20, height: 17);
-      //
-      await precacheImage(image.image, context);
-
-      if (_markers.containsKey(date)) {
-        _markers[date]!.add(image);
-      } else {
-        _markers[date] = [image];
-      }
+      _emotionMap[date] = emotion;
     }
   }
 
@@ -95,8 +84,10 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
           calendarBuilders: CalendarBuilders(
             markerBuilder: (context, date, event) {
               final children = <Widget>[];
-              if (_markers.containsKey(date)) {
-                children.addAll(_markers[date]!);
+              if (_emotionMap.containsKey(date)) {
+                final emotion = _emotionMap[date]!;
+                final image = Image.asset('assets/images/flower$emotion.png', width: 20, height: 17);
+                children.add(image);
               }
               return children.isNotEmpty ? Positioned(bottom: 1, child: Row(children: children)) : SizedBox.shrink();
             },
