@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto selectUserByEmail(String email) {
 
-        // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
+        // 이메일이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
         System.out.println("repo "+ email);
         User user = userRepository.findByEmail(email);
 
