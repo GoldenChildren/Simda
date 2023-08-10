@@ -30,7 +30,7 @@ class CommentProviders{
     return comment;
   }
 
-  Future<int> postComment(CommentDto commentDto) async {
+  Future<void> postComment(CommentDto commentDto) async {
     // Dio dio = Dio();
 
     final response = await dio.post(
@@ -39,7 +39,7 @@ class CommentProviders{
       options: Options(headers: {'Content-Type': 'application/json'})
     );
 
-    return response.data;
+    // return response.data;
   }
 
   Future<void> deleteComment(int commentId) async{

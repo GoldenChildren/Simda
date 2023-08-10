@@ -34,10 +34,12 @@ class FeedDto {
   factory FeedDto.fromJson(Map<String, dynamic> json) {
     List<CommentDto> comments = [];
     if(json['comments'] != null){
+      print('comments not null');
       json['comments'].forEach((commentJson){
         comments.add(CommentDto.fromJson(commentJson));
       });
     }
+    print('comments null');
 
     return FeedDto(
       content: json['content'],

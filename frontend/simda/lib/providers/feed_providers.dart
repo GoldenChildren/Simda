@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:simda/models/CommentDto.dart';
 import 'package:simda/models/FeedDto.dart';
 
 class FeedProviders {
@@ -30,8 +31,19 @@ class FeedProviders {
       feed = response.data['feedList'].map<FeedDto>((feeds) {
         return FeedDto.fromJson(feeds);
       }).toList();
-      print(feed);
+      // print(feed);
     }
+
+    for(FeedDto feedDto in feed){
+      print('feedId : ${feedDto.feedId}');
+      for(CommentDto commentDto in feedDto.comments??[]){
+        print('cmt id : ${commentDto.cmtId}');
+        for(CommentDto cCommentDto in commentDto.cCommentList??[]){
+          print('ccmt id : ${cCommentDto.cmtId} : ${cCommentDto.content}');
+        }
+      }
+    }
+
     return feed;
   }
 
