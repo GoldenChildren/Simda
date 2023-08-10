@@ -27,29 +27,36 @@ class ChatRoomProviders {
 
 
   Future<List<ChatRoomDto>> getChatRooms(ChatUserDto myUserId, ChatUserDto contactUserId) async {
+    print("내아이디 ${myUserId.userId}");
+    print("상대 아이디 ${contactUserId.userId}");
     List<ChatRoomDto> chatRooms = [];
-    Query chatRoomRef = FirebaseDatabase.instance.reference().child('chatrooms')
+    Query chatRoomRef = FirebaseDatabase.instance.ref().child('chatrooms')
         .orderByChild("participants/${myUserId.userId}")
         .equalTo(true);
-
     try {
-      DataSnapshot snapshot = (await chatRoomRef.once()) as DataSnapshot;
-      if (snapshot.value != null) {
-        dynamic data = snapshot.value;
-
+      DatabaseEvent snapshot = await chatRoomRef.once();
+      dynamic data = snapshot.snapshot.value;
+      print(data);
+      if (data != null) {
+        print("데이터있다");
         data.forEach((roomId, roomData) {
-          if (roomData is Map<String, dynamic>) { // Map 타입 확인
+          if (roomData is Map<dynamic, dynamic>) { // Map 타입 확인
+            print("맵타입 확인");
             if (roomData['participants'] != null && roomData['participants'][contactUserId.userId] != null) {
-              ChatRoomDto chatRoom = ChatRoomDto.fromJson(roomData, int.parse(roomId));
+              print("상대유저 확인");
+              ChatRoomDto chatRoom = ChatRoomDto.fromJson(roomData, roomId);
               chatRooms.add(chatRoom);
             }
           }
         });
+
+      }else{
+        print("데이터 없다");
       }
+
     } catch (error) {
       print("Error getting chatrooms: $error");
     }
-
     return chatRooms;
   }
 
@@ -76,7 +83,8 @@ class ChatRoomProviders {
 
 
 
-  void createChatRoom(ChatUserDto myuid, ChatUserDto uid){
+  Future<String?> createChatRoom(ChatUserDto myuid, ChatUserDto uid) async {
+    List<ChatRoomDto> chatRooms = [];
     DatabaseReference ref = FirebaseDatabase.instance.ref("chatrooms");
 
 
@@ -93,12 +101,14 @@ class ChatRoomProviders {
       },
     };
     String? newChatroomId = ref.push().key;
-
+    print(newChatroomId);
     ref.child(newChatroomId!).set(newChatroomData).then((_) {
       print("New chatroom added with key: $newChatroomId");
+      return newChatroomId;
     }).catchError((error) {
       print("Error adding new chatroom: $error");
     });
+    return null;
   }
 
 }

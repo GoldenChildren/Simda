@@ -17,7 +17,7 @@ class ChattingSearchPage extends StatefulWidget {
 
 class _ChattingSearchPageState extends State<ChattingSearchPage> {
   int _userId = 0;
-
+  late ChatUserDto me;
   @override
   void initState() {
     super.initState();
@@ -27,9 +27,15 @@ class _ChattingSearchPageState extends State<ChattingSearchPage> {
   Future<void> getValueFromSecureStorage() async {
     try {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
-
+      String storeNickname = await storage.read(key: "nickname").toString();
+      String storeProfileImg = await storage.read(key: "profileImg").toString();
       setState(() {
         _userId = storeUserId;
+        me = ChatUserDto(
+          userId: storeUserId.toString(),
+          nickname: storeNickname,
+          profileImg: storeProfileImg,
+        );
       });
     } catch (e) {
       print("Error reading from secure storage: $e");
@@ -182,6 +188,7 @@ class _ChattingSearchPageState extends State<ChattingSearchPage> {
                                     MaterialPageRoute(
                                       builder: (context) => ChatWithFriend(
                                         contact: contact,
+                                        me : me,
                                       ),
                                     ),
                                   );

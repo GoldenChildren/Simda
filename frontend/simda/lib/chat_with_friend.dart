@@ -7,26 +7,45 @@ import 'package:simda/providers/chatroom_providers.dart';
 
 class ChatWithFriend extends StatefulWidget {
   final ChatUserDto contact;
-
-  const ChatWithFriend({super.key, required this.contact});
+  final ChatUserDto me;
+  const ChatWithFriend({super.key, required this.contact, required this.me});
   @override
   State<ChatWithFriend> createState() => _ChatWithFriendState();
 }
 
 class _ChatWithFriendState extends State<ChatWithFriend> {
-  ChatUserDto? me;
-  late Future<List<ChatRoomDto>> chatRoomsFuture;
-  List<ChatRoomDto> chatRooms =[];
-  late Future<String> chatroomId;
+  List<ChatRoomDto> chatroomsList=[];
+  late String? chatRoomId;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getRoom();
+    print("초기화 ");
+    print(chatroomsList.length);
+    // print("챗룸아이디 가져왔다 ! :${chatRoomId}");
   }
+  void getRoom() async{
+    chatroomsList = await ChatRoomProviders().getChatRooms(widget.me, widget.contact);
+    print("chatroomsList:${chatroomsList.length}");
+    if(chatroomsList.length==0){
+      chatRoomId = await ChatRoomProviders().createChatRoom(widget.me, widget.contact) as String;
+    }else{
+      chatRoomId = await chatroomsList.first.chatroomId;
+      print("기존의 챗룸있고 아이디 : ${chatRoomId}");
+    }
+    setState(() {
+    });
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
-
+          if(widget.me==null){
+            return CircularProgressIndicator();
+          }
           return SafeArea(
             child: Scaffold(
               body: Column(children: [
@@ -58,7 +77,7 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
                   ],
                 ),
                 Container(height: 2, color: Colors.purple),
-                Expanded(child: ListViewBuilder(me:me!, contact: widget.contact,)),
+                Expanded(child: ListViewBuilder(me:widget.me, contact: widget.contact,)),
                 Container(
                   color: Colors.black12,
                   child: const TextField(
@@ -92,26 +111,24 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
 
   }
 
-  Future<void> getValueFromSecureStorage() async {
-    try {
-      String storeUserId = await storage.read(key: "userId").toString();
-      print("hi getValueFromSecureStorage");
-      String storeNickname = await storage.read(key: "nickname").toString();
-      String storeProfileImg = await storage.read(key: "profileImg").toString();
-
-
-      me = ChatUserDto(
-          userId: storeUserId,
-          nickname: storeNickname,
-          profileImg: storeProfileImg,
-      );
-      setState(() {});
-
-    } catch (e) {
-      print("Error reading from secure storage: $e");
-
-    }
-  }
+  // Future<void> getValueFromSecureStorage() async {
+  //   try {
+  //     String storeUserId = await storage.read(key: "userId").toString();
+  //     print("hi getValueFromSecureStorage");
+  //     String storeNickname = await storage.read(key: "nickname").toString();
+  //     String storeProfileImg = await storage.read(key: "profileImg").toString();
+  //     me = ChatUserDto(
+  //         userId: storeUserId,
+  //         nickname: storeNickname,
+  //         profileImg: storeProfileImg,
+  //     );
+  //
+  //     setState(() {});
+  //     print("me 저장 완료 ");
+  //   } catch (e) {
+  //     print("Error reading from secure storage: $e");
+  //   }
+  // }
 }
 
 class ListViewBuilder extends StatefulWidget {
@@ -146,7 +163,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   // }
   void sendMsg(){
     if(chatRooms.length ==0){
-      ChatRoomProviders().createChatRoom(widget.me, widget.contact);
+      // ChatRoomProviders().createChatRoom(widget.me, widget.contact);
     }
     setState(() {});
   }

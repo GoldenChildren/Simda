@@ -181,12 +181,13 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                                   );
 
 
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                             ChatWithFriend(contact: contact,)),
-                                  );
+                                  // Navigator.push(
+                                  //   // context,
+                                  //   // MaterialPageRoute(
+                                  //   //     // builder: (context) =>
+                                  //   //          // ChatWithFriend(contact: contact,)
+                                  //   // ),
+                                  // );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Theme.of(context).primaryColor,

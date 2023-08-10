@@ -186,11 +186,11 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
 
         return GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ChatWithFriend(contact: contact,)),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //       builder: (context) => ChatWithFriend(contact: contact,)),
+            // );
           },
           child: Container(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
