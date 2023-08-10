@@ -98,9 +98,9 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: const Image(
                       image: AssetImage(
-                          'assets/images/kakao_login_large_wide.png'))),
+                          'assets/images/kakao_login_large_wide.png'),height: 53,)),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             SocialLoginButton(
               height: 46,
               backgroundColor: Colors.white,
@@ -114,17 +114,17 @@ class _LoginPageState extends State<LoginPage> {
                 // Once signed in, return the UserCredential
               },
             ),
-            Text(
-              '${viewModel.isLoggedIn}',
-            ),
+            // Text(5
+            //   '${viewModel.isLoggedIn}',
+            // ),
 
-            ElevatedButton(
-              onPressed: () async {
-                await viewModel.logout();
-                setState(() {});
-              },
-              child: const Text('Logout'),
-            )
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     await viewModel.logout();
+            //     setState(() {});
+            //   },
+            //   child: const Text('Logout'),
+            // )
           ],
         ),
       ),
