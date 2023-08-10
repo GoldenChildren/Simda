@@ -21,9 +21,6 @@ import java.io.InputStreamReader;
 public class ApiController {
 
     @Autowired
-    private FeedService feedService;
-
-    @Autowired
     private FileService fileService;
 
     @Autowired

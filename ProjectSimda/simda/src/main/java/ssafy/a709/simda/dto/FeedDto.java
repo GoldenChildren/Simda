@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ssafy.a709.simda.domain.Comment;
 import ssafy.a709.simda.domain.Feed;
 import ssafy.a709.simda.domain.User;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Builder
@@ -37,8 +40,14 @@ public class FeedDto {
     private String nickname;
     //Writer id
     private int userId;
+    // Comment
+    private List<CommentDto> comments;
     // Feed(Entity)를 FeedDto로 변환
-    public static FeedDto changeToFeedDto(Feed feed, User user){
+    public static FeedDto changeToFeedDto(Feed feed, User user, List<CommentDto> comments){
+        if (comments == null) {
+            comments = new ArrayList<>(); // 댓글이 없는 경우 빈 리스트 생성
+        }
+
         return FeedDto.builder()
                 .feedId(feed.getFeedId())
                 .title(feed.getTitle())
@@ -51,6 +60,8 @@ public class FeedDto {
                 .lng(feed.getLng())
                 .likeCnt(feed.getLikeCnt())
                 .regDate(feed.getRegDate().toString())
+                .comments(comments)
                 .build();
     }
+
 }
