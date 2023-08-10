@@ -104,6 +104,17 @@ class FeedProviders {
     print('피드 수정 : $response');
   }
 
+  Future<void> addLikes(FeedDto feedDto) async {
+    Response response = await dio.put(
+      '$url',
+      data: feedDto
+    );
+
+    print("like: ${feedDto.likeCnt}");
+  }
+
+
+
   // feed 삭제 메소드
   Future<void> deleteFeed(int feedId) async{
     Response response = await dio.delete(
