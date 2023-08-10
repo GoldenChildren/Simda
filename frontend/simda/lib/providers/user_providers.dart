@@ -52,21 +52,13 @@ class UserProviders {
   }
   // 유저 체크
   Future<int> checkUser(String email) async{
-    Response response = await dio.get(
-        '$url/email',
-        queryParameters: {
-          'email' : email
-        }
-    );
-    UserDto userDto = UserDto(
-        bio: '',
-        userId: 0,
-        email: email ?? '',
-        nickname: '',
-        profileImg: '',
-        userRole: response.data);
-    saveStorage(userDto as Map<String, dynamic>);
-    return response.data;
+    storage.write(key: "email", value: email);
+    try{
+      final response = await dio.get('$url/email?email=$email');
+      return 1;
+    }catch (Exception) {
+      return -1;
+    }
   }
 
   // 회원 정보를 수정한다.

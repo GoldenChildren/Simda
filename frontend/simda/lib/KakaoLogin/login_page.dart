@@ -146,12 +146,16 @@ class _LoginPageState extends State<LoginPage> {
                 int emailCheck = await signInWithGoogle();
                 if (emailCheck == 1) {
                   print('로그인 성공');
+                  String? storeEmail = await storage.read(key: "email");
+                  print(storeEmail);
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: (context) => MainPage(0)), (route) => false
                   );
                 }else{
+                  String? storeEmail = await storage.read(key: "email");
+                  print(storeEmail);
                   print('회원가입 화면으로 이동합니다.');
                   Navigator.push(
                     context,
