@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xffffbe96),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -96,6 +96,10 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(),
+                  //   borderRadius: BorderRadius.circular(7.5),
+                  // ),
                   child: const Image(
                       image: AssetImage(
                           'assets/images/kakao_login_large_wide.png'),height: 53,)),
@@ -121,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                 }
                 // 카카오 로그인 오류
                 else if (viewModel.isLoggedIn == -1) {
-                  print('카카오 로그인 오류');
+                  print('구글 로그인 오류');
                 }
                 else {
                   print('로그인 성공');
