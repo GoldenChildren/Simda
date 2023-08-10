@@ -34,10 +34,11 @@ class _MapPageState extends State<MapPage> {
   FeedProviders feedProvider = FeedProviders();
 
   Future initFeed() async {
+    // print("37번 실행 : initFeed");
     var gps = await getCurrentLocation();
     feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
-    print("feed 개수: ${feed.length}개 입니다");
-    print("첫번째 피드 작성자: ${feed[0].nickname}");
+    // print("feed 개수: ${feed.length}개 입니다");
+    // print("첫번째 피드 작성자: ${feed[0].nickname}");
     setState(() {
       // isVisible = List.generate(feed.length, (index) => true);
       // writeComment = List.generate(feed.length, (index) => true);
@@ -60,8 +61,8 @@ class _MapPageState extends State<MapPage> {
 
   // 예시데이터를 파싱해온 list를  item리스트에 담는 메서드
   void _addMarkers() {
-    print("63 : addMarkers 실행");
-    print("마커를 추가해보겠습니다. ${feed.length}");
+    // print("63번 실행 : addMarkers");
+    // print("마커를 추가해보겠습니다. ${feed.length}");
     for (int i = 0; i < feed.length; i++) {
       items.add(Place(
         feedId: feed[i].feedId,
@@ -75,14 +76,22 @@ class _MapPageState extends State<MapPage> {
   //State초기화메서드
   @override
   void initState() {
-    print("init state");
+    // print("79번 실행 : init state");
     super.initState();
     _getUserLocation();
-    initFeed();
+    _manager = _initClusterManager(); // _initClusterManager()를 호출하여 초기화 >> 여기로 이동시켜줬음
+    _addMarkersAndInitializeClusterManager();
+  }
+
+  void _addMarkersAndInitializeClusterManager() async {
+    await initFeed();
+    _addMarkers();
+    // _manager = _initClusterManager(); // _initClusterManager()를 호출하여 초기화 >> 여기서 하면 initialize 오류가 생기는듯
   }
 
   //클러스터 매니저 초기화 메서드
   ClusterManager _initClusterManager() {
+    // print("87번 실행 : initClusterMananger");
     //ClusterManger<지도의 표시할 객체의 형> ("지도의 표시할 형의 리스트","지도에 있는 메서드를
     return ClusterManager<Place>(items, _updateMarkers,
         markerBuilder: _markerBuilder);
@@ -90,12 +99,12 @@ class _MapPageState extends State<MapPage> {
 
 // 마커 업데이트 메서드
   void _updateMarkers(Set<Marker> markers) {
-    print("92 : updateMarkers 실행");
-    print('Updated ${markers.length} markers');
+    // print("95번 실행 : updateMarkers");
+    // print('Updated ${markers.length} markers');
     setState(() {
       if (mounted) {
-        print("marker 초기화가 이루어지나?");
         this.markers = markers;
+        // print(markers);
       }
     });
   }
@@ -103,11 +112,11 @@ class _MapPageState extends State<MapPage> {
   LatLng currentPosition = const LatLng(37.5013068, 127.0396597);
 
   void _getUserLocation() async {
-    print("104 getUserLocation 실행");
+    // print("107번 실행 : getUserLocation");
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-    print("lat : ${position.latitude}");
-    print("long : ${position.longitude}");
+    // print("lat : ${position.latitude}");
+    // print("long : ${position.longitude}");
     setState(() {
       currentPosition = LatLng(position.latitude, position.longitude);
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -118,6 +127,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<Position> getCurrentLocation() async {
+    // print("122번 실행 : getCurrentLocation");
     // LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -127,6 +137,7 @@ class _MapPageState extends State<MapPage> {
   //마커를 만드는 메서드
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
       (cluster) async {
+    // print("132번 실행 : markerBuilder");
         int emotion = 0;
         if (cluster.isMultiple) {
           List checklist = [0, 0, 0, 0, 0];
@@ -150,7 +161,7 @@ class _MapPageState extends State<MapPage> {
           position: cluster.location,
           onTap: () {
             print('---- $cluster');
-            cluster.items.forEach((p) => print(p.emotion));
+            cluster.items.forEach((p) => print(p.feedId));
             mapController?.animateCamera(CameraUpdate.newCameraPosition(
               CameraPosition(
                   target: LatLng(cluster.location.latitude - 0.002,
@@ -578,6 +589,7 @@ class _MapPageState extends State<MapPage> {
   //이미지를 불러와 우리가 원하는 비트맵으롭 변환
   Future<BitmapDescriptor> _getMarkerBitmapFromAsset(int emotion, int size,
       {String? text}) async {
+    // print("584번 실행 : getMarkerBit뭐시기");
     late String assetPath;
     switch (emotion) {
       //행복
@@ -675,11 +687,14 @@ class _MapPageState extends State<MapPage> {
     // CameraPosition startCameraPosition =
     // CameraPosition(target: LatLng(gps.latitude, gps.longitude), zoom: 17.0);
 
-    items = [];
-    _addMarkers();
-    print("marker 개수: ${items.length}");
+    // print("675번 실행 : Build");
+    // items = [];
+    // _addMarkers();
+    // print("marker 개수: ${items.length}");
+    // print(currentPosition.longitude);
+    // print(currentPosition.latitude);
 
-    _manager = _initClusterManager();
+    // _manager = _initClusterManager();
 
     return SafeArea(
       child: Stack(alignment: AlignmentDirectional.bottomEnd, children: [
