@@ -1,4 +1,6 @@
 
+
+
 class ChatUserDto {
   final String nickname;
   final String profileImg;

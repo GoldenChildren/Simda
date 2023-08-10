@@ -69,7 +69,7 @@ class ChatRoomProviders {
       dynamic data = snapshot.value;
       print(data);
       if(snapshot.value is Map) {
-        ChatUserDto chatUserDto = ChatUserDto.fromJson(data, userId1);
+        ChatUserDto chatUserDto = ChatUserDto.fromJson(data, userId1.toString());
         return chatUserDto;
       }
     } else {
