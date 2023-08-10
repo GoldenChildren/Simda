@@ -50,6 +50,24 @@ class UserProviders {
 
     return response.data;
   }
+  // 유저 체크
+  Future<int> checkUser(String email) async{
+    Response response = await dio.get(
+        '$url/email',
+        queryParameters: {
+          'email' : email
+        }
+    );
+    UserDto userDto = UserDto(
+        bio: '',
+        userId: 0,
+        email: email ?? '',
+        nickname: '',
+        profileImg: '',
+        userRole: response.data);
+    saveStorage(userDto as Map<String, dynamic>);
+    return response.data;
+  }
 
   // 회원 정보를 수정한다.
   Future<UserDto> modifyUser(String path, UserDto userDto) async {

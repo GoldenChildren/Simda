@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
 import 'package:simda/KakaoLogin/sign_up.dart';
 import 'package:simda/main.dart';
 import 'package:simda/main_page.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
-
+import 'package:simda/providers/user_providers.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -12,7 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
+  UserProviders userProvider = UserProviders();
   String email = "";
   String profileImg =
       "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
@@ -43,6 +46,36 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<int> signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser != null) {
+        // Obtain the auth details from the request
+        final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        // Sign in to Firebase with the credential
+        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        // Get the user's information
+        final User user = userCredential.user!;
+        // Now you can access the user's information
+        print("Email: ${user.email}");
+        return await userProvider.checkUser("${user.email}");
+      } else {
+        throw Exception("Google Sign-In was canceled.");
+      }
+    } catch (error) {
+      // Handle any errors that occur during the sign-in process
+      print("Error signing in with Google: $error");
+      rethrow;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,9 +142,22 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: 5,
               width: 350,
               buttonType: SocialLoginButtonType.google,
-              onPressed: () async {
-                print("로그인 클릭");
-                // Once signed in, return the UserCredential
+              onPressed:() async{
+                int emailCheck = await signInWithGoogle();
+                if (emailCheck == 1) {
+                  print('로그인 성공');
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MainPage(0)), (route) => false
+                  );
+                }else{
+                  print('회원가입 화면으로 이동합니다.');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUp()),
+                  );
+                }
               },
             ),
             Text(
@@ -131,3 +177,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
