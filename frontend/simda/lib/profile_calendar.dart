@@ -23,7 +23,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   bool isLoading = true;
   List<bool> isVisible = [];
 
-  Map<DateTime, List<Image>> _emotionMap = {};
+  Map<DateTime, List<FeedDto>> _emotionMap = {};
 
   Future<void> initFeed() async {
     feed = await feedProvider.getUserFeedList(_userId);
@@ -38,19 +38,15 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     for (var i = 0; i < feed.length; i++) {
       final feedItem = feed[i];
       final emotion = feedItem.emotion;
-      // final date = DateTime.parse(feedItem.regDate);
       final year = int.parse(feedItem.regDate.substring(0, 4)); // 년 추출
       final month = int.parse(feedItem.regDate.substring(5, 7)); // 월 추출
       final day = int.parse(feedItem.regDate.substring(8, 10)); // 일 추출
       final date = DateTime.utc(year, month, day); // DateTime 객체 생성
-      final image = Image.asset('assets/images/flower$emotion.png', width: 20, height: 17);
-      await precacheImage(image.image, context);
 
       if (_emotionMap.containsKey(date)) {
-        _emotionMap[date]!.add(image);
-        print(_emotionMap);
+        _emotionMap[date]!.add(feedItem);
       } else {
-        _emotionMap[date] = [image];
+        _emotionMap[date] = [feedItem];
       }
     }
   }
@@ -98,9 +94,11 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
               final children = <Widget>[];
               if (_emotionMap.containsKey(date)) {
                 final emotions = _emotionMap[date]!;
-                for (var emotionImage in emotions) {
-                  children.add(emotionImage);
-                }
+                emotions.sort((a, b) => b.regDate.compareTo(a.regDate)); // 최신 값이 먼저 오도록 정렬
+                final latestEmotion = emotions.first;
+                final emotion = latestEmotion.emotion;
+                final image = Image.asset('assets/images/flower$emotion.png', width: 20, height: 17);
+                children.add(image);
               }
               return children.isNotEmpty
                   ? Positioned(bottom: 1, child: Row(children: children))
