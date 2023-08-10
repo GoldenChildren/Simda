@@ -6,7 +6,6 @@ import 'package:simda/providers/user_providers.dart';
 import 'informaion_policy.dart';
 import 'location_service_policy.dart';
 import 'main.dart';
-import 'models/UserDto.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
 import 'KakaoLogin/login_page.dart';
@@ -251,7 +250,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: TabBarView(
                   physics: NeverScrollableScrollPhysics(),
                   children: [
-                    TableCalendarScreen(),
+                    ProfileCalendarPage(),
                     ProfileFeedPage(),
                     ProfileMapPage(),
                   ],

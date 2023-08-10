@@ -8,7 +8,7 @@ class ProfileFeedPage extends StatefulWidget {
   const ProfileFeedPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ProfileFeedState();
+  State<ProfileFeedPage> createState() => _ProfileFeedState();
 }
 
 class _ProfileFeedState extends State<ProfileFeedPage> {

@@ -3,6 +3,7 @@ import 'package:simda/main.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_map.dart';
 import 'package:simda/providers/user_providers.dart';
+import 'friend_profile_calendar.dart';
 import 'friend_profile_feed.dart';
 import 'profile_calendar.dart';
 import 'chat_with_friend.dart';
@@ -248,7 +249,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                 child: TabBarView(
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    const TableCalendarScreen(),
+                    FriendProfileCalendarPage(widget.userDto.userId),
                     FriendProfileFeedPage(widget.userDto.userId),
                     const ProfileMapPage(),
                   ],
