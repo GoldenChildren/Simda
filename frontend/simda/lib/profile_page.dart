@@ -6,6 +6,7 @@ import 'package:simda/providers/user_providers.dart';
 import 'informaion_policy.dart';
 import 'location_service_policy.dart';
 import 'main.dart';
+import 'models/UserDto.dart';
 import 'profile_edit_page.dart';
 import 'KakaoLogin/kakao_login.dart';
 import 'KakaoLogin/login_page.dart';
@@ -62,13 +63,14 @@ class _ProfilePageState extends State<ProfilePage> {
         _userId = storeUserId;
         _followList = followings;
         _followerList = followers;
-        _followCount = _followList.length;
-        _followerCount = _followerList.length;
+        _followCount = followings?.length ?? 0;
+        _followerCount = followers?.length ?? 0;
       });
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
   }
+
 
   final viewModel = MainViewModel(KakaoLogin());
 
@@ -247,6 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ]),
               const Expanded(
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   children: [
                     TableCalendarScreen(),
                     ProfileFeedPage(),
@@ -362,9 +365,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                     );
                   },
-                ),
-
-                ListTile(
+                ), ListTile(
                   leading: const Icon(
                     Icons.info,
                     color: Colors.blueGrey,
@@ -390,11 +391,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>  LocationServicePolicy()),
+                          builder: (context) => LocationServicePolicy()),
                     );
                   },
                 ),
-
               ],
             ),
           ),
