@@ -27,8 +27,9 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
     feed = await feedProvider.getUserFeedList(_userId);
     setState(() {
       isVisible = List.generate(feed.length, (index) => true);
-      _generateMarkers();
+      // _generateMarkers();
     });
+    await _generateMarkers(); // Wait for images to be precached
   }
 
   Map<DateTime, List<Widget>> _markers = {};
@@ -42,6 +43,8 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
       // final date = DateTime.utc(feedItem.regDate.year, feedItem.regDate.month, feedItem.regDate.day);
 
       final image = Image.asset('assets/images/flower$emotion.png', width: 20, height: 17);
+      //
+      await precacheImage(image.image, context);
 
       if (_markers.containsKey(date)) {
         _markers[date]!.add(image);
