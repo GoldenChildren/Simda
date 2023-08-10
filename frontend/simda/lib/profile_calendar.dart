@@ -23,7 +23,7 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
   bool isLoading = true;
   List<bool> isVisible = [];
 
-  Map<DateTime, int> _emotionMap = {};
+  Map<DateTime, List<Image>> _emotionMap = {};
 
   Future<void> initFeed() async {
     feed = await feedProvider.getUserFeedList(_userId);
@@ -42,8 +42,16 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
       final year = int.parse(feedItem.regDate.substring(0, 4)); // 년 추출
       final month = int.parse(feedItem.regDate.substring(5, 7)); // 월 추출
       final day = int.parse(feedItem.regDate.substring(8, 10)); // 일 추출
-      final date = DateTime(year, month, day); // DateTime 객체 생성
-      _emotionMap[date] = emotion;
+      final date = DateTime.utc(year, month, day); // DateTime 객체 생성
+      final image = Image.asset('assets/images/flower$emotion.png', width: 20, height: 17);
+      await precacheImage(image.image, context);
+
+      if (_emotionMap.containsKey(date)) {
+        _emotionMap[date]!.add(image);
+        print(_emotionMap);
+      } else {
+        _emotionMap[date] = [image];
+      }
     }
   }
 
@@ -89,11 +97,14 @@ class _TableCalendarScreenState extends State<TableCalendarScreen> {
             markerBuilder: (context, date, event) {
               final children = <Widget>[];
               if (_emotionMap.containsKey(date)) {
-                final emotion = _emotionMap[date]!;
-                final image = Image.asset('assets/images/flower$emotion.png', width: 20, height: 17);
-                children.add(image);
+                final emotions = _emotionMap[date]!;
+                for (var emotionImage in emotions) {
+                  children.add(emotionImage);
+                }
               }
-              return children.isNotEmpty ? Positioned(bottom: 1, child: Row(children: children)) : SizedBox.shrink();
+              return children.isNotEmpty
+                  ? Positioned(bottom: 1, child: Row(children: children))
+                  : SizedBox.shrink();
             },
           ),
         ),
