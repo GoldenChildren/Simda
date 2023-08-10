@@ -511,11 +511,13 @@ class _WritePageState extends State<WritePage> {
                   TextField(
                     controller: _titleEditController,
                     maxLines: null,
+                    maxLength: 50,
                     style: const TextStyle(
                         fontSize: 17.0, fontWeight: FontWeight.bold),
                     cursorColor: Colors.black12,
                     cursorWidth: 1.0,
                     decoration: const InputDecoration(
+                      counterText: "",
                       contentPadding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                       hintText: '제목을 입력하세요',
                       enabledBorder: OutlineInputBorder(
@@ -614,7 +616,7 @@ class _WritePageState extends State<WritePage> {
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 60),
       width: 300,
       height: 300,
-      color: Colors.red,
+      color: Colors.transparent,
     );
   }
 

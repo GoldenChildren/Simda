@@ -102,14 +102,20 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                feed[reversedIndex].title,
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                            ],
+                          Container(
+                            width: MediaQuery.of(context).size.width / 100 * 73,
+                            padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    feed[reversedIndex].title,
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 5),
                           Row(
@@ -131,8 +137,8 @@ class ListViewBuilderState extends State<ListViewBuilder> {
                       Row(
                         children: [
                           Text(
-                              feed[reversedIndex].likeCnt > 999
-                                  ? "999+"
+                              feed[reversedIndex].likeCnt > 99
+                                  ? "99+"
                                   : feed[reversedIndex].likeCnt.toString(),
                               style: const TextStyle(fontSize: 20)),
                           const SizedBox(width: 5),
