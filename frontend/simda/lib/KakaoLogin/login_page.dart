@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simda/KakaoLogin/sign_up.dart';
 import 'package:simda/main.dart';
 import 'package:simda/main_page.dart';
+import 'package:simda/providers/user_providers.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
       "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
   String nickname = "";
   String bio = "";
-
+  UserProviders userProvider = UserProviders();
   @override
   void initState() {
     super.initState();
