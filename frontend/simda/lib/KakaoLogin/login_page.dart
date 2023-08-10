@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: const Color(0xffffbe96),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,git 
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Image(
                 image: AssetImage('assets/images/1152.png'), height: 150),
