@@ -69,7 +69,7 @@ class FeedDto {
       "regDate": regDate,
       "title": title,
       "userId": userId,
-      "comments" : comments!.map((comment) => comment.toJson()).toList(),
+      "comments" : (comments?.map((comment) => comment.toJson()).toList())??[],
     };
   }
 }

@@ -6,8 +6,8 @@ import 'package:simda/models/CommentDto.dart';
 class CommentProviders{
 
   Dio dio = Dio();
-  // String url = "http://i9a709.p.ssafy.io:8000/comment";
-  String url = "http://70.12.247.215:8000/comment";
+  String url = "http://i9a709.p.ssafy.io:8000/comment";
+  // String url = "http://70.12.247.215:8000/comment";
 
   Future<List<CommentDto>> getComment(int feedId) async {
     // Future<List<Feed>> getFeed(double lat, double lng) async {
