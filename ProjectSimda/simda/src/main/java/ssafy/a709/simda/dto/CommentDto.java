@@ -18,13 +18,13 @@ public class CommentDto {
     // Comment Id
     private int cmtId;
 
-    private int userId;
-
-    private String nickName;
+    private UserDto userDto;
 
     private int feedId;
 
     private int pCmtId;
+
+    private String regTime;
 
     // Content
     private String content;
@@ -34,10 +34,10 @@ public class CommentDto {
     public static CommentDto changeToCommentDto(Comment comment){
         return CommentDto.builder()
                 .cmtId(comment.getCmtId())
-                .userId(comment.getUser().getUserId())
-                .nickName(comment.getUser().getNickname())
+                .userDto(UserDto.changeToUserDto(comment.getUser()))
                 .feedId(comment.getFeed().getFeedId())
                 .pCmtId(comment.getPComment() == null ? -1 : comment.getPComment().getCmtId())
+                .regTime(comment.getRegTime().toString())
                 .content(comment.getContent())
                 .build();
     }
