@@ -47,9 +47,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   List<bool> isVisible = [];
   List<bool> writeComment = [];
 
-  // List<bool> isVisible = List.filled(feed.length, false);
-  // List<bool> writeComment = List.filled(feed.length, false);
-
   Future initFeed() async {
     var gps = await getCurrentLocation();
     feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
@@ -68,7 +65,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      // scrollDirection: Axis.,
       itemCount: feed.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
@@ -84,14 +80,22 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              feed[index].title,
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                          ],
+                        Container(
+                          width: MediaQuery.of(context).size.width / 100 * 73,
+                          padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                          child: Row(
+                            children: [
+                              // const SizedBox(width: 20),
+                              Expanded(
+                                child: Text(
+                                  feed[index].title,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              // const SizedBox(width: 20),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Row(
@@ -112,9 +116,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                     Row(
                       children: [
-                        Text(
-                            feed[index].likeCnt > 999
-                                ? "999+"
+                        Text(feed[index].likeCnt > 99
+                                ? "99+"
                                 : feed[index].likeCnt.toString(),
                             style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 5),

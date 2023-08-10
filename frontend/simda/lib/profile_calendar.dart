@@ -103,7 +103,7 @@ class _ProfileCalendarPageState extends State<ProfileCalendarPage> {
               }
               return children.isNotEmpty
                   ? Positioned(bottom: 1, child: Row(children: children))
-                  : SizedBox.shrink();
+                  : const SizedBox.shrink();
             },
           ),
         ),
