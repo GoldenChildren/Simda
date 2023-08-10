@@ -11,7 +11,6 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
-
   @override
   Widget build(BuildContext context) {
     return const SafeArea(
@@ -34,7 +33,6 @@ class ListViewBuilder extends StatefulWidget {
 }
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
-
   Future<Position> getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
@@ -114,7 +112,10 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     ),
                     Row(
                       children: [
-                        Text(feed[index].likeCnt.toString(),
+                        Text(
+                            feed[index].likeCnt > 999
+                                ? "999+"
+                                : feed[index].likeCnt.toString(),
                             style: const TextStyle(fontSize: 20)),
                         const SizedBox(width: 5),
                         GestureDetector(
@@ -132,16 +133,13 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                 title: feed[index].title,
                                 userId: feed[index].userId);
                             feedProvider.addLikes(feedDto);
-                            print("좋아요 개수: ${feedDto.likeCnt}");
-                            print("좋아요~~ ${feed[index].likeCnt + 1}");
                             setState(() {
                               feed[index].likeCnt++;
                             });
                           },
                           child: Image(
-                              image:
-                              AssetImage('assets/images/flower${feed[index]
-                                  .emotion}.png'),
+                              image: AssetImage(
+                                  'assets/images/flower${feed[index].emotion}.png'),
                               height: 30),
                         ),
                       ],
@@ -153,8 +151,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 alignment: Alignment.center,
-                child:
-                Image(image: NetworkImage(feed[index].img)),
+                child: Image(image: NetworkImage(feed[index].img)),
               ),
               const SizedBox(height: 15),
               Row(
@@ -164,7 +161,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   Expanded(
                     child: Text(
                       feed[index].content,
-                      style: const TextStyle(height: 1.5),),
+                      style: const TextStyle(height: 1.5),
+                    ),
                   ),
                   const SizedBox(width: 20),
                 ],
@@ -176,8 +174,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: TextButton(
-                      onPressed: () =>
-                      {
+                      onPressed: () => {
                         setState(() {
                           isVisible[index] = !isVisible[index];
                         })
@@ -203,7 +200,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   children: [
                                     CircleAvatar(
                                       backgroundImage:
-                                      AssetImage('assets/images/yuri.jpg'),
+                                          AssetImage('assets/images/yuri.jpg'),
                                       radius: 25,
                                     ),
                                     SizedBox(
@@ -216,7 +213,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   flex: 1,
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Row(
                                         children: [
@@ -242,18 +239,17 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       ),
                                       const SizedBox(width: 20),
                                       TextButton(
-                                        onPressed: () =>
-                                        {
+                                        onPressed: () => {
                                           setState(() {
                                             writeComment[index] =
-                                            !writeComment[index];
+                                                !writeComment[index];
                                           })
                                         },
                                         style: TextButton.styleFrom(
                                           minimumSize: Size.zero,
                                           padding: EdgeInsets.zero,
                                           tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
+                                              MaterialTapTargetSize.shrinkWrap,
                                         ),
                                         child: const Text(
                                           '답글 달기',
@@ -264,8 +260,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       ),
                                       const SizedBox(height: 10),
                                       const Row(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           CircleAvatar(
                                             backgroundImage: AssetImage(
@@ -277,7 +273,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                             flex: 1,
                                             child: Column(
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
@@ -286,14 +282,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                       style: TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
-                                                          FontWeight.bold),
+                                                              FontWeight.bold),
                                                     ),
                                                     SizedBox(width: 10),
                                                     Text('9시간 전',
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           fontWeight:
-                                                          FontWeight.bold,
+                                                              FontWeight.bold,
                                                           color: Colors.black45,
                                                         ))
                                                   ],
@@ -302,7 +298,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                   // '응 좋아 좋아',
                                                   '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
                                                   style:
-                                                  TextStyle(fontSize: 14),
+                                                      TextStyle(fontSize: 14),
                                                 ),
                                                 SizedBox(height: 10),
                                               ],
@@ -323,20 +319,20 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                               cursorWidth: 1.0,
                               decoration: InputDecoration(
                                 contentPadding:
-                                EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 suffixIcon:
-                                Icon(Icons.send, color: Colors.black54),
+                                    Icon(Icons.send, color: Colors.black54),
                                 prefixText: '@유리 ',
                                 enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Colors.black12,
-                                      width: 0.0,
-                                    )),
+                                  color: Colors.black12,
+                                  width: 0.0,
+                                )),
                                 focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Colors.black12,
-                                      width: 0.0,
-                                    )),
+                                  color: Colors.black12,
+                                  width: 0.0,
+                                )),
                                 filled: true,
                                 fillColor: Colors.black12,
                               ),
@@ -350,7 +346,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                               cursorWidth: 1.0,
                               decoration: InputDecoration(
                                 contentPadding:
-                                const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 suffixIcon: IconButton(
                                     icon: const Icon(Icons.send),
                                     color: Colors.black54,
@@ -358,14 +354,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                 hintText: '신짱구(으)로 댓글 달기...',
                                 enabledBorder: const OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Colors.black12,
-                                      width: 0.0,
-                                    )),
+                                  color: Colors.black12,
+                                  width: 0.0,
+                                )),
                                 focusedBorder: const OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Colors.black12,
-                                      width: 0.0,
-                                    )),
+                                  color: Colors.black12,
+                                  width: 0.0,
+                                )),
                                 filled: true,
                                 fillColor: Colors.black12,
                               ),
@@ -382,8 +378,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
           ),
         );
       },
-      separatorBuilder: (BuildContext context, int index) =>
-      const Divider(
+      separatorBuilder: (BuildContext context, int index) => const Divider(
         height: 2.0,
         color: Colors.black45,
       ),
