@@ -137,12 +137,13 @@ class KakaoLogin implements SocialLogin {
       // print(response.data);
 
       saveStorage(response.data);
+      String? storeUid = await storage.read(key:"userId");
       String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       print("여기야");
       print(response.data);
-      DatabaseReference ref = FirebaseDatabase.instance.ref("users").child(storeNickname!);
+      DatabaseReference ref = FirebaseDatabase.instance.ref("users").child(storeUid!);
       await ref.set({
         "nickname": storeNickname,
         "userEmail" : storeEmail,
