@@ -63,6 +63,17 @@ public class UserController {
         }
         return new ResponseEntity<>(FAIL, HttpStatus.NOT_ACCEPTABLE);
     }
+    // 유저 중복 검사
+    @GetMapping("/email")
+    public ResponseEntity<Integer> checkUser(@RequestParam String email) {
+        System.out.println(email);
+        // String type의 email을 받아와서 DB와 비교
+        UserDto userDto = userService.selectUserByEmail(email);
+        if (userDto == null) // 유저가 없는 경우
+            return new ResponseEntity<>(-1, HttpStatus.NOT_ACCEPTABLE);
+        else
+            return new ResponseEntity<>(userDto.getUserRole(), HttpStatus.OK);
+    }
 
     // 유저 - 검색 keyword를 통해 닉네임을 포함하는 유저를 전체 반환
     @GetMapping("/search")
