@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
+import 'package:simda/main_page.dart';
 import 'package:simda/providers/user_providers.dart';
 
 import 'main.dart';
