@@ -61,6 +61,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
