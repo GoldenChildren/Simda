@@ -145,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: Colors.purple,
                             ),
                             image: DecorationImage(
-                              image: NetworkImage(_profileImg),
+                              image: NetworkImage('${_profileImg}?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -265,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(_profileImg),
+                    backgroundImage: NetworkImage('${_profileImg}?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
                     backgroundColor: Colors.white,
                   ),
                   accountName: Text(_nickname),
