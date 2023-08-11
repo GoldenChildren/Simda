@@ -5,6 +5,7 @@ import 'package:simda/main.dart';
 import 'package:simda/providers/user_providers.dart';
 
 import 'main.dart';
+import 'main_page.dart';
 import 'models/UserDto.dart';
 
 class ProfileEditPage extends StatefulWidget {
@@ -105,7 +106,10 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                               profileImg: _profileImg,
                               userRole: _userRole));
 
-                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainPage(4)), // 4는 이동하고 싶은 인덱스
+                          );
 
                         },
                         style: ButtonStyle(
