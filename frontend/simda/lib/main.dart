@@ -27,9 +27,12 @@ Future<void> main() async {
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     mapsImplementation.useAndroidViewSurface = true;
   }
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+    theme: ThemeData(
+      scaffoldBackgroundColor: Colors.white,
+    ),
       debugShowCheckedModeBanner: false,
-      home: MyApp()));
+      home: const MyApp()));
 }
 
 bool isVisible = true;

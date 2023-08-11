@@ -66,7 +66,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
     print(regTime);
     DateTime time = DateTime.parse(regTime);
     print(time);
-    final now = DateTime.now().add(Duration(hours: 9));
+    final now = DateTime.now().add(const Duration(hours: 9));
     print(now);
     final difference = now.difference(time);
     print(difference);
@@ -135,18 +135,12 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         Container(
                           width: MediaQuery.of(context).size.width / 100 * 73,
                           padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                          child: Row(
-                            children: [
-                              // const SizedBox(width: 20),
-                              Expanded(
-                                child: Text(
-                                  feed[index].title,
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(fontSize: 20),
-                                ),
-                              ),
-                              // const SizedBox(width: 20),
-                            ],
+                          child: Expanded(
+                            child: Text(
+                              feed[index].title,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 20),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -457,14 +451,17 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       _cur[0] == index &&
                                       _cur[1] == i,
                                   child: Container(
-                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
                                     child: TextField(
                                       maxLines: null,
                                       style: const TextStyle(fontSize: 14.0),
                                       cursorColor: Colors.black12,
                                       cursorWidth: 1.0,
                                       decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        contentPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                10, 0, 10, 0),
                                         suffixIcon: IconButton(
                                             icon: const Icon(Icons.send),
                                             color: Colors.black54,
@@ -474,10 +471,13 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                     CommentDto(
                                                         cCommentList: [],
                                                         cmtId: 0,
-                                                        content: _commentContent,
+                                                        content:
+                                                            _commentContent,
                                                         feedId:
                                                             feed[index].feedId,
-                                                        pcmtId: feed[index].comments![i].cmtId,
+                                                        pcmtId: feed[index]
+                                                            .comments![i]
+                                                            .cmtId,
                                                         regTime: '',
                                                         userDto: _loginUser!);
                                                 commentProviders
@@ -485,11 +485,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                 await initFeed();
                                               }
                                             }),
-                                        hintText:
-                                            // 댓글 달고 있다면
-                                            _cur[0] == index && _cur[1] == -1
-                                                ? '${_loginUser?.nickname ?? ''}(으)로 댓글 달기...'
-                                                : '${feed[index].comments![i].userDto.nickname}에게 답글 다는 중',
+                                        hintText: '${feed[index].comments![i].userDto.nickname}에게 답글 다는 중',
                                         enabledBorder: const OutlineInputBorder(
                                             borderSide: BorderSide(
                                           color: Colors.black12,
@@ -509,7 +505,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                     ),
                                   ),
                                 ),
-
                               ],
                             );
                           }),
@@ -518,7 +513,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                 ],
               ),
               Visibility(
-                visible: isVisible[index], // && _cur[0] == index && _cur[1] == -1,
+                visible: isVisible[index],
+                // && _cur[0] == index && _cur[1] == -1,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: TextField(
@@ -527,8 +523,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                     cursorColor: Colors.black12,
                     cursorWidth: 1.0,
                     decoration: InputDecoration(
-                      contentPadding:
-                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       suffixIcon: IconButton(
                           icon: const Icon(Icons.send),
                           color: Colors.black54,
@@ -542,28 +537,26 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   feedId: feed[index].feedId,
                                   pcmtId: null,
                                   regTime: '',
-                                  userDto: _loginUser!
-                              );
-                              commentProviders.postComment(
-                                  commentDto);
+                                  userDto: _loginUser!);
+                              commentProviders.postComment(commentDto);
                               await initFeed();
                             }
                           }),
-                      hintText: '${_loginUser?.nickname??''}(으)로 댓글 달기...',
+                      hintText: '${_loginUser?.nickname ?? ''}(으)로 댓글 달기...',
                       enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.black12,
-                            width: 0.0,
-                          )),
+                        color: Colors.black12,
+                        width: 0.0,
+                      )),
                       focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: Colors.black12,
-                            width: 0.0,
-                          )),
+                        color: Colors.black12,
+                        width: 0.0,
+                      )),
                       filled: true,
                       fillColor: Colors.black12,
                     ),
-                    onChanged: (text){
+                    onChanged: (text) {
                       _commentContent = text;
                     },
                   ),
