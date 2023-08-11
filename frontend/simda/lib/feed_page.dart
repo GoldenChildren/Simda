@@ -59,8 +59,10 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
     var gps = await getCurrentLocation();
     feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
     setState(() {
-      isVisible = List.generate(feed.length, (index) => false);
-      writeComment = List.generate(feed.length, (index) => false);
+      if(mounted){
+        isVisible = List.generate(feed.length, (index) => false);
+        writeComment = List.generate(feed.length, (index) => false);
+      }
     });
   }
 
