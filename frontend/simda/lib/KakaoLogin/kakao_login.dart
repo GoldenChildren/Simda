@@ -19,8 +19,8 @@ class KakaoLogin implements SocialLogin {
     // print(userDto);
     // Map<String, dynamic> map = jsonDecode(userDto);
     // print(map);
-    print(map);
-    print("정보받아보자 : " + map["email"]);
+    // print(map);
+    // print("정보받아보자 : " + map["email"]);
 
     map.forEach((key, value) {
       if (value is String) {
@@ -30,7 +30,7 @@ class KakaoLogin implements SocialLogin {
         storage.write(key: key, value: stringValue);
       }
     });
-    print(map);
+    // print(map);
   }
 
   @override
@@ -39,7 +39,7 @@ class KakaoLogin implements SocialLogin {
       bool isInstalled = await isKakaoTalkInstalled();
 
       if (isInstalled) {
-        print("실행1");
+        // print("실행1");
         try {
           OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
           print('카카오계정으로 로그인 성공1 ${token.accessToken}');
@@ -49,13 +49,13 @@ class KakaoLogin implements SocialLogin {
           return -1;
         }
       } else {
-        print("실행2");
+        // print("실행2");
         try {
           OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
           var actoken = token.accessToken;
           var retoken = token.refreshToken;
-          print(actoken);
-          print(retoken);
+          // print(actoken);
+          // print(retoken);
 
           final url = Uri.parse("$ip/user/login/kakao");
           final response = await http.post(url,
@@ -65,19 +65,19 @@ class KakaoLogin implements SocialLogin {
                 // 'socialType' : retoken,
               }));
 
-          print(response);
+          // print(response);
           saveStorage(jsonDecode(response.body));
           if (response.statusCode == 200) {
-            print("로그인 성공!");
+            // print("로그인 성공!");
             return 1;
           } else if (response.statusCode == 202) {
-            print("회원가입 필요!");
+            // print("회원가입 필요!");
             // email = response.body;
             // print(email);
             return 0;
           }
 
-          print("뭔가 오류가 있다");
+          // print("뭔가 오류가 있다");
           return -1;
         } catch (e) {
           print(e);
@@ -107,7 +107,7 @@ class KakaoLogin implements SocialLogin {
 
   @override
   Future<bool> signup(String path, String nickname) async {
-    print('회원가입');
+    // print('회원가입');
     try {
       Dio dio = Dio();
       var url = "$ip/user/";
@@ -141,8 +141,8 @@ class KakaoLogin implements SocialLogin {
       String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
-      print("여기야");
-      print(response.data);
+      // print("여기야");
+      // print(response.data);
       DatabaseReference ref = FirebaseDatabase.instance.ref("users").child(storeUid!);
       await ref.set({
         "nickname": storeNickname,
@@ -150,10 +150,10 @@ class KakaoLogin implements SocialLogin {
         "profileImg": storeProfileImg,
       });
 
-      print('회원가입 성공!');
+      // print('회원가입 성공!');
       return true;
     } catch (error) {
-      print("회원가입 에러");
+      // print("회원가입 에러");
       print(error);
       return false;
     }

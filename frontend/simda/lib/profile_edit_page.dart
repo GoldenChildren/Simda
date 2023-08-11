@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
+import 'package:simda/main_page.dart';
 import 'package:simda/providers/user_providers.dart';
 
 import 'main.dart';
@@ -30,17 +31,22 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   @override
   void initState() {
+    print("33 : initState 실행");
     super.initState();
+    print("1번 : $_profileImg");
     getValueFromSecureStorage();
+    print("2번 : $_profileImg");
   }
 
   Future<void> getValueFromSecureStorage() async {
+    print("39 : getValue 실행");
     try {
-      String? storeEmail = await storage.read(key: "profileImg");
+      String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
+
 
       setState(() {
         _email = storeEmail ?? "";
@@ -58,6 +64,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("63 : Build 실행");
+    print("3번 : $_profileImg");
     final imageSize = MediaQuery.of(context).size.width / 4;
 
     return SafeArea(
@@ -105,7 +113,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                               profileImg: _profileImg,
                               userRole: _userRole));
 
-                          Navigator.pop(context);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainPage(4)), // 4는 이동하고 싶은 인덱스
+                          );
 
                         },
                         style: ButtonStyle(
@@ -142,9 +154,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       : CircleAvatar(
                     radius: imageSize / 2,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(_profileImg),
+                    backgroundImage: NetworkImage('${_profileImg}?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
                   )
-
                 // Center(
                 //         child: Container(
                 //           width: imageSize,
@@ -237,6 +248,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   Future<void> _selectImage() async {
+    print("240 : selectImage 실행");
     final pickedFile =
     await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
