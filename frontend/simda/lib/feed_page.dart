@@ -59,6 +59,9 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
     feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
     setState(() {
       isVisible = List.generate(feed.length, (index) => false);
+      if(mounted){
+        isVisible = List.generate(feed.length, (index) => false);
+      }
     });
   }
 
@@ -508,7 +511,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                     ),
                                   ),
                                 ),
-
                               ],
                             );
                           }),

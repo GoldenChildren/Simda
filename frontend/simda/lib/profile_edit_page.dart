@@ -91,20 +91,22 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           print(_bio);
                           print(_nickname);
                           print(_userId);
                           print(_profileImg);
 
-                          userProvider.modifyUser(_imgFile?.path ?? '', UserDto(
+                          await userProvider.modifyUser(_imgFile?.path ?? '', UserDto(
                               bio: _bio,
                               email: _email,
                               userId: _userId,
                               nickname: _nickname,
                               profileImg: _profileImg,
                               userRole: _userRole));
+
                           Navigator.pop(context);
+
                         },
                         style: ButtonStyle(
                             backgroundColor:
