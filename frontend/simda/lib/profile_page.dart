@@ -271,7 +271,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   accountName: Text(_nickname),
                   accountEmail: Text(_email),
                   decoration: BoxDecoration(
-                      color: Colors.purple[200],
+                      color: Colors.purple[400],
                       borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(25.0),
                           bottomRight: Radius.circular(25.0))),
