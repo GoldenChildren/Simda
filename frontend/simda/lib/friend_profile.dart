@@ -77,10 +77,10 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                         iconSize: 28,
                       ),
                     ),
-                    const Text(
-                      '팔로잉 목록',
+                    Text(
+                      widget.userDto.nickname,
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
