@@ -1,10 +1,11 @@
+import 'dart:js_interop';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:simda/main.dart';
 import 'package:simda/models/ChatDto.dart';
 import 'package:simda/models/ChatRoomDto.dart';
 import 'package:simda/models/ChatUserDto.dart';
-import 'package:simda/models/UserDto.dart';
 import 'package:simda/providers/chatroom_providers.dart';
 
 class ChatWithFriend extends StatefulWidget {
@@ -33,8 +34,7 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
   void listenForChatUpdates() {
     Query starCountRef =
     FirebaseDatabase.instance.ref('chats')
-        .child(chatRoomId!).orderByChild("time");
-
+        .child(chatRoomId!);
     starCountRef.onValue.listen((DatabaseEvent event) {
       chats=[];
       final data = event.snapshot.value;
@@ -46,9 +46,24 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
           if (chatdata is Map<dynamic, dynamic>) { // Map 타입 확인
             print(chatId is String);
             ChatDto rchat = ChatDto.fromJson(chatdata,chatId);
+            print("1111111111111111111111111111");
+            print(rchat.time);
             chats.add(rchat);
           }
         });
+        int i = 0;
+        while (i < chats.length){
+          int j = i + 1;
+          while(j < chats.length){
+            if (int.parse(chats[j].time) > int.parse(chats[i].time)){
+              ChatDto temp = chats[j];
+              chats[j] = chats[i];
+              chats[i] = temp;
+            }
+            j++;
+          }
+          i++;
+        }
       }
       setState(() {if (mounted) {
         // 여기서 setState() 호출
@@ -87,7 +102,7 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
   @override
   Widget build(BuildContext context) {
 
-          if(widget.me==null){
+          if(widget.me.isNull){
             return CircularProgressIndicator();
           }
           return SafeArea(
