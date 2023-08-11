@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 50),
             // Image.network(
             //     viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? ''),
-            Text(nickname),
+            // Text(nickname),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
@@ -137,16 +137,9 @@ class _LoginPageState extends State<LoginPage> {
                     image: AssetImage(
                         'assets/images/kakao_login_large_wide.png'),height: 53,)),
             ),
-            const SizedBox(height: 10),
-            SocialLoginButton(
-              height: 46,
-              backgroundColor: Colors.white,
-              text: '구글 로그인',
-              fontSize: 18,
-              borderRadius: 5,
-              width: 350,
-              buttonType: SocialLoginButtonType.google,
-              onPressed:() async{
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap:() async{
                 int emailCheck = await signInWithGoogle();
                 if (emailCheck == 1) {
                   print('로그인 성공');
@@ -167,43 +160,78 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 }
               },
+              child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: const Image(
+                    image: AssetImage(
+                        'assets/images/google_login.png'),height: 52.5,)),
             ),
+            // SocialLoginButton(
+            //   height: 46,
+            //   backgroundColor: Colors.white,
+            //   text: '구글 로그인',
+            //   fontSize: 18,
+            //   borderRadius: 5,
+            //   width: 350,
+            //   buttonType: SocialLoginButtonType.google,
+            //   onPressed:() async{
+            //     int emailCheck = await signInWithGoogle();
+            //       print('여기여기');
+            //     if (emailCheck == 1) {
+            //       print('로그인 성공');
+            //       String? storeEmail = await storage.read(key: "email");
+            //       print(storeEmail);
+            //       Navigator.pushAndRemoveUntil(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) => MainPage(0)), (route) => false
+            //       );
+            //     }else{
+            //       String? storeEmail = await storage.read(key: "email");
+            //       print(storeEmail);
+            //       print('회원가입 화면으로 이동합니다.');
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => SignUp()),
+            //       );
+            //     }
+            //   },
+            // ),
             const SizedBox(height: 20),
-            GestureDetector(
-              onTap: () async {
-                await viewModel.login();
-                // Navigator.pushAndRemoveUntil(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => const MainPage()), (route) => false
-                // );
-                setState(() {});
-                if (!mounted) return;
-                // 화면 이동
-                if (viewModel.isLoggedIn == 0) {
-                  print('회원가입 화면으로 이동합니다.');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SignUp()),
-                  );
-                }
-                // 카카오 로그인 오류
-                else if (viewModel.isLoggedIn == -1) {
-                  print('구글 로그인 오류');
-                }
-                else {
-                  print('로그인 성공');
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MainPage(0)), (route) => false
-                  );
-                }
-
-                getValueFromSecureStorage();
-              },
-              child: const Text('Logout'),
-            )
+            // GestureDetector(
+            //   onTap: () async {
+            //     await viewModel.login();
+            //     // Navigator.pushAndRemoveUntil(
+            //     //   context,
+            //     //   MaterialPageRoute(
+            //     //       builder: (context) => const MainPage()), (route) => false
+            //     // );
+            //     setState(() {});
+            //     if (!mounted) return;
+            //     // 화면 이동
+            //     if (viewModel.isLoggedIn == 0) {
+            //       print('회원가입 화면으로 이동합니다.');
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => SignUp()),
+            //       );
+            //     }
+            //     // 카카오 로그인 오류
+            //     else if (viewModel.isLoggedIn == -1) {
+            //       print('구글 로그인 오류');
+            //     }
+            //     else {
+            //       print('로그인 성공');
+            //       Navigator.pushAndRemoveUntil(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) => MainPage(0)), (route) => false
+            //       );
+            //     }
+            //     getValueFromSecureStorage();
+            //   },
+            //   child: const Text('Logout'),
+            // )
           ],
         ),
       ),
