@@ -6,8 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ssafy.a709.simda.domain.Comment;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 @Builder
 @AllArgsConstructor
@@ -37,9 +40,16 @@ public class CommentDto {
                 .userDto(UserDto.changeToUserDto(comment.getUser()))
                 .feedId(comment.getFeed().getFeedId())
                 .pCmtId(comment.getPComment() == null ? -1 : comment.getPComment().getCmtId())
-                .regTime(comment.getRegTime().toString())
+                .regTime(convertUtcToSeoul(comment.getRegTime()))
                 .content(comment.getContent())
                 .build();
+    }
+
+    private static String convertUtcToSeoul(Timestamp regTime){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul")); // UTC+9 타임존 설정
+
+        return sdf.format(regTime);
     }
 }
 

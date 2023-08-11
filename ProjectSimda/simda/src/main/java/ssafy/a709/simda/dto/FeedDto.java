@@ -9,8 +9,10 @@ import ssafy.a709.simda.domain.Feed;
 import ssafy.a709.simda.domain.User;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 
 @Builder
@@ -59,9 +61,16 @@ public class FeedDto {
                 .lat(feed.getLat())
                 .lng(feed.getLng())
                 .likeCnt(feed.getLikeCnt())
-                .regDate(feed.getRegDate().toString())
+                .regDate(convertUtcToSeoul(feed.getRegDate()))
                 .comments(comments)
                 .build();
+    }
+
+    private static String convertUtcToSeoul(Timestamp regDate){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul")); // UTC+9 타임존 설정
+
+        return sdf.format(regDate);
     }
 
 }
