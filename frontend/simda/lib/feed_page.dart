@@ -45,7 +45,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   }
 
   List<FeedDto> feed = [];
-  bool isLoading = true;
   FeedProviders feedProvider = FeedProviders();
   CommentProviders commentProviders = CommentProviders();
   String _commentContent = '';

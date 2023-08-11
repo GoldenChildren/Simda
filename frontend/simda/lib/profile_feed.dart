@@ -41,7 +41,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   UserProviders userProvider = UserProviders();
 
   List<FeedDto> feed = [];
-  bool isLoading = true;
 
   FeedProviders feedProvider = FeedProviders();
   CommentProviders commentProviders = CommentProviders();
