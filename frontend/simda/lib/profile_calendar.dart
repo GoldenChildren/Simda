@@ -74,6 +74,7 @@ class _ProfileCalendarPageState extends State<ProfileCalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: TableCalendar(
