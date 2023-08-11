@@ -1,4 +1,4 @@
-import 'dart:js_interop';
+
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +88,7 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
   }
 
   void sendMessage() {
-    if (chatContent.isNotEmpty) {
+    if (chatContent!=null) {
       ChatRoomProviders().sendMsg(chatRoomId!, widget.me.userId, chatContent);
       setState(() {
         chatContent = ''; // Clear the text field after sending the message
@@ -102,7 +102,7 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
   @override
   Widget build(BuildContext context) {
 
-          if(widget.me.isNull){
+          if(widget.me==null){
             return CircularProgressIndicator();
           }
           return SafeArea(
