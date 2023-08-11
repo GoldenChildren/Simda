@@ -7,23 +7,19 @@ import 'package:http/http.dart' as http;
 import 'package:simda/models/ChatUserDto.dart';
 //db에서 들고오기
 class ChatRoomProviders {
-  // Future<List<ChatRoomDto>> getChatRoom1(int userId) async {
-  //   List<ChatRoomDto> chatroom = [];
-  //   String uri = "http://i9a709.p.ssafy.io:8000/simda/chat/rooms/";
-  //   uri += "${userId}";
-  //
-  //   final response = await http.get(Uri.parse(uri));
-  //
-  //   if (response.statusCode == 200) {
-  //     chatroom =
-  //         jsonDecode(response.body).map<ChatRoomDto>((chatrooms) {
-  //       return ChatRoomDto.fromJson(chatrooms);
-  //     }).toList();
-  //     print(chatroom);
-  //   }
-  //
-  //   return chatroom;
-  // }
+
+  Future<void> sendMsg(String chatroomId, String userId, String content)async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("chats").child(chatroomId);
+    String? newChatroomId = ref.push().key;
+    Map<String, dynamic> newChatroomData = {
+      "userId": userId,
+      "text": content,
+      "time": ServerValue.timestamp,
+    };
+
+    await ref.child(newChatroomId!).set(newChatroomData);
+  }
+
 
 
   Future<List<ChatRoomDto>> getChatRooms(ChatUserDto myUserId, ChatUserDto contactUserId) async {

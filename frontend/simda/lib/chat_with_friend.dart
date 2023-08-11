@@ -1,5 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:simda/main.dart';
+import 'package:simda/models/ChatDto.dart';
 import 'package:simda/models/ChatRoomDto.dart';
 import 'package:simda/models/ChatUserDto.dart';
 import 'package:simda/models/UserDto.dart';
@@ -16,19 +18,51 @@ class ChatWithFriend extends StatefulWidget {
 class _ChatWithFriendState extends State<ChatWithFriend> {
   List<ChatRoomDto> chatroomsList=[];
   late String? chatRoomId;
+  List<ChatDto> chats=[];
+  String chatContent="";
+  var _controller = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getRoom();
+    getRoom().then((value)=>listenForChatUpdates());
     print("초기화 ");
     print(chatroomsList.length);
-    // print("챗룸아이디 가져왔다 ! :${chatRoomId}");
+    print("내정보  가져왔다 ! :${widget.me.profileImg}");
   }
-  void getRoom() async{
+  void listenForChatUpdates() {
+    Query starCountRef =
+    FirebaseDatabase.instance.ref('chats')
+        .child(chatRoomId!).orderByChild("time");
+
+    starCountRef.onValue.listen((DatabaseEvent event) {
+      chats=[];
+      final data = event.snapshot.value;
+      if (data == null) {
+        return;
+      }
+      if(data is Map){
+        data.forEach((chatId, chatdata) {
+          if (chatdata is Map<dynamic, dynamic>) { // Map 타입 확인
+            print(chatId is String);
+            ChatDto rchat = ChatDto.fromJson(chatdata,chatId);
+            chats.add(rchat);
+          }
+        });
+      }
+      setState(() {if (mounted) {
+        // 여기서 setState() 호출
+      }});
+    });
+  }
+
+
+  Future<void> getRoom() async{
     chatroomsList = await ChatRoomProviders().getChatRooms(widget.me, widget.contact);
     print("chatroomsList:${chatroomsList.length}");
     if(chatroomsList.length==0){
+      print("getRoom 내닉네임: ${widget.me.nickname}");
+      print("getRoom 상대닉네임 : ${widget.contact.nickname}");
       chatRoomId = await ChatRoomProviders().createChatRoom(widget.me, widget.contact) as String;
     }else{
       chatRoomId = await chatroomsList.first.chatroomId;
@@ -38,11 +72,21 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
     });
   }
 
+  void sendMessage() {
+    if (chatContent.isNotEmpty) {
+      ChatRoomProviders().sendMsg(chatRoomId!, widget.me.userId, chatContent);
+      setState(() {
+        chatContent = ''; // Clear the text field after sending the message
+        _controller.clear();
+      });
+    }
 
+  }
 
 
   @override
   Widget build(BuildContext context) {
+
           if(widget.me==null){
             return CircularProgressIndicator();
           }
@@ -77,24 +121,28 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
                   ],
                 ),
                 Container(height: 2, color: Colors.purple),
-                Expanded(child: ListViewBuilder(me:widget.me, contact: widget.contact,)),
+                Expanded(child: ListViewBuilder(chatList:chats ,me:widget.me, contact: widget.contact,)),
                 Container(
                   color: Colors.black12,
-                  child: const TextField(
-                    style: TextStyle(fontSize: 14.0),
+                  child: TextField(
+                    controller: _controller,
+                    style: const TextStyle(fontSize: 14.0),
                     cursorColor: Colors.black12,
                     cursorWidth: 1.0,
                     decoration: InputDecoration(
                       contentPadding:
                       EdgeInsets.fromLTRB(20, 0, 10, 0),
                       suffixIcon:
-                      Icon(Icons.send, color: Colors.black54),
-                      enabledBorder: OutlineInputBorder(
+                        IconButton(
+                          icon: Icon(Icons.send, color: Colors.black54),
+                          onPressed: sendMessage,
+                        ),
+                      enabledBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.transparent,
                             width: 0.0,
                           )),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.transparent,
                             width: 0.0,
@@ -102,6 +150,9 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
                       filled: true,
                       fillColor: Colors.transparent,
                     ),
+                    onChanged: (text){
+                      chatContent = text;
+                    },
                   ),
                 ),
               ]),
@@ -111,30 +162,13 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
 
   }
 
-  // Future<void> getValueFromSecureStorage() async {
-  //   try {
-  //     String storeUserId = await storage.read(key: "userId").toString();
-  //     print("hi getValueFromSecureStorage");
-  //     String storeNickname = await storage.read(key: "nickname").toString();
-  //     String storeProfileImg = await storage.read(key: "profileImg").toString();
-  //     me = ChatUserDto(
-  //         userId: storeUserId,
-  //         nickname: storeNickname,
-  //         profileImg: storeProfileImg,
-  //     );
-  //
-  //     setState(() {});
-  //     print("me 저장 완료 ");
-  //   } catch (e) {
-  //     print("Error reading from secure storage: $e");
-  //   }
-  // }
 }
 
 class ListViewBuilder extends StatefulWidget {
   final ChatUserDto me;
   final ChatUserDto contact;
-  const ListViewBuilder( {super.key,required this.me, required this.contact});
+  final List<ChatDto> chatList;
+  const ListViewBuilder( {super.key,required this.chatList ,required this.me, required this.contact});
 
   @override
   State<ListViewBuilder> createState() => _ListViewBuilderState();
@@ -142,105 +176,79 @@ class ListViewBuilder extends StatefulWidget {
 
 
 class _ListViewBuilderState extends State<ListViewBuilder> {
-  List<String> arr=[];
-  late Future<List<ChatRoomDto>> chatRoomsFuture;
-  List<ChatRoomDto> chatRooms =[];
-  late Future<String> chatroomId;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    chatRoomsFuture = ChatRoomProviders().getChatRooms(
-      widget.me,
-      widget.contact,
-    );
-    // getRoomId();
-  }
-  // Future<void>? getRoomId() async{
-  //   chatroomId = (await ChatRoomProviders().createChatRoom(
-  //       int.parse(widget.me.userId),
-  //       int.parse(widget.contact.userId))) as Future<String>;
-  // }
-  void sendMsg(){
-    if(chatRooms.length ==0){
-      // ChatRoomProviders().createChatRoom(widget.me, widget.contact);
-    }
-    setState(() {});
-  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<ChatRoomDto>>(
-      future: chatRoomsFuture, // chatRoomsFuture의 완료를 기다림
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // 로딩 중에 표시할 위젯
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else if (snapshot.hasData) {
-           chatRooms = snapshot.data!;
-          print("챗룸이 있어? ${chatRooms.length}");
-          return ListView.builder(
-              reverse: true,
-              itemCount: arr.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                  child: Row(children: [
-                    const Column(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage('assets/images/yuri.jpg'),
-                          radius: 26,
+    print("_ListViewBuilderState입니다!!!!!!!!!!!");
+    print("프로필 내꺼 : ${widget.me.profileImg}");
+    print("프로필 너꺼 : ${widget.contact.profileImg}");
+    return ListView.builder(
+
+        reverse: true,
+        itemCount: widget.chatList.length,
+        itemBuilder: (BuildContext context, int index) {
+          ChatDto thisChat = widget.chatList[index];
+          ChatUserDto thisUser;
+          if(thisChat.userId==widget.me.userId){
+            thisUser= widget.me;
+          }else{
+            thisUser=widget.contact;
+          }
+
+          return Container(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+            child: Row(children: [
+               Column(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(thisUser.profileImg),
+                    radius: 26,
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      height: 23,
+                      child: Text(
+                        thisUser.nickname,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      )),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey.shade200,
+                          borderRadius: const BorderRadius.only(
+                            // topLeft: Radius.circular(5),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
                         ),
-                        SizedBox(height: 10),
-                      ],
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                            height: 23,
-                            child: Text(
-                              "메세지 내용 넣는곳",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            )),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey.shade200,
-                                borderRadius: const BorderRadius.only(
-                                  // topLeft: Radius.circular(5),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)),
-                              ),
-                              child: Text(
-                                arr[arr.length - index - 1],
-                                style: const TextStyle(fontSize: 15),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Text(
-                              '오후 4: 30',
-                              style: TextStyle(fontSize: 12, color: Colors.black45),
-                            ),
-                          ],
+                        child: Text(
+                          thisChat.text,
+                          style: const TextStyle(fontSize: 15),
                         ),
-                      ],
-                    ),
-                  ]),
-                );
-              });
-        } else {
-          return Text('No data available');
-        }
-      },
-    );
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        thisChat.time,
+                        style: TextStyle(fontSize: 12, color: Colors.black45),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ]),
+          );
+        });
   }
-  }
+}
+
 

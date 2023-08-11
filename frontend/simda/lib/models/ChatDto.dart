@@ -1,32 +1,23 @@
 
 class ChatDto {
-  final int chatId;
-  final int chatRoomId;
-  final int userId;
-  final String nickName;
-  final String content;
-  final String regDate;
-  final int readFlag;
+  final String chatId;
+  final String text;
+  final String userId;
+  final String time;
 
   ChatDto({
     required this.chatId,
-    required this.chatRoomId,
+    required this.text,
     required this.userId,
-    required this.nickName,
-    required this.content,
-    required this.readFlag,
-    required this.regDate,
+    required this.time,
   });
 
-  factory ChatDto.fromJson(Map<String, dynamic> json) {
+  factory ChatDto.fromJson(Map<dynamic, dynamic> json, String inputChatId) {
     return ChatDto(
-        chatId: json['chatId'],
-        chatRoomId: json['chatRoomId'],
+        chatId: inputChatId,
+        text: json['text'],
         userId: json['userId'],
-        nickName: json['nickName'],
-        content: json['content'],
-        readFlag: json['readFlag'],
-        regDate: json['regDate']
+        time: (json['time']).toString(),
     );
   }
 }

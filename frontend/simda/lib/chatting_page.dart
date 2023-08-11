@@ -17,12 +17,11 @@ class ChattingPage extends StatefulWidget {
 
 class _ChattingPageState extends State<ChattingPage> {
   int userId = 0;
-  late ChatUserDto me;
+  ChatUserDto? me;
   List<ChatRoomDto> chatroom = [];
   ChatRoomProviders chatroomprovider = ChatRoomProviders();
 
   void listenForChatRoomUpdates() {
-
     Query starCountRef =
     FirebaseDatabase.instance.ref('chatrooms')
         .orderByChild("participants/" +userId.toString())
@@ -33,8 +32,6 @@ class _ChattingPageState extends State<ChattingPage> {
       if (data == null) {
         return;
       }
-
-
       if(data is Map){
         data.forEach((roomId, roomData) {
           if (roomData is Map<dynamic, dynamic>) { // Map 타입 확인
@@ -44,18 +41,16 @@ class _ChattingPageState extends State<ChattingPage> {
           }
         });
       }
-      setState(() {if (mounted) {
-        // 여기서 setState() 호출
-      }});
+      setState(() {});
     });
   }
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-    // getValueFromSecureStorage();
-    listenForChatRoomUpdates();
+    getValueFromSecureStorage().then((value) => listenForChatRoomUpdates());
   }
+
   Future<void> getValueFromSecureStorage() async {
     try {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
@@ -63,30 +58,21 @@ class _ChattingPageState extends State<ChattingPage> {
       String storeProfileImg = await storage.read(key: "profileImg").toString();
 
         userId = storeUserId;
+        me =  ChatUserDto(
+          userId: storeUserId.toString(),
+          nickname: storeNickname,
+          profileImg: storeProfileImg,);
 
-      setState(() {
-        print("완!~");
-        me = ChatUserDto(
-        userId: storeUserId.toString(),
-        nickname: storeNickname,
-        profileImg: storeProfileImg,
-      );});
+          setState(() {});
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
   }
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<void>(
-      future: getValueFromSecureStorage(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center();
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text("Error: ${snapshot.error}"),
-          );
-        } else {
+          if(me ==null){
+            return CircularProgressIndicator();
+          }
           return GestureDetector(
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();
@@ -118,7 +104,7 @@ class _ChattingPageState extends State<ChattingPage> {
                     ),
                     Container(height: 2, color: Colors.purple),
                     Expanded(
-                      child: me != null ?ListViewBuilder(chatroom: chatroom, userId : userId, me:me as ChatUserDto): Center(),
+                      child: ListViewBuilder(chatroom: chatroom, userId : userId, me:me!),
                     ),
                   ],
                 ),
@@ -126,10 +112,6 @@ class _ChattingPageState extends State<ChattingPage> {
             ),
           );
 
-
-        }
-      },
-    );
 
   }
 }
@@ -141,7 +123,7 @@ class ListViewBuilder extends StatefulWidget {
   int userId;
   ChatUserDto me;
 
-  ListViewBuilder({required this.chatroom, required this.userId, required this.me});
+  ListViewBuilder({super.key, required this.chatroom, required this.userId, required this.me});
   @override
   State<ListViewBuilder> createState() => _ListViewBuilderState();
 }
@@ -152,7 +134,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   @override
   void initState() {
     super.initState();
-    print("${widget.me} 왔다");
+    print("${widget.me.nickname} 왔다");
   }
 
   Future<List<ChatUserDto>> fetchContacts() async {
@@ -203,7 +185,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ChatWithFriend(contact: contact,me:widget.me)),
+                  builder: (context) => ChatWithFriend(contact: contact, me:widget.me)),
             );
           },
           child: Container(
