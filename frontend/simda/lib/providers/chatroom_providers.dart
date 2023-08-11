@@ -9,15 +9,18 @@ import 'package:simda/models/ChatUserDto.dart';
 class ChatRoomProviders {
 
   Future<void> sendMsg(String chatroomId, String userId, String content)async {
+    DateTime dt = DateTime.now();
+    int timestamp = dt.millisecondsSinceEpoch;
     DatabaseReference ref = FirebaseDatabase.instance.ref("chats").child(chatroomId);
-    String? newChatroomId = ref.push().key;
+
+
     Map<String, dynamic> newChatroomData = {
       "userId": userId,
       "text": content,
-      "time": ServerValue.timestamp,
+      "time": timestamp,
     };
 
-    await ref.child(newChatroomId!).set(newChatroomData);
+    await ref.child(timestamp.toString()).set(newChatroomData);
   }
 
 

@@ -1,4 +1,6 @@
 
+import 'package:intl/intl.dart';
+
 class ChatDto {
   final String chatId;
   final String text;
@@ -13,11 +15,13 @@ class ChatDto {
   });
 
   factory ChatDto.fromJson(Map<dynamic, dynamic> json, String inputChatId) {
+    var format = new DateFormat('hh:mm');
+    var date = new DateTime.fromMillisecondsSinceEpoch(json['time']);
     return ChatDto(
         chatId: inputChatId,
         text: json['text'],
         userId: json['userId'],
-        time: (json['time']).toString(),
+        time: format.format(date).toString(),
     );
   }
 }

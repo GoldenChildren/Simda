@@ -22,6 +22,7 @@ class _ChattingPageState extends State<ChattingPage> {
   ChatRoomProviders chatroomprovider = ChatRoomProviders();
 
   void listenForChatRoomUpdates() {
+    print("me가 초기화가 되었나요? ${me?.nickname}");
     Query starCountRef =
     FirebaseDatabase.instance.ref('chatrooms')
         .orderByChild("participants/" +userId.toString())
@@ -48,22 +49,23 @@ class _ChattingPageState extends State<ChattingPage> {
   @override
   void initState()  {
     super.initState();
-    getValueFromSecureStorage().then((value) => listenForChatRoomUpdates());
+    getValueFromSecureStorage();
   }
 
   Future<void> getValueFromSecureStorage() async {
     try {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
-      String storeNickname = await storage.read(key: "nickname").toString();
-      String storeProfileImg = await storage.read(key: "profileImg").toString();
+      String? storeNickname =await storage.read(key: "nickname");
+      String? storeProfileImg =await storage.read(key: "profileImg");
 
         userId = storeUserId;
         me =  ChatUserDto(
           userId: storeUserId.toString(),
-          nickname: storeNickname,
-          profileImg: storeProfileImg,);
+          nickname: storeNickname.toString(),
+          profileImg: storeProfileImg.toString(),);
 
-          setState(() {});
+       listenForChatRoomUpdates();
+
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
