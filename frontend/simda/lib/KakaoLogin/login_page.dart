@@ -5,7 +5,6 @@ import 'package:simda/KakaoLogin/sign_up.dart';
 import 'package:simda/main.dart';
 import 'package:simda/main_page.dart';
 import 'package:simda/providers/user_providers.dart';
-import 'package:social_login_buttons/social_login_buttons.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

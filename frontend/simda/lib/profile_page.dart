@@ -82,6 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
