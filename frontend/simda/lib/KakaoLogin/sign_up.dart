@@ -4,16 +4,24 @@ import 'package:simda/KakaoLogin/kakao_login.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:simda/main_page.dart';
+import 'package:simda/providers/user_providers.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
+  @override
+  _SignUpState createState() => _SignUpState();
+}
 
+class _SignUpState extends State<SignUp> {
   final viewModel = MainViewModel(KakaoLogin());
   final formKey = GlobalKey<FormState>();
   final TextEditingController nicknameController =
-      TextEditingController(); // 닉네임 입력 값을 저장하는 컨트롤러를 생성
+  TextEditingController(); // 닉네임 입력 값을 저장하는 컨트롤러를 생성
   final _picker = ImagePicker();
   XFile? _profileImage;
+  bool _isNicknameAvailable = true;
+  UserProviders userProvider = UserProviders();
+
 
   // 이미지 선택 메서드
   Future<void> _pickImage(BuildContext context) async {
@@ -26,7 +34,10 @@ class SignUp extends StatelessWidget {
 
   // 이미지 미리보기를 원하는 크기로 조정하는 함수
   Widget _getProfileImagePreview(BuildContext context) {
-    final imageSize = MediaQuery.of(context).size.width / 4;
+    final imageSize = MediaQuery
+        .of(context)
+        .size
+        .width / 4;
     if (_profileImage != null) {
       return CircleAvatar(
         radius: 60,
@@ -43,6 +54,24 @@ class SignUp extends StatelessWidget {
           ));
     }
   }
+
+  // 닉네임 중복 체크 메서드
+  Future<void> _checkNicknameAvailability(String nickname) async {
+    String nickname = nicknameController.text;
+    if (nickname.isNotEmpty) {
+      try {
+        bool isAvailable = await userProvider.checkNickname(nickname);
+        setState(() {
+          _isNicknameAvailable = isAvailable;
+        });
+      } catch (error) {
+        setState(() {
+          _isNicknameAvailable = false;
+        });
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +133,10 @@ class SignUp extends StatelessWidget {
                       nicknameController, // 닉네임 입력 값을 저장하는 컨트롤러를 전달
                     ),
                   ),
+                    // ElevatedButton(
+                    //   onPressed: _onCheckNicknameButtonPressed,
+                    //   child: Text("닉네임 중복 확인"),
+                    // ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -125,7 +158,7 @@ class SignUp extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => MainPage(0)),
-                            (route) => false);
+                                (route) => false);
                       }
                     },
                   ),
@@ -139,23 +172,27 @@ class SignUp extends StatelessWidget {
   }
 
   Widget textFormFieldComponent(
-    bool obscureText,
-    TextInputType keyboardType,
-    TextInputAction textInputAction,
-    String hintText,
-    int maxSize,
-    String errorMessage,
-    TextEditingController controller, // 컨트롤러 매개변수 추가
-  ) {
+      bool obscureText,
+      TextInputType keyboardType,
+      TextInputAction textInputAction,
+      String hintText,
+      int maxSize,
+      String errorMessage,
+      TextEditingController controller, // 컨트롤러 매개변수 추가
+      ) {
     return TextFormField(
       controller: controller,
       // 전달받은 컨트롤러를 사용하여 입력 값을 관리
+      maxLength: 20,
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       cursorColor: Colors.black45,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: '닉네임을 입력해주세요',
+        helperText: !_isNicknameAvailable
+            ? '이미 사용 중인 닉네임입니다.'
+            : null,
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
@@ -168,17 +205,22 @@ class SignUp extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
         ),
-        fillColor: Colors.lightGreen,
+        fillColor: Colors.purple[200],
         filled: true,
       ),
       validator: (value) {
         if (value!.trim().isEmpty) {
-          return errorMessage;
+          return "error";
         }
         if (value.length > maxSize) {
           return '닉네임은 $maxSize자 이하여야 합니다';
         }
         return null;
+      },
+      onChanged: (value) {
+        setState(() {
+          _isNicknameAvailable = true; // 닉네임이 변경되면 다시 확인 가능하도록
+        });
       },
     );
   }
