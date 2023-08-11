@@ -50,6 +50,9 @@ class _ProfilePageState extends State<ProfilePage> {
       String? storeBio = await storage.read(key: "bio");
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
 
+      print("지금 주소는?");
+      print(storeProfileImg);
+
       List<UserDto>? followings =
       await userProvider.getFollowData("followings", storeUserId);
       List<UserDto>? followers =
