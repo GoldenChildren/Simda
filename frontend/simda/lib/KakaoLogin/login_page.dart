@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xffffbe96),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -119,9 +119,9 @@ class _LoginPageState extends State<LoginPage> {
                 else {
                   print('로그인 성공');
                   Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MainPage(0)), (route) => false
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MainPage(0)), (route) => false
                   );
                 }
 
@@ -134,8 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                   //   borderRadius: BorderRadius.circular(7.5),
                   // ),
                   child: const Image(
-                      image: AssetImage(
-                          'assets/images/kakao_login_large_wide.png'),height: 53,)),
+                    image: AssetImage(
+                        'assets/images/kakao_login_large_wide.png'),height: 53,)),
             ),
             const SizedBox(height: 10),
             SocialLoginButton(
@@ -210,3 +210,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+

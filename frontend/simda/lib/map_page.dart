@@ -109,7 +109,7 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  LatLng currentPosition = const LatLng(37.5013068, 127.0396597);
+  LatLng currentPosition = const LatLng(37.5013068, 127.0396597); // 이게 역삼인가?
 
   void _getUserLocation() async {
     // print("107번 실행 : getUserLocation");
@@ -240,21 +240,320 @@ class _MapPageState extends State<MapPage> {
   Widget buildFeedItem(FeedDto feedItem) {
     // Customize this function to build each feed item
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      width: MediaQuery.of(context).size.width,
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            feedItem.title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width / 100 * 73,
+                      padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              feedItem.title,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Text(
+                          feedItem.nickname,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          feedItem.regDate,
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.black45),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                        feedItem.likeCnt > 99
+                            ? "99+"
+                            : feedItem.likeCnt.toString(),
+                        style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 5),
+                    GestureDetector(
+                      onTap: () {
+                        FeedDto feedDto = FeedDto(
+                            content: feedItem.content,
+                            emotion: feedItem.emotion,
+                            feedId: feedItem.feedId,
+                            img: feedItem.img,
+                            lat: feedItem.lat,
+                            likeCnt: feedItem.likeCnt + 1,
+                            lng: feedItem.lng,
+                            nickname: feedItem.nickname,
+                            regDate: feedItem.regDate,
+                            title: feedItem.title,
+                            userId: feedItem.userId);
+                        feedProvider.addLikes(feedDto);
+                        setState(() {
+                          feedItem.likeCnt++;
+                        });
+                      },
+                      child: Image(
+                          image: AssetImage(
+                              'assets/images/flower${feedItem.emotion}.png'),
+                          height: 30),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          Text(
-            feedItem.nickname,
-            style: TextStyle(fontSize: 12),
+          const SizedBox(height: 15),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            alignment: Alignment.center,
+            child: Image(image: NetworkImage(feedItem.img)),
           ),
-          Image.network(feedItem.img),
-          // Add more UI elements for the feed item
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width: 20),
+              Expanded(
+                child: Text(
+                  feedItem.content,
+                  style: const TextStyle(height: 1.5),
+                ),
+              ),
+              const SizedBox(width: 20),
+            ],
+          ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     const SizedBox(width: 20),
+              // Container(
+              //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              //   child: TextButton(
+              //     onPressed: () => {
+              //       setState(() {
+              //         isVisible[reversedIndex] =
+              //         !isVisible[reversedIndex];
+              //       })
+              //     },
+              //     style: TextButton.styleFrom(
+              //       minimumSize: Size.zero,
+              //       padding: const EdgeInsets.all(0),
+              //     ),
+              //     child: Text(
+              //         isVisible[reversedIndex] ? "댓글 2개 닫기" : "댓글 2개 보기",
+              //         style: const TextStyle(color: Colors.black45)),
+              //   ),
+              // ),
+              // Visibility(
+              //   visible: isVisible[reversedIndex],
+              //   child: Container(
+              //     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              //     child: Column(
+              //       children: [
+              //         Row(
+              //             crossAxisAlignment: CrossAxisAlignment.start,
+              //             children: [
+              //               const Column(
+              //                 children: [
+              //                   CircleAvatar(
+              //                     backgroundImage: AssetImage(
+              //                         'assets/images/yuri.jpg'),
+              //                     radius: 25,
+              //                   ),
+              //                   SizedBox(
+              //                     height: 20,
+              //                   )
+              //                 ],
+              //               ),
+              //               const SizedBox(width: 10),
+              //               Flexible(
+              //                 flex: 1,
+              //                 child: Column(
+              //                   crossAxisAlignment:
+              //                   CrossAxisAlignment.start,
+              //                   children: [
+              //                     const Row(
+              //                       children: [
+              //                         Text(
+              //                           '유리',
+              //                           style: TextStyle(
+              //                               fontSize: 14,
+              //                               fontWeight: FontWeight.bold),
+              //                         ),
+              //                         SizedBox(width: 10),
+              //                         Text('10시간 전',
+              //                             style: TextStyle(
+              //                               fontSize: 12,
+              //                               fontWeight: FontWeight.bold,
+              //                               color: Colors.black45,
+              //                             )),
+              //                       ],
+              //                     ),
+              //                     const Text(
+              //                       // '짱구가 기분이 좋구나',
+              //                       '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
+              //                       style: TextStyle(fontSize: 14),
+              //                     ),
+              //                     const SizedBox(width: 20),
+              //                     TextButton(
+              //                       onPressed: () => {
+              //                         setState(() {
+              //                           writeComment[reversedIndex] =
+              //                           !writeComment[reversedIndex];
+              //                         })
+              //                       },
+              //                       style: TextButton.styleFrom(
+              //                         minimumSize: Size.zero,
+              //                         padding: EdgeInsets.zero,
+              //                         tapTargetSize: MaterialTapTargetSize
+              //                             .shrinkWrap,
+              //                       ),
+              //                       child: const Text(
+              //                         '답글 달기',
+              //                         style: TextStyle(
+              //                             fontSize: 12,
+              //                             color: Colors.black45),
+              //                       ),
+              //                     ),
+              //                     const SizedBox(height: 10),
+              //                     const Row(
+              //                       crossAxisAlignment:
+              //                       CrossAxisAlignment.start,
+              //                       children: [
+              //                         CircleAvatar(
+              //                           backgroundImage: AssetImage(
+              //                               'assets/images/shin.jpg'),
+              //                           radius: 25,
+              //                         ),
+              //                         SizedBox(width: 10),
+              //                         Flexible(
+              //                           flex: 1,
+              //                           child: Column(
+              //                             crossAxisAlignment:
+              //                             CrossAxisAlignment.start,
+              //                             children: [
+              //                               Row(
+              //                                 children: [
+              //                                   Text(
+              //                                     '김짱구',
+              //                                     style: TextStyle(
+              //                                         fontSize: 14,
+              //                                         fontWeight:
+              //                                         FontWeight
+              //                                             .bold),
+              //                                   ),
+              //                                   SizedBox(width: 10),
+              //                                   Text('9시간 전',
+              //                                       style: TextStyle(
+              //                                         fontSize: 12,
+              //                                         fontWeight:
+              //                                         FontWeight.bold,
+              //                                         color:
+              //                                         Colors.black45,
+              //                                       ))
+              //                                 ],
+              //                               ),
+              //                               Text(
+              //                                 // '응 좋아 좋아',
+              //                                 '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
+              //                                 style:
+              //                                 TextStyle(fontSize: 14),
+              //                               ),
+              //                               SizedBox(height: 10),
+              //                             ],
+              //                           ),
+              //                         ),
+              //                       ],
+              //                     ),
+              //                     const SizedBox(height: 10),
+              //                   ],
+              //                 ),
+              //               ),
+              //             ]),
+              //         Visibility(
+              //           visible: writeComment[reversedIndex],
+              //           child: const TextField(
+              //             style: TextStyle(fontSize: 14.0),
+              //             cursorColor: Colors.black12,
+              //             cursorWidth: 1.0,
+              //             decoration: InputDecoration(
+              //               contentPadding:
+              //               EdgeInsets.fromLTRB(10, 0, 10, 0),
+              //               suffixIcon:
+              //               Icon(Icons.send, color: Colors.black54),
+              //               prefixText: '@유리 ',
+              //               enabledBorder: OutlineInputBorder(
+              //                   borderSide: BorderSide(
+              //                     color: Colors.black12,
+              //                     width: 0.0,
+              //                   )),
+              //               focusedBorder: OutlineInputBorder(
+              //                   borderSide: BorderSide(
+              //                     color: Colors.black12,
+              //                     width: 0.0,
+              //                   )),
+              //               filled: true,
+              //               fillColor: Colors.black12,
+              //             ),
+              //           ),
+              //         ),
+              //         Visibility(
+              //           visible: !writeComment[reversedIndex],
+              //           child: TextField(
+              //             style: const TextStyle(fontSize: 14.0),
+              //             cursorColor: Colors.black12,
+              //             cursorWidth: 1.0,
+              //             decoration: InputDecoration(
+              //               contentPadding:
+              //               const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              //               suffixIcon: IconButton(
+              //                   icon: const Icon(Icons.send),
+              //                   color: Colors.black54,
+              //                   onPressed: () {}),
+              //               hintText: '신짱구(으)로 댓글 달기...',
+              //               enabledBorder: const OutlineInputBorder(
+              //                   borderSide: BorderSide(
+              //                     color: Colors.black12,
+              //                     width: 0.0,
+              //                   )),
+              //               focusedBorder: const OutlineInputBorder(
+              //                   borderSide: BorderSide(
+              //                     color: Colors.black12,
+              //                     width: 0.0,
+              //                   )),
+              //               filled: true,
+              //               fillColor: Colors.black12,
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+          //   ],
+          // ),
+          const SizedBox(height: 15),
         ],
       ),
     );
