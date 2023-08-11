@@ -15,13 +15,13 @@ class ChatDto {
   });
 
   factory ChatDto.fromJson(Map<dynamic, dynamic> json, String inputChatId) {
-    var format = new DateFormat('hh:mm');
-    var date = new DateTime.fromMillisecondsSinceEpoch(json['time']);
+    // var format = new DateFormat('hh:mm');
+    // var date = new DateTime.fromMillisecondsSinceEpoch(json['time']);
     return ChatDto(
         chatId: inputChatId,
         text: json['text'],
         userId: json['userId'],
-        time: format.format(date).toString(),
+        time: json['time'].toString(),
     );
   }
 }
