@@ -459,6 +459,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                   child: Container(
                                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                                     child: TextField(
+                                      maxLines: null,
                                       style: const TextStyle(fontSize: 14.0),
                                       cursorColor: Colors.black12,
                                       cursorWidth: 1.0,
@@ -476,7 +477,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                         content: _commentContent,
                                                         feedId:
                                                             feed[index].feedId,
-                                                        pcmtId: null,
+                                                        pcmtId: feed[index].comments![i].cmtId,
                                                         regTime: '',
                                                         userDto: _loginUser!);
                                                 commentProviders
@@ -521,6 +522,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: TextField(
+                    maxLines: null,
                     style: const TextStyle(fontSize: 14.0),
                     cursorColor: Colors.black12,
                     cursorWidth: 1.0,
