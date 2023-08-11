@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simda/KakaoLogin/sign_up.dart';
 import 'package:simda/main.dart';
 import 'package:simda/main_page.dart';
+import 'package:simda/providers/user_providers.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
       "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg";
   String nickname = "";
   String bio = "";
-
+  UserProviders userProvider = UserProviders();
   @override
   void initState() {
     super.initState();
@@ -43,10 +46,40 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<int> signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser != null) {
+        // Obtain the auth details from the request
+        final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+        // Sign in to Firebase with the credential
+        final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        // Get the user's information
+        final User user = userCredential.user!;
+        // Now you can access the user's information
+        print("Email: ${user.email}");
+        return await userProvider.checkUser("${user.email}");
+      } else {
+        throw Exception("Google Sign-In was canceled.");
+      }
+    } catch (error) {
+      // Handle any errors that occur during the sign-in process
+      print("Error signing in with Google: $error");
+      rethrow;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xffffbe96),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 50),
             // Image.network(
             //     viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? ''),
-            Text(nickname),
+            // Text(nickname),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
@@ -86,9 +119,9 @@ class _LoginPageState extends State<LoginPage> {
                 else {
                   print('로그인 성공');
                   Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => MainPage(0)), (route) => false
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MainPage(0)), (route) => false
                   );
                 }
 
@@ -96,38 +129,48 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(),
+                  //   borderRadius: BorderRadius.circular(7.5),
+                  // ),
                   child: const Image(
-                      image: AssetImage(
-                          'assets/images/kakao_login_large_wide.png'))),
+                    image: AssetImage(
+                        'assets/images/kakao_login_large_wide.png'),height: 53,)),
             ),
-            const SizedBox(height: 10),
-            SocialLoginButton(
-              height: 46,
-              backgroundColor: Colors.white,
-              text: '구글 로그인',
-              fontSize: 18,
-              borderRadius: 5,
-              width: 350,
-              buttonType: SocialLoginButtonType.google,
-              onPressed: () async {
-                print("로그인 클릭");
-                // Once signed in, return the UserCredential
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap:() async{
+                int emailCheck = await signInWithGoogle();
+                if (emailCheck == 1) {
+                  print('로그인 성공');
+                  String? storeEmail = await storage.read(key: "email");
+                  print(storeEmail);
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MainPage(0)), (route) => false
+                  );
+                }else{
+                  String? storeEmail = await storage.read(key: "email");
+                  print(storeEmail);
+                  print('회원가입 화면으로 이동합니다.');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUp()),
+                  );
+                }
               },
+              child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: const Image(
+                    image: AssetImage(
+                        'assets/images/google_login.png'),height: 52.5,)),
             ),
-            Text(
-              '${viewModel.isLoggedIn}',
-            ),
-
-            ElevatedButton(
-              onPressed: () async {
-                await viewModel.logout();
-                setState(() {});
-              },
-              child: const Text('Logout'),
-            )
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 }
+
