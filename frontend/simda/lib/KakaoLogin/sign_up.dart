@@ -8,6 +8,7 @@ import 'package:simda/providers/user_providers.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
+
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -22,7 +23,6 @@ class _SignUpState extends State<SignUp> {
   bool _isNicknameAvailable = true;
   UserProviders userProvider = UserProviders();
 
-
   // 이미지 선택 메서드
   Future<void> _pickImage(BuildContext context) async {
     final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
@@ -32,35 +32,11 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  // 이미지 미리보기를 원하는 크기로 조정하는 함수
-  Widget _getProfileImagePreview(BuildContext context) {
-    final imageSize = MediaQuery
-        .of(context)
-        .size
-        .width / 4;
-    if (_profileImage != null) {
-      return CircleAvatar(
-        radius: 60,
-        backgroundImage: FileImage(File(_profileImage!.path)),
-      );
-    } else {
-      return CircleAvatar(
-          radius: imageSize / 2,
-          backgroundColor: Colors.transparent,
-          child: Icon(
-            Icons.account_circle,
-            size: imageSize,
-            color: Colors.black45,
-          ));
-    }
-  }
-
-  // 닉네임 중복 체크 메서드
+  // 닉네임 중복 체크
   Future<void> _checkNicknameAvailability(String nickname) async {
-    String nickname = nicknameController.text;
     if (nickname.isNotEmpty) {
       try {
-        bool isAvailable = await userProvider.checkNickname(nickname);
+        bool isAvailable = await userProvider.checkNickname(nicknameController.text);
         setState(() {
           _isNicknameAvailable = isAvailable;
         });
@@ -69,9 +45,12 @@ class _SignUpState extends State<SignUp> {
           _isNicknameAvailable = false;
         });
       }
+    } else {
+      setState(() {
+        _isNicknameAvailable = false; // 닉네임이 비어있는 경우 사용 가능하도록 설정
+      });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -133,10 +112,21 @@ class _SignUpState extends State<SignUp> {
                       nicknameController, // 닉네임 입력 값을 저장하는 컨트롤러를 전달
                     ),
                   ),
-                    // ElevatedButton(
-                    //   onPressed: _onCheckNicknameButtonPressed,
-                    //   child: Text("닉네임 중복 확인"),
-                    // ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (nicknameController.text.isNotEmpty) {
+                        await _checkNicknameAvailability(nicknameController.text);
+                      }
+                      setState(() {}); // 이 부분을 추가하여 화면을 갱신합니다.
+                    },
+                    child: Text("닉네임 중복 확인"),
+                  ),
+                  Text(
+                    _isNicknameAvailable
+                        ? ""  // 사용 가능한 닉네임일 경우 빈 문자열을 출력
+                        : "이미 사용 중인 닉네임입니다.",
+                    style: TextStyle(color: Colors.red),
+                  ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -148,17 +138,12 @@ class _SignUpState extends State<SignUp> {
                       if (formKey.currentState!.validate()) {
                         // 폼 검증을 통과한 경우에만 회원가입 동작 수행
                         String nickname = nicknameController.text; // 닉네임 값을 가져옴
-                        // FormData formData = FormData.fromMap({
-                        //   'profileImg': await MultipartFile.fromFile(_profileImage!.path, filename: nickname+'_profile_img.jpg'),
-                        //   'nickname' : nickname,
-                        //   'email': null,
-                        // });
                         viewModel.signup(_profileImage!.path, nickname);
                         Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MainPage(0)),
-                                (route) => false);
+                          context,
+                          MaterialPageRoute(builder: (context) => MainPage(0)),
+                              (route) => false,
+                        );
                       }
                     },
                   ),
@@ -178,21 +163,18 @@ class _SignUpState extends State<SignUp> {
       String hintText,
       int maxSize,
       String errorMessage,
-      TextEditingController controller, // 컨트롤러 매개변수 추가
+      TextEditingController controller,
       ) {
     return TextFormField(
       controller: controller,
-      // 전달받은 컨트롤러를 사용하여 입력 값을 관리
       maxLength: 20,
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
       cursorColor: Colors.black45,
       decoration: InputDecoration(
-        hintText: '닉네임을 입력해주세요',
-        helperText: !_isNicknameAvailable
-            ? '이미 사용 중인 닉네임입니다.'
-            : null,
+        hintText: hintText,
+        // helperText: !_isNicknameAvailable ? '이미 사용 중인 닉네임입니다.' : null,
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
@@ -223,5 +205,24 @@ class _SignUpState extends State<SignUp> {
         });
       },
     );
+  }
+
+  Widget _getProfileImagePreview(BuildContext context) {
+    final imageSize = MediaQuery.of(context).size.width / 4;
+    if (_profileImage != null) {
+      return CircleAvatar(
+        radius: 60,
+        backgroundImage: FileImage(File(_profileImage!.path)),
+      );
+    } else {
+      return CircleAvatar(
+          radius: imageSize / 2,
+          backgroundColor: Colors.transparent,
+          child: Icon(
+            Icons.account_circle,
+            size: imageSize,
+            color: Colors.black45,
+          ));
+    }
   }
 }

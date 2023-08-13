@@ -44,7 +44,7 @@ class UserProviders {
 
   // 닉네임 체크
   Future<bool> checkNickname(String nickname) async{
-    final response = await dio.get('$url/check');
+    final response = await dio.get('$url/check?nickname=$nickname');
 
     print('닉네임 중복? : $response');
 
