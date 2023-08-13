@@ -1,10 +1,12 @@
 import "package:flutter/material.dart";
-import 'package:simda/KakaoLogin/main_view_model.dart';
-import 'package:simda/KakaoLogin/kakao_login.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:simda/main_page.dart';
 import 'package:simda/providers/user_providers.dart';
+
+import '../main.dart';
+import 'kakao_login.dart';
+import 'main_view_model.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({Key? key}) : super(key: key);
@@ -20,7 +22,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController(); // 닉네임 입력 값을 저장하는 컨트롤러를 생성
   final _picker = ImagePicker();
   XFile? _profileImage;
-  bool _isNicknameAvailable = true;
+  String _nicknameAvailability = ""; //
   UserProviders userProvider = UserProviders();
 
   // 이미지 선택 메서드
@@ -32,25 +34,51 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  // 닉네임 중복 체크
+  // 이미지 미리보기를 원하는 크기로 조정하는 함수
+  Widget _getProfileImagePreview(BuildContext context) {
+    final imageSize = MediaQuery
+        .of(context)
+        .size
+        .width / 4;
+    if (_profileImage != null) {
+      return CircleAvatar(
+        radius: 60,
+        backgroundImage: FileImage(File(_profileImage!.path)),
+      );
+    } else {
+      return CircleAvatar(
+          radius: imageSize / 2,
+          backgroundColor: Colors.transparent,
+          child: Icon(
+            Icons.account_circle,
+            size: imageSize,
+            color: Colors.black45,
+          ));
+    }
+  }
+
+
+// 닉네임 체크
   Future<void> _checkNicknameAvailability(String nickname) async {
-    if (nickname.isNotEmpty) {
+    if (nicknameController.text.isNotEmpty) {
       try {
-        bool isAvailable = await userProvider.checkNickname(nicknameController.text);
+        var result = (await userProvider.checkNickname(nicknameController.text)) as String;
         setState(() {
-          _isNicknameAvailable = isAvailable;
+          _nicknameAvailability =
+              result; // 변경: _isNicknameAvailable -> _nicknameAvailability
         });
       } catch (error) {
         setState(() {
-          _isNicknameAvailable = false;
+          _nicknameAvailability = "fail";
         });
       }
     } else {
       setState(() {
-        _isNicknameAvailable = false; // 닉네임이 비어있는 경우 사용 가능하도록 설정
+        _nicknameAvailability = "";
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,23 +137,30 @@ class _SignUpState extends State<SignUp> {
                       '닉네임을 입력해주세요',
                       20,
                       '닉네임은 20자 이하여야 합니다',
-                      nicknameController, // 닉네임 입력 값을 저장하는 컨트롤러를 전달
+                      nicknameController,
                     ),
                   ),
                   ElevatedButton(
                     onPressed: () async {
                       if (nicknameController.text.isNotEmpty) {
-                        await _checkNicknameAvailability(nicknameController.text);
+                        await _checkNicknameAvailability(
+                            nicknameController.text);
                       }
-                      setState(() {}); // 이 부분을 추가하여 화면을 갱신합니다.
                     },
                     child: Text("닉네임 중복 확인"),
                   ),
                   Text(
-                    _isNicknameAvailable
-                        ? ""  // 사용 가능한 닉네임일 경우 빈 문자열을 출력
-                        : "이미 사용 중인 닉네임입니다.",
-                    style: TextStyle(color: Colors.red),
+                    _nicknameAvailability == "success"
+                        ? "사용 가능한 닉네임입니다."
+                        : _nicknameAvailability ==
+                        "fail" // 변경: "error" -> "fail"
+                        ? "이미 사용 중인 닉네임입니다."
+                        : "",
+                    style: TextStyle(
+                        color:
+                        _nicknameAvailability == "success"
+                            ? Colors.green
+                            : Colors.red),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
@@ -136,8 +171,7 @@ class _SignUpState extends State<SignUp> {
                     child: const Text("회원가입"),
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        // 폼 검증을 통과한 경우에만 회원가입 동작 수행
-                        String nickname = nicknameController.text; // 닉네임 값을 가져옴
+                        String nickname = nicknameController.text;
                         viewModel.signup(_profileImage!.path, nickname);
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -156,15 +190,13 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget textFormFieldComponent(
-      bool obscureText,
+  Widget textFormFieldComponent(bool obscureText,
       TextInputType keyboardType,
       TextInputAction textInputAction,
       String hintText,
       int maxSize,
       String errorMessage,
-      TextEditingController controller,
-      ) {
+      TextEditingController controller,) {
     return TextFormField(
       controller: controller,
       maxLength: 20,
@@ -174,7 +206,11 @@ class _SignUpState extends State<SignUp> {
       cursorColor: Colors.black45,
       decoration: InputDecoration(
         hintText: hintText,
-        // helperText: !_isNicknameAvailable ? '이미 사용 중인 닉네임입니다.' : null,
+        helperText: !_nicknameAvailability.isEmpty
+            ? _nicknameAvailability == "fail"
+            ? '이미 사용 중인 닉네임입니다.'
+            : null
+            : null,
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
@@ -201,28 +237,9 @@ class _SignUpState extends State<SignUp> {
       },
       onChanged: (value) {
         setState(() {
-          _isNicknameAvailable = true; // 닉네임이 변경되면 다시 확인 가능하도록
+          _nicknameAvailability = ""; // 닉네임이 변경되면 다시 확인 가능하도록
         });
       },
     );
-  }
-
-  Widget _getProfileImagePreview(BuildContext context) {
-    final imageSize = MediaQuery.of(context).size.width / 4;
-    if (_profileImage != null) {
-      return CircleAvatar(
-        radius: 60,
-        backgroundImage: FileImage(File(_profileImage!.path)),
-      );
-    } else {
-      return CircleAvatar(
-          radius: imageSize / 2,
-          backgroundColor: Colors.transparent,
-          child: Icon(
-            Icons.account_circle,
-            size: imageSize,
-            color: Colors.black45,
-          ));
-    }
   }
 }
