@@ -45,8 +45,9 @@ class CommentProviders{
   Future<void> deleteComment(int commentId) async{
     final response = await dio.delete(
         "$url/",
-        queryParameters: {
-          'commentId' : commentId
-        });
+        queryParameters: {'commentId': commentId});
+
+  print("댓글 삭제: ${response.statusCode}");
   }
+
 }

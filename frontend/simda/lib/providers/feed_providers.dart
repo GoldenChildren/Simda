@@ -108,7 +108,7 @@ class FeedProviders {
   }
 
   // feed 수정 메소드
-  Future<void> modifyFeed(FeedDto feedDto) async{
+  Future<void> modifyFeed(FeedDto feedDto) async {
     Response response = await dio.put(
         '$url/',
         data: feedDto
@@ -125,19 +125,33 @@ class FeedProviders {
   }
 
   // feed 삭제 메소드
+  // Future<void> deleteFeed(int feedId) async {
+  //   Response response = await dio.delete(
+  //       '$url/',
+  //       queryParameters: {
+  //         'feedId' : feedId
+  //       },
+  //   );
+  //
+  // print('피드 삭제 : ${response.statusCode}');
+  // }
+
   Future<void> deleteFeed(int feedId) async{
     Response response = await dio.delete(
-        '$url/',
-        queryParameters: {
-          'feedId' : feedId
-        }
+      '$url/',
+      queryParameters: {
+        'feedId': feedId
+      },
+      options: Options(
+        headers: {'feedId': feedId},
+      ),
     );
 
-    print('피드 삭제 : $response');
+    print('피드 삭제 : ${response.statusCode}');
   }
 
   // userId로 그 유저의 피드 목록을 가져오는 메소드
-  Future<List<FeedDto>> getUserFeedList(int userId) async{
+  Future<List<FeedDto>> getUserFeedList(int userId) async {
     List<FeedDto> feed = [];
 
     final response = await dio.get('$url/$userId');
@@ -154,7 +168,7 @@ class FeedProviders {
   }
 
   // userId로 그 유저의 팔로워들의 피드 목록을 가져오는 메소드
-  Future<List<FeedDto>> getFollowFeedList(int userId) async{
+  Future<List<FeedDto>> getFollowFeedList(int userId) async {
     List<FeedDto> feed = [];
 
     final response = await dio.get(
@@ -177,7 +191,7 @@ class FeedProviders {
 
 
   // 좋아요 메소드
-  Future<void> hitLikePoint(int feedId) async{
+  Future<void> hitLikePoint(int feedId) async {
     final response = await dio.put(
         '$url/',
         queryParameters: {
