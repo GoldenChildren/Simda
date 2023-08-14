@@ -227,6 +227,44 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                             fontSize: 12,
                                             color: Colors.black45),
                                       ),
+                                      feed[index].userId == _loginUser?.userId
+                                          ? IconButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        content: const Text(
+                                                            '글을 삭제하시겠습니까?'),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                feedProvider
+                                                                    .deleteFeed(
+                                                                        feed[index]
+                                                                            .feedId);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  '삭제하기')),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  '닫기')),
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                              icon: const Icon(Icons.delete,
+                                                  color: Colors.black54),
+                                            )
+                                          : const SizedBox(height: 1, width: 1)
                                     ],
                                   ),
                                 ],
@@ -387,6 +425,20 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                                 color: Colors
                                                                     .black45,
                                                               )),
+                                                          const SizedBox(width: 10),
+                                                          feed[index].comments![i].userDto.userId == _loginUser?.userId
+                                                              ? IconButton(
+                                                              padding: EdgeInsets.zero,
+                                                              constraints: const BoxConstraints(),
+                                                                  onPressed: () {
+                                                                    commentProviders.deleteComment(feed[index].comments![i].cmtId);
+                                                                  },
+                                                                  icon: const Icon(
+                                                                      Icons.close,
+                                                                      color: Colors.red))
+                                                              : const SizedBox(
+                                                                  height: 1,
+                                                                  width: 1)
                                                         ],
                                                       ),
                                                       Text(
@@ -608,8 +660,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                     icon: const Icon(Icons.send),
                                     color: Colors.black54,
                                     onPressed: () async {
-                                      if (_commentContent != null &&
-                                          _commentContent.isNotEmpty) {
+                                      if (_commentContent.isNotEmpty) {
                                         CommentDto commentDto = CommentDto(
                                             cCommentList: [],
                                             cmtId: 0,
@@ -657,8 +708,6 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               );
   }
 }
-
-class LoadingSkelton {}
 
 class Skelton extends StatelessWidget {
   const Skelton({Key? key, this.height, this.width}) : super(key: key);
