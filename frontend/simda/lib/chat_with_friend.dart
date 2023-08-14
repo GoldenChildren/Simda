@@ -66,7 +66,7 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
         }
       }
 
-      if(chats.last.userId !=widget.me.userId){
+      if(chats.first.userId !=widget.me.userId){
         DatabaseReference chatRoomRef = FirebaseDatabase.instance.ref().child('chatrooms/${chatRoomId}/last_message');
         chatRoomRef.update({"read": false});
       }
