@@ -48,8 +48,6 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
           if (chatdata is Map<dynamic, dynamic>) { // Map 타입 확인
             print(chatId is String);
             ChatDto rchat = ChatDto.fromJson(chatdata,chatId);
-            print("1111111111111111111111111111");
-            print(rchat.time);
             chats.add(rchat);
           }
         });
@@ -67,6 +65,14 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
           i++;
         }
       }
+
+      if(chats.last.userId !=widget.me.userId){
+        DatabaseReference chatRoomRef = FirebaseDatabase.instance.ref().child('chatrooms/${chatRoomId}/last_message');
+        chatRoomRef.update({"read": false});
+      }
+
+
+
       setState(() {if (mounted) {
         // 여기서 setState() 호출
       }});
