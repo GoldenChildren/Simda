@@ -115,7 +115,7 @@ class ChatRoomProviders {
     }).catchError((error) {
       print("Error adding new chatroom: $error");
     });
-    return null;
+    return newChatroomId;
   }
 
 }
