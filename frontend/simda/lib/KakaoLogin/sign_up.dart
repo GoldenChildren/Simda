@@ -23,7 +23,7 @@ class _SignUpState extends State<SignUp> {
   final _picker = ImagePicker();
   XFile? _profileImage;
   bool _nicknameAvailability = true; //
-  String isAvailable = "";
+  bool isAvailable = true;
   UserProviders userProvider = UserProviders();
   bool _showProfileImageHint = false;
 
@@ -64,17 +64,11 @@ class _SignUpState extends State<SignUp> {
  Future<void> _checkNicknameAvailability(String nickname) async {
     nickname = nicknameController.text;
    try {
-     isAvailable = (await userProvider.checkNickname(nickname)) as String;
- 
-     if (isAvailable == "success") {
+     isAvailable = await userProvider.checkNickname(nickname);
+
        setState(() {
-         _nicknameAvailability = true;
+         _nicknameAvailability = isAvailable;
        });
-     } else {
-       setState(() {
-         _nicknameAvailability = false;
-       });
-     }
    } catch (error) {
      setState(() {
        _nicknameAvailability = false;
@@ -163,6 +157,7 @@ class _SignUpState extends State<SignUp> {
                     },
                     child: Text("닉네임 중복 확인"),
                   ),
+                  if (_nicknameAvailability != true)
                   Text(
                      _nicknameAvailability == true
                       ? "사용 가능한 닉네임입니다."
