@@ -24,6 +24,7 @@ class _SignUpState extends State<SignUp> {
   XFile? _profileImage;
   String _nicknameAvailability = ""; //
   UserProviders userProvider = UserProviders();
+  bool _showProfileImageHint = false;
 
   // 이미지 선택 메서드
   Future<void> _pickImage(BuildContext context) async {
@@ -127,6 +128,14 @@ class _SignUpState extends State<SignUp> {
                       await _pickImage(context);
                     },
                   ),
+                  if (_showProfileImageHint && _profileImage == null)
+                    Text(
+                      '프로필 이미지를 선택해주세요',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                      ),
+                    ),
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -170,6 +179,12 @@ class _SignUpState extends State<SignUp> {
                     ),
                     child: const Text("회원가입"),
                     onPressed: () async {
+                      if (_profileImage == null) {
+                        setState(() {
+                          _showProfileImageHint = true;
+                        });
+                        return ;
+                      }
                       if (formKey.currentState!.validate()) {
                         String nickname = nicknameController.text;
                         viewModel.signup(_profileImage!.path, nickname);
@@ -181,6 +196,7 @@ class _SignUpState extends State<SignUp> {
                       }
                     },
                   ),
+         
                 ],
               ),
             ),
@@ -228,7 +244,7 @@ class _SignUpState extends State<SignUp> {
       ),
       validator: (value) {
         if (value!.trim().isEmpty) {
-          return "error";
+          return '닉네임을 입력해주세요';
         }
         if (value.length > maxSize) {
           return '닉네임은 $maxSize자 이하여야 합니다';
