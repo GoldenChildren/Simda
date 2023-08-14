@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -104,6 +105,7 @@ class KakaoLogin implements SocialLogin {
           value:
               "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg");
       session.logout();
+      await FirebaseAuth.instance.signOut();
       return true;
     } catch (error) {
       return false;
