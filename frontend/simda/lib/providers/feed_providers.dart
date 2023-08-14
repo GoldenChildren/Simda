@@ -125,23 +125,9 @@ class FeedProviders {
   }
 
   // feed 삭제 메소드
-  // Future<void> deleteFeed(int feedId) async {
-  //   Response response = await dio.delete(
-  //       '$url/',
-  //       queryParameters: {
-  //         'feedId' : feedId
-  //       },
-  //   );
-  //
-  // print('피드 삭제 : ${response.statusCode}');
-  // }
-
   Future<void> deleteFeed(int feedId) async{
     Response response = await dio.delete(
-      '$url/',
-      queryParameters: {
-        'feedId': feedId
-      },
+        '$url/',
       options: Options(
         headers: {'feedId': feedId},
       ),

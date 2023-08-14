@@ -486,26 +486,26 @@ class _MapPageState extends State<MapPage> {
             zoom: 17,
           ),
           markers: markers,
-          onCameraMove: _manager.onCameraMove,
-          onCameraIdle: _manager.updateMap,
-          zoomControlsEnabled: false,
-          mapToolbarEnabled: false,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+        onCameraMove: _manager.onCameraMove,
+        onCameraIdle: _manager.updateMap,
+        zoomControlsEnabled: false,
+        mapToolbarEnabled: false,
+      ),
+            Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
             Container(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-              child: ElevatedButton(
-                onPressed: () async {
-                  var gps = await getCurrentLocation();
-                  mapController?.animateCamera(CameraUpdate.newLatLng(
-                      LatLng(gps.latitude, gps.longitude)));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
+            child: ElevatedButton(
+            onPressed: () async {
+            var gps = await getCurrentLocation();
+            mapController?.animateCamera(CameraUpdate.newLatLng(
+            LatLng(gps.latitude, gps.longitude)));
+            },
+            style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            shape: const CircleBorder(),
+            padding: const EdgeInsets.all(15),
                 ),
                 child: const Icon(
                   Icons.my_location,
