@@ -7,7 +7,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'package:simda/KakaoLogin/kakao_login.dart';
 import 'package:simda/KakaoLogin/login_page.dart';
-import 'package:simda/session.dart';
+import 'package:simda/store.dart';
 import 'package:simda/main_page.dart';
 
 // 달력 한국 시각
@@ -22,7 +22,7 @@ Future<void> main() async {
   // 달력 한국 시각
 
   await initializeDateFormatting();
-  isLogin = await session.checkAccessTokenValidity();
+  isLogin = await store.checkAccessTokenValidity();
 
   final GoogleMapsFlutterPlatform mapsImplementation =
       GoogleMapsFlutterPlatform.instance;
@@ -39,7 +39,7 @@ Future<void> main() async {
 
 bool isVisible = true;
 bool isLogin = false;
-final Session session = Session();
+final Store store = Store();
 const storage = FlutterSecureStorage();
 final viewModel = MainViewModel(KakaoLogin());
 

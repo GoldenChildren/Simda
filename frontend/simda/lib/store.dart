@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:simda/models/UserDto.dart';
 
-class Session{
+class Store{
   FlutterSecureStorage storage = FlutterSecureStorage();
 
   Future<void> saveAccessToken(OAuthToken token) async{

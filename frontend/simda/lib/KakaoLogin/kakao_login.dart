@@ -6,12 +6,13 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:simda/KakaoLogin/social_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'package:simda/Session.dart';
 import 'package:simda/models/UserDto.dart';
+
+import '../store.dart';
 
 class KakaoLogin implements SocialLogin {
   final storage = const FlutterSecureStorage();
-  final session = Session();
+  final store = Store();
 
   // static String email = "";
   // static String ip = "http://70.12.247.215:8000";
@@ -59,7 +60,7 @@ class KakaoLogin implements SocialLogin {
           // print(actoken);
           // print(retoken);
 
-          session.saveAccessToken(token);
+          store.saveAccessToken(token);
 
           final url = Uri.parse("$ip/user/login/kakao");
           final response = await http.post(url,
@@ -104,7 +105,7 @@ class KakaoLogin implements SocialLogin {
           key: "profileImg",
           value:
               "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg");
-      session.logout();
+      store.logout();
       return true;
     } catch (error) {
       return false;
