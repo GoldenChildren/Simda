@@ -91,7 +91,7 @@ class _ChattingSearchPageState extends State<ChattingSearchPage> {
         children: <Widget>[
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+            padding: const EdgeInsets.fromLTRB(0, 10, 20, 10),
             child: Row(
               children: <Widget>[
                 const SizedBox(width: 10),
