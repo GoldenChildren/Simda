@@ -243,11 +243,14 @@ class _SignUpState extends State<SignUp> {
         isDense: true,
         contentPadding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
         hintText: hintText,
-        helperText: _nicknameAvailability == true
+        helperText:
+            // if (nicknameController.text.isNotEmpty)
+            _nicknameAvailability == true
             ? '사용 가능한 닉네임입니다.'
             : _nicknameAvailability == false
             ? '이미 사용 중인 닉네임입니다.'
             : '',
+        helperStyle: TextStyle(fontSize: 12.0, color:_nicknameAvailability  ? Colors.green  : Colors.red  ),
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
@@ -266,6 +269,9 @@ class _SignUpState extends State<SignUp> {
       validator: (value) {
         if (value!.trim().isEmpty) {
           return '닉네임을 입력해주세요';
+        }
+        if (value!.trim().isNotEmpty) {
+          return null;
         }
         if (value.length > maxSize) {
           return '닉네임은 $maxSize자 이하여야 합니다';
