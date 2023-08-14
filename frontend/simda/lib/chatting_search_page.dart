@@ -27,14 +27,14 @@ class _ChattingSearchPageState extends State<ChattingSearchPage> {
   Future<void> getValueFromSecureStorage() async {
     try {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
-      String storeNickname = await storage.read(key: "nickname").toString();
-      String storeProfileImg = await storage.read(key: "profileImg").toString();
+      String? storeNickname = await storage.read(key: "nickname");
+      String? storeProfileImg = await storage.read(key: "profileImg");
       setState(() {
         _userId = storeUserId;
         me = ChatUserDto(
           userId: storeUserId.toString(),
-          nickname: storeNickname,
-          profileImg: storeProfileImg,
+          nickname: storeNickname.toString(),
+          profileImg: storeProfileImg.toString(),
         );
       });
     } catch (e) {

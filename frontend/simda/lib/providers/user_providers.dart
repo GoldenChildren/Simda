@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:simda/models/FollowDto.dart';
@@ -45,17 +46,18 @@ class UserProviders {
 
   // 닉네임 체크
   Future<bool> checkNickname(String nickname) async{
-    final response = await dio.get('$url/check');
+      final response = await dio.get('$url/check');
 
-    print('닉네임 중복? : $response');
-
-    return response.data;
+      print('닉네임 중복? : $response');
+      return true;
   }
   // 유저 체크
   Future<int> checkUser(String email) async{
     storage.write(key: "email", value: email);
     try{
       final response = await dio.get('$url/email?email=$email');
+      print(response.data);
+      saveStorage(response.data);
       return 1;
     }catch (Exception) {
       return -1;
@@ -75,8 +77,6 @@ class UserProviders {
         multipartfile = null;
       }
 
-      print(multipartfile?.filename?? '왜 null 임?');
-
       FormData formData = FormData.fromMap({
         'imgfile': multipartfile,
         "bio": userDto.bio,
@@ -86,7 +86,6 @@ class UserProviders {
         "userId": userDto.userId,
         "userRole": userDto.userRole,
       });
-
       var response = await dio.post(
         "$url/modify",
         data: formData,
@@ -96,7 +95,16 @@ class UserProviders {
       if(response != null){
         saveStorage(response.data);
       }
-
+      String? storeUid = await storage.read(key:"userId");
+      String? storeEmail = await storage.read(key: "email");
+      String? storeProfileImg = await storage.read(key: "profileImg");
+      String? storeNickname = await storage.read(key: "nickname");
+      FirebaseDatabase ref = FirebaseDatabase.instance;
+      await ref.ref("users").child(storeUid!).update({
+        "nickname": storeNickname,
+        "userEmail" : storeEmail,
+        "profileImg": storeProfileImg,
+      });
       return UserDto.fromJson(response.data);
     }catch(error){
       print("유저 정보 수정 에러");

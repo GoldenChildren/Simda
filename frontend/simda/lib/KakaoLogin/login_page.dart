@@ -88,8 +88,16 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Image(
-                image: AssetImage('assets/images/1152.png'), height: 150),
+            // const Image(
+            //     image: AssetImage('assets/images/1152.png'), height: 150),
+            InkWell(onTap: (){
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MainPage(0)), (route) => false
+              );
+            },
+            child: const Image(image: AssetImage('assets/images/1152.png'), height: 150),),
             const SizedBox(height: 20),
             const Image(
                 image: AssetImage('assets/images/simda.png'), height: 40),

@@ -82,11 +82,14 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
 
   Future<void> getRoom() async{
     chatroomsList = await ChatRoomProviders().getChatRooms(widget.me, widget.contact);
+    String? newchatroomId;
     print("chatroomsList:${chatroomsList.length}");
     if(chatroomsList.length==0){
       print("getRoom 내닉네임: ${widget.me.nickname}");
       print("getRoom 상대닉네임 : ${widget.contact.nickname}");
-      chatRoomId = await ChatRoomProviders().createChatRoom(widget.me, widget.contact) as String;
+      newchatroomId = await ChatRoomProviders().createChatRoom(widget.me, widget.contact);
+      chatRoomId = newchatroomId.toString();
+      print('chatRoomId : $chatRoomId');
     }else{
       chatRoomId = await chatroomsList.first.chatroomId;
       print("기존의 챗룸있고 아이디 : ${chatRoomId}");
