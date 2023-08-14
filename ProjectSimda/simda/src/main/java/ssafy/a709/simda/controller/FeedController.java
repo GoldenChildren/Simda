@@ -71,7 +71,7 @@ public class FeedController {
     }
     @DeleteMapping("/")
     public ResponseEntity<String> removeFeed(@RequestHeader("feedId") int feedId) {
-
+        System.out.println(feedId);
         if (commentService.deleteCommentByFeedId(feedId) && feedService.deleteFeed(feedId)) {
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }

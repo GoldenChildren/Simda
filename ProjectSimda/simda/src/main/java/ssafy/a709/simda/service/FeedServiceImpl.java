@@ -11,6 +11,7 @@ import ssafy.a709.simda.domain.Feed;
 import ssafy.a709.simda.dto.FeedDto;
 import ssafy.a709.simda.repository.UserRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,12 @@ public class FeedServiceImpl implements FeedService{
     public List<FeedDto> selectAroundList(double lat, double lng) {
         long oneDayInMillis = 24 * 60 * 60 * 1000;
         Date oneDayAgo = new Date(System.currentTimeMillis() - oneDayInMillis);
-        List<Feed> list = feedRepository.findFeedAroundAndWithinOneDay(lat, lng, oneDayAgo);
+        List<Feed> list = new ArrayList<>();
+        try {
+            list = feedRepository.findFeedAroundAndWithinOneDay(lat, lng, oneDayAgo);
+        } catch(EntityNotFoundException e){
+            e.printStackTrace();
+        }
         List<FeedDto> resList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             User feedUser = userRepository.findByUserId(list.get(i).getUser().getUserId());
@@ -49,7 +55,12 @@ public class FeedServiceImpl implements FeedService{
     @Override
     public List<FeedDto> selectFollowList(int userId) {
         List<FeedDto> resList = new ArrayList<>();
-        List<Feed> list = feedRepository.getListByMyId(userId);
+        List<Feed> list = new ArrayList<>();
+        try {
+            list = feedRepository.getListByMyId(userId);
+        }catch (EntityNotFoundException e){
+            e.printStackTrace();
+        }
         for (int i = 0; i < list.size(); i++) {
             User feedUser = userRepository.findByUserId(list.get(i).getUser().getUserId());
             List<CommentDto> commentDtos = commentService.getCommentDtos(list.get(i));
@@ -93,10 +104,22 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
+    public boolean deleteUserFeed(int userId) {
+        try{
+            feedRepository.deleteUserFeed(userId);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public boolean deleteFeed(int feedId) {
+        System.out.println("deleteFeed");
         try {
             feedRepository.deleteById(feedId);
         }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
         return true;

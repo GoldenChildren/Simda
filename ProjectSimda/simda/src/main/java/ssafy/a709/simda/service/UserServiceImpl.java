@@ -25,6 +25,10 @@ public class UserServiceImpl implements UserService {
     // Entity를 가져오기 위해서 Repo 불러오기
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    FeedService feedService;
+    @Autowired
+    CommentService commentService;
 
     // 전체 유저를 조회한다
     @Override

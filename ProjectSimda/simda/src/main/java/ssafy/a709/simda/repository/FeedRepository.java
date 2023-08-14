@@ -24,4 +24,8 @@ public interface FeedRepository extends JpaRepository<Feed, Integer> {
     @Query("update Feed f set f.likeCnt = (f.likeCnt + 1) where f.feedId = :feedId")
     int updateLike(@Param("feedId") int feedId);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE Feed f SET f.user.userId = null WHERE f.user.userId = :userId")
+    int deleteUserFeed(@Param("userId") int userId);
 }

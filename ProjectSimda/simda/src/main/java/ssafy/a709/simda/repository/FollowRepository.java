@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ssafy.a709.simda.domain.Follow;
 import ssafy.a709.simda.domain.User;
 
@@ -35,6 +36,14 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
     @Query("SELECT COUNT(*) FROM Follow f WHERE f.fromUserId.userId = :fromUserId AND f.toUserId.userId = :toUserId")
     int findByToUserIdAndFromUserId(@Param("fromUserId")int fromUserId, @Param("toUserId")int toUserId);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Follow f WHERE f.fromUserId.userId = :fromUserId")
+    void deleteFollowByFromUserId(@Param("fromUserId") int fromUserId);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Follow f WHERE f.toUserId.userId = :toUserId")
+    void deleteFollowByToUserId(@Param("toUserId") int toUserId);
 
 }

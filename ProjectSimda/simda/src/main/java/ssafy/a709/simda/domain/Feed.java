@@ -2,6 +2,7 @@ package ssafy.a709.simda.domain;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
 import ssafy.a709.simda.dto.FeedDto;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
+@Where(clause = "user_id is not null")
 public class Feed {
 
     // Feed Id

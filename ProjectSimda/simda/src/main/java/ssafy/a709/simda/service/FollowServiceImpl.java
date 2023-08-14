@@ -113,4 +113,16 @@ public class FollowServiceImpl implements FollowService{
 
         return check;
     }
+
+    @Override
+    public boolean deleteUserFollow(int userId) {
+        try{
+            followRepository.deleteFollowByFromUserId(userId);
+            followRepository.deleteFollowByToUserId(userId);
+            return true;
+        }catch (Exception e){
+            System.out.println(e);
+        }
+        return false;
+    }
 }

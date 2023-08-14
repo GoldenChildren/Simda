@@ -45,6 +45,15 @@ public class UserDto {
 
     // User(Entity)를 UserDto로 변환
     public static UserDto changeToUserDto(User user) {
+        if(user == null){
+            return UserDto.builder()
+                    .userId(-1)
+                    .email("")
+                    .nickname("탈퇴한 사용자")
+                    .userRole(2)
+                    .profileImg("https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg")
+                    .build();
+        }
         return UserDto.builder()
                 .userId(user.getUserId())
                 // .socialToken(user.getSocialToken())

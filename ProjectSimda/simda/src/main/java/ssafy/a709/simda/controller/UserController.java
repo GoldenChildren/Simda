@@ -16,10 +16,7 @@ import ssafy.a709.simda.dto.FollowDto;
 import ssafy.a709.simda.dto.TokenDto;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.dto.UserList;
-import ssafy.a709.simda.service.ApiService;
-import ssafy.a709.simda.service.FileService;
-import ssafy.a709.simda.service.FollowService;
-import ssafy.a709.simda.service.UserService;
+import ssafy.a709.simda.service.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +43,12 @@ public class UserController {
 
     @Autowired
     FileService fileService;
+
+    @Autowired
+    FeedService feedService;
+
+    @Autowired
+    CommentService commentService;
 
     /*
     Follow Controller를 따로 만드는 대신
@@ -213,11 +216,11 @@ public class UserController {
             userService.createUser(userDto);
         }
         System.out.println("UserController 158 : 회원가입 성공!");
+        System.out.println(userDto.getNickname());
         //파이어베이스 이중 저장을 위한 데이터 반환
         List<UserDto> resultList=userService.selectUsers(userDto.getNickname());
         return new ResponseEntity<>(resultList.get(0), HttpStatus.OK);
     }
-
 
     // 사용자의 탈퇴 처리 - 수정과 유사하다
     @PutMapping("/{userId}")
@@ -226,10 +229,14 @@ public class UserController {
 
         // 현재 유저의 상태를 변경하여 저장
         // 유저 정보가 있는 경우, 해당 userDto를 userService의 deleteUser로 보낸다
-        if(userService.deleteUser(userId)) {
+        if(userService.deleteUser(userId)
+                && feedService.deleteUserFeed(userId)
+                && commentService.deleteUserComment(userId)
+                && followService.deleteUserFollow(userId)) {
             // 성공하면 OK 반환
             System.out.println(userService.selectOneUser(userId).getNickname());
             System.out.println(userService.selectOneUser(userId).getUserRole());
+
             return new ResponseEntity<>(SUCCESS, HttpStatus.OK);
         } else {
             // 실패하면 NOT_ACCEPTABLE 반환
@@ -302,6 +309,4 @@ public class UserController {
         }
         return new ResponseEntity<>(check, HttpStatus.NO_CONTENT);
     }
-
-
 }

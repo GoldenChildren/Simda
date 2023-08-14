@@ -63,6 +63,7 @@ public class CommentServiceImpl implements CommentService{
             }
             commentRepository.deleteById(commentId);
         }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -78,7 +79,7 @@ public class CommentServiceImpl implements CommentService{
         }catch (Exception e){
             return false;
         }
-        return false;
+        return true;
     }
 
     // feed로 댓글 리스트를 받아온다
@@ -119,5 +120,16 @@ public class CommentServiceImpl implements CommentService{
         }
         // subCommentDto List를 리턴
         return subCommentDtos;
+    }
+
+    // 유저가 작성한 comment 전부 삭제 (userId null 처리)
+    @Override
+    public boolean deleteUserComment(int userId) {
+        try{
+            commentRepository.deleteUserComment(userId);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 }

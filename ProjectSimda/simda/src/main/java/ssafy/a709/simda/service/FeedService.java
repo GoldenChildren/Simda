@@ -12,4 +12,5 @@ public interface FeedService {
     boolean hitLikePoint(int  feedId);
     boolean deleteFeed(int feedId);
     boolean updateFeed(FeedDto feedDto);
+    boolean deleteUserFeed(int userId);
 }

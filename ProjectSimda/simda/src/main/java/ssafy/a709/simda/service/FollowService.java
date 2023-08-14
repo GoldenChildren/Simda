@@ -22,4 +22,7 @@ public interface FollowService {
     List<UserDto> selectFollowerList(int userId);
 
     boolean selectUser(int fromUserId, int toUserId);
+
+    // 회원 탈퇴 시 팔로우 삭제
+    boolean deleteUserFollow(int userId);
 }
