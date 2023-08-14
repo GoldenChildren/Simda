@@ -96,6 +96,7 @@ class KakaoLogin implements SocialLogin {
   @override
   Future<bool> logout() async {
     try {
+      await UserApi.instance.logout();
       await UserApi.instance.unlink();
       storage.write(key: "email", value: "");
       storage.write(key: "nickname", value: "");
