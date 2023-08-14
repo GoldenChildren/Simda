@@ -102,6 +102,7 @@ flutter:
   assets:
     - assets/
     - assets/images/flower0.png
+    - assets/images/google_login.png
     - assets/images/flower1.png
     - assets/images/flower2.png
     - assets/images/flower3.png

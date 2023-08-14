@@ -44,17 +44,18 @@ class UserProviders {
 
   // 닉네임 체크
   Future<bool> checkNickname(String nickname) async{
-    final response = await dio.get('$url/check');
+      final response = await dio.get('$url/check');
 
-    print('닉네임 중복? : $response');
-
-    return response.data;
+      print('닉네임 중복? : $response');
+      return true;
   }
   // 유저 체크
   Future<int> checkUser(String email) async{
     storage.write(key: "email", value: email);
     try{
       final response = await dio.get('$url/email?email=$email');
+      print(response.data);
+      saveStorage(response.data);
       return 1;
     }catch (Exception) {
       return -1;
