@@ -22,7 +22,8 @@ class _SignUpState extends State<SignUp> {
   TextEditingController(); // 닉네임 입력 값을 저장하는 컨트롤러를 생성
   final _picker = ImagePicker();
   XFile? _profileImage;
-  String _nicknameAvailability = ""; //
+  bool _nicknameAvailability = true; //
+  String isAvailable = "";
   UserProviders userProvider = UserProviders();
   bool _showProfileImageHint = false;
 
@@ -60,26 +61,26 @@ class _SignUpState extends State<SignUp> {
 
 
 // 닉네임 체크
-  Future<void> _checkNicknameAvailability(String nickname) async {
-    if (nicknameController.text.isNotEmpty) {
-      try {
-        var result = (await userProvider.checkNickname(nicknameController.text)) as String;
-        setState(() {
-          _nicknameAvailability =
-              result; // 변경: _isNicknameAvailable -> _nicknameAvailability
-        });
-      } catch (error) {
-        setState(() {
-          _nicknameAvailability = "fail";
-        });
-      }
-    } else {
-      setState(() {
-        _nicknameAvailability = "";
-      });
-    }
-  }
-
+ Future<void> _checkNicknameAvailability(String nickname) async {
+    nickname = nicknameController.text;
+   try {
+     isAvailable = (await userProvider.checkNickname(nickname)) as String;
+ 
+     if (isAvailable == "success") {
+       setState(() {
+         _nicknameAvailability = true;
+       });
+     } else {
+       setState(() {
+         _nicknameAvailability = false;
+       });
+     }
+   } catch (error) {
+     setState(() {
+       _nicknameAvailability = false;
+     });
+   }
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +130,7 @@ class _SignUpState extends State<SignUp> {
                     },
                   ),
                   if (_showProfileImageHint && _profileImage == null)
-                    Text(
+                    const Text(
                       '프로필 이미지를 선택해주세요',
                       style: TextStyle(
                         color: Colors.red,
@@ -154,20 +155,24 @@ class _SignUpState extends State<SignUp> {
                       if (nicknameController.text.isNotEmpty) {
                         await _checkNicknameAvailability(
                             nicknameController.text);
+                      } else {
+                        setState(() {
+                          _nicknameAvailability = true;
+                        });
                       }
                     },
                     child: Text("닉네임 중복 확인"),
                   ),
                   Text(
-                    _nicknameAvailability == "success"
-                        ? "사용 가능한 닉네임입니다."
-                        : _nicknameAvailability ==
-                        "fail" // 변경: "error" -> "fail"
+                     _nicknameAvailability == true
+                      ? "사용 가능한 닉네임입니다."
+                      : _nicknameAvailability == false
                         ? "이미 사용 중인 닉네임입니다."
                         : "",
+
                     style: TextStyle(
                         color:
-                        _nicknameAvailability == "success"
+                        _nicknameAvailability
                             ? Colors.green
                             : Colors.red),
                   ),
@@ -222,11 +227,11 @@ class _SignUpState extends State<SignUp> {
       cursorColor: Colors.black45,
       decoration: InputDecoration(
         hintText: hintText,
-        helperText: !_nicknameAvailability.isEmpty
-            ? _nicknameAvailability == "fail"
-            ? '이미 사용 중인 닉네임입니다.'
-            : null
-            : null,
+        // helperText: !_nicknameAvailability.isEmpty
+        //     ? _nicknameAvailability == false;
+        //     ? '이미 사용 중인 닉네임입니다.'
+        //     : null
+        //     : null,
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
@@ -253,7 +258,7 @@ class _SignUpState extends State<SignUp> {
       },
       onChanged: (value) {
         setState(() {
-          _nicknameAvailability = ""; // 닉네임이 변경되면 다시 확인 가능하도록
+          _nicknameAvailability = true; // 닉네임이 변경되면 다시 확인 가능하도록
         });
       },
     );
