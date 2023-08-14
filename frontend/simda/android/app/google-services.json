@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "783723398229-dlc5d2ttmhq5lq489e3gniit86500ejn.apps.googleusercontent.com",
+          "client_id": "783723398229-d0e4df4rldtqqc1h5bftfd24c6frqi3l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.simda.simda",
+            "certificate_hash": "5d2e4f878d5a66c77016dc60481b4157e1d9c62e"
+          }
+        },
+        {
+          "client_id": "783723398229-p7olnmpv364gla4rfipinvlm9r9qpsm1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

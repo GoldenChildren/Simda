@@ -7,21 +7,23 @@ import 'main.dart';
 import 'models/CommentDto.dart';
 import 'models/UserDto.dart';
 
-class ProfileFeedPage extends StatefulWidget {
-  const ProfileFeedPage({Key? key}) : super(key: key);
+class FriendProfileFeedPage extends StatefulWidget {
+  final int userId;
+
+  const FriendProfileFeedPage(this.userId, {Key? key}) : super(key: key);
 
   @override
-  State<ProfileFeedPage> createState() => _ProfileFeedState();
+  State<StatefulWidget> createState() => _FriendProfileFeedState();
 }
 
-class _ProfileFeedState extends State<ProfileFeedPage> {
+class _FriendProfileFeedState extends State<FriendProfileFeedPage> {
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
-            Expanded(child: ListViewBuilder()),
+            Expanded(child: ListViewBuilder(widget.userId)),
           ],
         ),
       ),
@@ -30,14 +32,17 @@ class _ProfileFeedState extends State<ProfileFeedPage> {
 }
 
 class ListViewBuilder extends StatefulWidget {
-  const ListViewBuilder({super.key});
+  final int userId;
+
+  const ListViewBuilder(this.userId, {super.key});
 
   @override
-  State<ListViewBuilder> createState() => _ListViewBuilderState();
+  State<ListViewBuilder> createState() => ListViewBuilderState();
 }
 
-class _ListViewBuilderState extends State<ListViewBuilder> {
-  int _userId = 0;
+class ListViewBuilderState extends State<ListViewBuilder> {
+  int _userId = 0; // 친구 아이디
+  int _loginUserId = 0;
   UserProviders userProvider = UserProviders();
 
   List<FeedDto> feed = [];
@@ -53,7 +58,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   Future initFeed() async {
     feed = await feedProvider.getUserFeedList(_userId);
     setState(() {
-      isVisible = List.generate(feed.length, (reversedIndex) => false);
+      isVisible = List.generate(feed.length, (reversedIndex) => true);
     });
   }
 
@@ -81,7 +86,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   @override
   void initState() {
     super.initState();
-    _userId = 0;
+    _userId = widget.userId;
     getValueFromSecureStorage();
   }
 
@@ -95,7 +100,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
           userId: int.parse((await storage.read(key: 'userId'))!),
           userRole: int.parse((await storage.read(key: 'userRole'))!));
       setState(() {
-        _userId = storeUserId;
+        _loginUserId = storeUserId;
         _loginUser = temp;
       });
       initFeed();
@@ -225,7 +230,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         onPressed: () => {
                           setState(() {
                             isVisible[reversedIndex] =
-                                !isVisible[reversedIndex];
+                            !isVisible[reversedIndex];
                             if (!isVisible[reversedIndex]) {
                               _cur[0] = reversedIndex;
                               _cur[1] = -1;
@@ -256,7 +261,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                               children: [
                                 Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Column(
                                         children: [
@@ -278,7 +283,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         flex: 1,
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Row(
                                               children: [
@@ -290,7 +295,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                   style: const TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.bold),
+                                                      FontWeight.bold),
                                                 ),
                                                 const SizedBox(width: 10),
                                                 Text(
@@ -301,7 +306,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                     style: const TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
-                                                          FontWeight.bold,
+                                                      FontWeight.bold,
                                                       color: Colors.black45,
                                                     )),
                                               ],
@@ -312,14 +317,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                   .comments![i]
                                                   .content,
                                               style:
-                                                  const TextStyle(fontSize: 14),
+                                              const TextStyle(fontSize: 14),
                                             ),
                                             const SizedBox(width: 20),
                                             TextButton(
                                               onPressed: () => {
                                                 setState(() {
                                                   if (_cur[0] ==
-                                                          reversedIndex &&
+                                                      reversedIndex &&
                                                       _cur[1] == i) {
                                                     _cur[0] = -1;
                                                     _cur[1] = -1;
@@ -333,8 +338,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                 minimumSize: Size.zero,
                                                 padding: EdgeInsets.zero,
                                                 tapTargetSize:
-                                                    MaterialTapTargetSize
-                                                        .shrinkWrap,
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
                                               ),
                                               child: const Text(
                                                 '답글 달기',
@@ -347,28 +352,28 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                             ListView.builder(
                                                 shrinkWrap: true,
                                                 physics:
-                                                    const NeverScrollableScrollPhysics(),
+                                                const NeverScrollableScrollPhysics(),
                                                 itemCount: feed[reversedIndex]
-                                                        .comments![i]
-                                                        .cCommentList
-                                                        ?.length ??
+                                                    .comments![i]
+                                                    .cCommentList
+                                                    ?.length ??
                                                     0,
                                                 itemBuilder: (context, j) {
                                                   return Column(children: [
                                                     Row(
                                                       crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      CrossAxisAlignment
+                                                          .start,
                                                       children: [
                                                         CircleAvatar(
                                                           backgroundImage:
-                                                              NetworkImage(feed[
-                                                                      reversedIndex]
-                                                                  .comments![i]
-                                                                  .cCommentList![
-                                                                      j]
-                                                                  .userDto
-                                                                  .profileImg),
+                                                          NetworkImage(feed[
+                                                          reversedIndex]
+                                                              .comments![i]
+                                                              .cCommentList![
+                                                          j]
+                                                              .userDto
+                                                              .profileImg),
                                                           radius: 25,
                                                         ),
                                                         const SizedBox(
@@ -377,41 +382,41 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                           flex: 1,
                                                           child: Column(
                                                             crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                            CrossAxisAlignment
+                                                                .start,
                                                             children: [
                                                               Row(
                                                                 children: [
                                                                   Text(
                                                                     feed[reversedIndex]
                                                                         .comments![
-                                                                            i]
+                                                                    i]
                                                                         .cCommentList![
-                                                                            j]
+                                                                    j]
                                                                         .userDto
                                                                         .nickname,
                                                                     style: const TextStyle(
                                                                         fontSize:
-                                                                            14,
+                                                                        14,
                                                                         fontWeight:
-                                                                            FontWeight.bold),
+                                                                        FontWeight.bold),
                                                                   ),
                                                                   const SizedBox(
                                                                       width:
-                                                                          10),
+                                                                      10),
                                                                   Text(
                                                                       formatDate(feed[reversedIndex]
                                                                           .comments![
-                                                                              i]
+                                                                      i]
                                                                           .cCommentList![
-                                                                              j]
+                                                                      j]
                                                                           .regTime),
                                                                       style:
-                                                                          const TextStyle(
+                                                                      const TextStyle(
                                                                         fontSize:
-                                                                            12,
+                                                                        12,
                                                                         fontWeight:
-                                                                            FontWeight.bold,
+                                                                        FontWeight.bold,
                                                                         color: Colors
                                                                             .black45,
                                                                       ))
@@ -421,14 +426,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                                 // '응 좋아 좋아',
                                                                 feed[reversedIndex]
                                                                     .comments![
-                                                                        i]
+                                                                i]
                                                                     .cCommentList![
-                                                                        j]
+                                                                j]
                                                                     .content,
                                                                 style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            14),
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                    14),
                                                               ),
                                                               const SizedBox(
                                                                   height: 10),
@@ -450,7 +455,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       _cur[1] == i,
                                   child: Container(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                    const EdgeInsets.fromLTRB(0, 0, 0, 10),
                                     child: TextField(
                                       maxLines: null,
                                       style: const TextStyle(fontSize: 14.0),
@@ -458,45 +463,45 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                       cursorWidth: 1.0,
                                       decoration: InputDecoration(
                                         contentPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                10, 0, 10, 0),
+                                        const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 0),
                                         suffixIcon: IconButton(
                                             icon: const Icon(Icons.send),
                                             color: Colors.black54,
                                             onPressed: () async {
                                               if (_commentContent.isNotEmpty) {
                                                 CommentDto commentDto =
-                                                    CommentDto(
-                                                        cCommentList: [],
-                                                        cmtId: 0,
-                                                        content:
-                                                            _commentContent,
-                                                        feedId:
-                                                            feed[reversedIndex]
-                                                                .feedId,
-                                                        pcmtId:
-                                                            feed[reversedIndex]
-                                                                .comments![i]
-                                                                .cmtId,
-                                                        regTime: '',
-                                                        userDto: _loginUser!);
+                                                CommentDto(
+                                                    cCommentList: [],
+                                                    cmtId: 0,
+                                                    content:
+                                                    _commentContent,
+                                                    feedId:
+                                                    feed[reversedIndex]
+                                                        .feedId,
+                                                    pcmtId:
+                                                    feed[reversedIndex]
+                                                        .comments![i]
+                                                        .cmtId,
+                                                    regTime: '',
+                                                    userDto: _loginUser!);
                                                 commentProviders
                                                     .postComment(commentDto);
                                                 await initFeed();
                                               }
                                             }),
                                         hintText:
-                                            '${feed[reversedIndex].comments![i].userDto.nickname}에게 답글 다는 중',
+                                        '${feed[reversedIndex].comments![i].userDto.nickname}에게 답글 다는 중',
                                         enabledBorder: const OutlineInputBorder(
                                             borderSide: BorderSide(
-                                          color: Colors.black12,
-                                          width: 0.0,
-                                        )),
+                                              color: Colors.black12,
+                                              width: 0.0,
+                                            )),
                                         focusedBorder: const OutlineInputBorder(
                                             borderSide: BorderSide(
-                                          color: Colors.black12,
-                                          width: 0.0,
-                                        )),
+                                              color: Colors.black12,
+                                              width: 0.0,
+                                            )),
                                         filled: true,
                                         fillColor: Colors.black12,
                                       ),
@@ -542,14 +547,14 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                         hintText: '${_loginUser?.nickname ?? ''}(으)로 댓글 달기...',
                         enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
-                          color: Colors.black12,
-                          width: 0.0,
-                        )),
+                              color: Colors.black12,
+                              width: 0.0,
+                            )),
                         focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(
-                          color: Colors.black12,
-                          width: 0.0,
-                        )),
+                              color: Colors.black12,
+                              width: 0.0,
+                            )),
                         filled: true,
                         fillColor: Colors.black12,
                       ),

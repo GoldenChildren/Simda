@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -34,10 +33,11 @@ class _MapPageState extends State<MapPage> {
   FeedProviders feedProvider = FeedProviders();
 
   Future initFeed() async {
+    // print("37번 실행 : initFeed");
     var gps = await getCurrentLocation();
     feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
-    print("feed 개수: ${feed.length}개 입니다");
-    print("첫번째 피드 작성자: ${feed[0].nickname}");
+    // print("feed 개수: ${feed.length}개 입니다");
+    // print("첫번째 피드 작성자: ${feed[0].nickname}");
     setState(() {
       // isVisible = List.generate(feed.length, (index) => true);
       // writeComment = List.generate(feed.length, (index) => true);
@@ -60,7 +60,8 @@ class _MapPageState extends State<MapPage> {
 
   // 예시데이터를 파싱해온 list를  item리스트에 담는 메서드
   void _addMarkers() {
-    print("마커를 추가해보겠습니다. ${feed.length}");
+    // print("63번 실행 : addMarkers");
+    // print("마커를 추가해보겠습니다. ${feed.length}");
     for (int i = 0; i < feed.length; i++) {
       items.add(Place(
         feedId: feed[i].feedId,
@@ -74,14 +75,23 @@ class _MapPageState extends State<MapPage> {
   //State초기화메서드
   @override
   void initState() {
-    print("init state");
+    // print("79번 실행 : init state");
     super.initState();
     _getUserLocation();
-    initFeed();
+    _manager =
+        _initClusterManager(); // _initClusterManager()를 호출하여 초기화 >> 여기로 이동시켜줬음
+    _addMarkersAndInitializeClusterManager();
+  }
+
+  void _addMarkersAndInitializeClusterManager() async {
+    await initFeed();
+    _addMarkers();
+    // _manager = _initClusterManager(); // _initClusterManager()를 호출하여 초기화 >> 여기서 하면 initialize 오류가 생기는듯
   }
 
   //클러스터 매니저 초기화 메서드
   ClusterManager _initClusterManager() {
+    // print("87번 실행 : initClusterMananger");
     //ClusterManger<지도의 표시할 객체의 형> ("지도의 표시할 형의 리스트","지도에 있는 메서드를
     return ClusterManager<Place>(items, _updateMarkers,
         markerBuilder: _markerBuilder);
@@ -89,19 +99,24 @@ class _MapPageState extends State<MapPage> {
 
 // 마커 업데이트 메서드
   void _updateMarkers(Set<Marker> markers) {
-    print('Updated ${markers.length} markers');
+    // print("95번 실행 : updateMarkers");
+    // print('Updated ${markers.length} markers');
     setState(() {
       if (mounted) {
         this.markers = markers;
+        // print(markers);
       }
     });
   }
 
-  LatLng currentPosition = const LatLng(37.5013068, 127.0396597);
+  LatLng currentPosition = const LatLng(37.5013068, 127.0396597); // 이게 역삼인가?
 
   void _getUserLocation() async {
+    // print("107번 실행 : getUserLocation");
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+    // print("lat : ${position.latitude}");
+    // print("long : ${position.longitude}");
     setState(() {
       currentPosition = LatLng(position.latitude, position.longitude);
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
@@ -112,7 +127,8 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<Position> getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
+    // print("122번 실행 : getCurrentLocation");
+    // LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     return position;
@@ -121,6 +137,7 @@ class _MapPageState extends State<MapPage> {
   //마커를 만드는 메서드
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
       (cluster) async {
+        // print("132번 실행 : markerBuilder");
         int emotion = 0;
         if (cluster.isMultiple) {
           List checklist = [0, 0, 0, 0, 0];
@@ -144,7 +161,15 @@ class _MapPageState extends State<MapPage> {
           position: cluster.location,
           onTap: () {
             print('---- $cluster');
-            cluster.items.forEach((p) => print(p.emotion));
+            List<FeedDto> clickFeedList = [];
+            cluster.items.forEach((p) {
+              // 눌렀을 때 나오는 id와 주변 feedId를 비교하여, 일치하는 것만 list를 생성해 담아준다
+              for(int i = 0; i < feed.length; i++) {
+                if(p.feedId == feed[i].feedId) {
+                  clickFeedList.add(feed[i]);
+                }
+              }
+            });
             mapController?.animateCamera(CameraUpdate.newCameraPosition(
               CameraPosition(
                   target: LatLng(cluster.location.latitude - 0.002,
@@ -156,410 +181,52 @@ class _MapPageState extends State<MapPage> {
               isScrollControlled: true,
               useSafeArea: true,
               builder: (context) {
-                return StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                  return DraggableScrollableSheet(
-                    expand: false,
-                    initialChildSize: 0.75,
-                    minChildSize: 0.3,
-                    builder: (context, ScrollController scrollController) =>
-                        Container(
-                      color: Colors.white,
+                return DraggableScrollableSheet(
+                  expand: false,
+                  initialChildSize: 0.75,
+                  minChildSize: 0.3,
+                  builder: (context, scrollController) {
+                    return ListView(
+                      controller: scrollController,
                       padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom,
                       ),
-                      child: ListView(children: <Widget>[
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      '피드 보기',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      icon: const Icon(Icons.close),
-                                      iconSize: 28,
-                                    ),
-                                  ],
+                              const Text(
+                                '피드 보기',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Container(
-                                  height: 2,
-                                  margin:
-                                      const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                  color: Colors.purple),
-                              Container(
-                                color: Colors.white,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20, 10, 20, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    '제목입니다~',
-                                                    textAlign: TextAlign.left,
-                                                    style:
-                                                        TextStyle(fontSize: 20),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 5),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    '김짱구',
-                                                    style:
-                                                        TextStyle(fontSize: 10),
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Text(
-                                                    '2023년 7월 21일 15:54',
-                                                    style: TextStyle(
-                                                        fontSize: 10,
-                                                        color: Colors.black45),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(likes.toString(),
-                                                  style: const TextStyle(
-                                                      fontSize: 20)),
-                                              const SizedBox(width: 5),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    likes++;
-                                                  });
-                                                },
-                                                child: const Image(
-                                                    image: AssetImage(
-                                                        'assets/images/flower2.png'),
-                                                    height: 30),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          20, 0, 20, 0),
-                                      alignment: Alignment.center,
-                                      child: const Image(
-                                          image: AssetImage(
-                                              'assets/images/think.png')),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(width: 20),
-                                        Expanded(
-                                          child: Text(
-                                            '이곳에 글의 내용이 들어갈 예정입니다. 글이 길어지면 어떻게 되는지 보기 위해 긴 글을 작성하고 있습니다. 이 곳은 글이 들어갈 자리입니다.',
-                                            style: TextStyle(height: 1.5),
-                                          ),
-                                        ),
-                                        SizedBox(width: 20),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(width: 20),
-                                        Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              20, 0, 20, 0),
-                                          child: TextButton(
-                                            onPressed: () => {
-                                              setState(() {
-                                                isVisible = !isVisible;
-                                              })
-                                            },
-                                            style: TextButton.styleFrom(
-                                              minimumSize: Size.zero,
-                                              padding: const EdgeInsets.all(0),
-                                            ),
-                                            child: Text(
-                                                isVisible
-                                                    ? "댓글 2개 닫기"
-                                                    : "댓글 2개 보기",
-                                                style: const TextStyle(
-                                                    color: Colors.black45)),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: isVisible,
-                                          child: Container(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20, 0, 20, 0),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      const Column(
-                                                        children: [
-                                                          CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    'assets/images/yuri.jpg'),
-                                                            radius: 25,
-                                                          ),
-                                                          SizedBox(
-                                                            height: 20,
-                                                          )
-                                                        ],
-                                                      ),
-                                                      const SizedBox(width: 10),
-                                                      Flexible(
-                                                        flex: 1,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            const Row(
-                                                              children: [
-                                                                Text(
-                                                                  '유리',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                                SizedBox(
-                                                                    width: 10),
-                                                                Text('10시간 전',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black45,
-                                                                    )),
-                                                              ],
-                                                            ),
-                                                            const Text(
-                                                              // '짱구가 기분이 좋구나',
-                                                              '짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나 짱구가 기분이 좋구나',
-                                                              style: TextStyle(
-                                                                  fontSize: 14),
-                                                            ),
-                                                            const SizedBox(
-                                                                width: 20),
-                                                            TextButton(
-                                                              onPressed: () => {
-                                                                setState(() {
-                                                                  writeComment =
-                                                                      !writeComment;
-                                                                })
-                                                              },
-                                                              style: TextButton
-                                                                  .styleFrom(
-                                                                minimumSize:
-                                                                    Size.zero,
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                tapTargetSize:
-                                                                    MaterialTapTargetSize
-                                                                        .shrinkWrap,
-                                                              ),
-                                                              child: const Text(
-                                                                '답글 달기',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color: Colors
-                                                                        .black45),
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 10),
-                                                            const Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                CircleAvatar(
-                                                                  backgroundImage:
-                                                                      AssetImage(
-                                                                          'assets/images/shin.jpg'),
-                                                                  radius: 25,
-                                                                ),
-                                                                SizedBox(
-                                                                    width: 10),
-                                                                Flexible(
-                                                                  flex: 1,
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            '김짱구',
-                                                                            style:
-                                                                                TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          SizedBox(
-                                                                              width: 10),
-                                                                          Text(
-                                                                              '9시간 전',
-                                                                              style: TextStyle(
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black45,
-                                                                              ))
-                                                                        ],
-                                                                      ),
-                                                                      Text(
-                                                                        // '응 좋아 좋아',
-                                                                        '짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱! 짱구 기분 짱!',
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                14),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          height:
-                                                                              10),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 10),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ]),
-                                                Visibility(
-                                                  visible: writeComment,
-                                                  child: const TextField(
-                                                    style: TextStyle(
-                                                        fontSize: 14.0),
-                                                    cursorColor: Colors.black12,
-                                                    cursorWidth: 1.0,
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          EdgeInsets.fromLTRB(
-                                                              10, 0, 10, 0),
-                                                      suffixIcon: Icon(
-                                                          Icons.send,
-                                                          color:
-                                                              Colors.black54),
-                                                      prefixText: '@유리 ',
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      filled: true,
-                                                      fillColor: Colors.black12,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Visibility(
-                                                  visible: !writeComment,
-                                                  child: TextField(
-                                                    style: const TextStyle(
-                                                        fontSize: 14.0),
-                                                    cursorColor: Colors.black12,
-                                                    cursorWidth: 1.0,
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          const EdgeInsets
-                                                                  .fromLTRB(
-                                                              10, 0, 10, 0),
-                                                      suffixIcon: IconButton(
-                                                          icon: const Icon(
-                                                              Icons.send),
-                                                          color: Colors.black54,
-                                                          onPressed: () {}),
-                                                      hintText:
-                                                          '신짱구(으)로 댓글 달기...',
-                                                      enabledBorder:
-                                                          const OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      focusedBorder:
-                                                          const OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                        color: Colors.black12,
-                                                        width: 0.0,
-                                                      )),
-                                                      filled: true,
-                                                      fillColor: Colors.black12,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
-                                  ],
-                                ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.close),
+                                iconSize: 28,
                               ),
-                            ]),
-                      ]),
-                    ),
-                  );
-                });
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 2,
+                          margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                          color: Colors.purple,
+                        ),
+                        // Add the rest of your content here
+                        for (var item in clickFeedList) ...[
+                          buildFeedItem(item),
+                        ],
+                      ],
+                    );
+                  },
+                );
               },
             );
           },
@@ -569,9 +236,123 @@ class _MapPageState extends State<MapPage> {
         );
       };
 
+  // 게시글 위젯
+  Widget buildFeedItem(FeedDto feedItem) {
+    // Customize this function to build each feed item
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      width: MediaQuery.of(context).size.width,
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width / 100 * 73,
+                      padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              feedItem.title,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        Text(
+                          feedItem.nickname,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          feedItem.regDate,
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.black45),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                        feedItem.likeCnt > 99
+                            ? "99+"
+                            : feedItem.likeCnt.toString(),
+                        style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 5),
+                    GestureDetector(
+                      onTap: () {
+                        FeedDto feedDto = FeedDto(
+                            content: feedItem.content,
+                            emotion: feedItem.emotion,
+                            feedId: feedItem.feedId,
+                            img: feedItem.img,
+                            lat: feedItem.lat,
+                            likeCnt: feedItem.likeCnt + 1,
+                            lng: feedItem.lng,
+                            nickname: feedItem.nickname,
+                            regDate: feedItem.regDate,
+                            title: feedItem.title,
+                            userId: feedItem.userId);
+                        feedProvider.addLikes(feedDto);
+                        setState(() {
+                          feedItem.likeCnt++;
+                        });
+                      },
+                      child: Image(
+                          image: AssetImage(
+                              'assets/images/flower${feedItem.emotion}.png'),
+                          height: 30),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 15),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+            alignment: Alignment.center,
+            child: Image(image: NetworkImage(feedItem.img)),
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width: 20),
+              Expanded(
+                child: Text(
+                  feedItem.content,
+                  style: const TextStyle(height: 1.5),
+                ),
+              ),
+              const SizedBox(width: 20),
+            ],
+          ),
+          const SizedBox(height: 15),
+        ],
+      ),
+    );
+  }
+
   //이미지를 불러와 우리가 원하는 비트맵으롭 변환
   Future<BitmapDescriptor> _getMarkerBitmapFromAsset(int emotion, int size,
       {String? text}) async {
+    // print("584번 실행 : getMarkerBit뭐시기");
     late String assetPath;
     switch (emotion) {
       //행복
@@ -661,20 +442,38 @@ class _MapPageState extends State<MapPage> {
     return BitmapDescriptor.fromBytes(bytes);
   }
 
+  void _saveCurrentMapCenter() async {
+    if (mapController != null) {
+      LatLng mapCenter = await mapController!.getLatLng(
+        ScreenCoordinate(
+          x: MediaQuery.of(context).size.width ~/ 2,
+          y: MediaQuery.of(context).size.height ~/ 2,
+        ),
+      );
+
+      // Feed새로 불러오기
+      reloadFeeds(mapCenter);
+      // 여기서 mapCenter의 위도와 경도를 저장하면 됩니다.
+      print("Saved Latitude: ${mapCenter.latitude}");
+      print("Saved Longitude: ${mapCenter.longitude}");
+    }
+  }
+
+  Future<void> reloadFeeds(LatLng newMapCenter) async {
+    markers.clear();
+    items = [];
+    feed.clear(); // 기존 피드 데이터를 지웁니다
+    var reloadedFeeds = await feedProvider.getFeed(newMapCenter.latitude, newMapCenter.longitude);
+    setState(() {
+      feed = reloadedFeeds;
+    });
+    _addMarkers();
+    _manager.setItems(items); // 클러스터 매니저에 아이템을 업데이트합니다.
+    _manager.updateMap(); // 지도를 업데이트합니다.
+  }
+
   @override
   Widget build(BuildContext context) {
-    // var gps = getCurrentLocation();
-    //
-    // //지도의 초기 위치를 담아줄 CameraPosition
-    // CameraPosition startCameraPosition =
-    // CameraPosition(target: LatLng(gps.latitude, gps.longitude), zoom: 17.0);
-
-    items = [];
-    _addMarkers();
-    print("marker 개수: ${items.length}");
-
-    _manager = _initClusterManager();
-
     return SafeArea(
       child: Stack(alignment: AlignmentDirectional.bottomEnd, children: [
         GoogleMap(
@@ -716,6 +515,14 @@ class _MapPageState extends State<MapPage> {
                   Icons.my_location,
                   color: Colors.black87,
                 ),
+              ),
+            ),
+            Container(
+              child: ElevatedButton(
+                onPressed: () {
+                  _saveCurrentMapCenter();
+                },
+                child: Text('현재 위치에서 검색'),
               ),
             ),
             Container(

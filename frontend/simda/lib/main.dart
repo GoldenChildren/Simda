@@ -7,6 +7,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:simda/KakaoLogin/main_view_model.dart';
 import 'package:simda/KakaoLogin/kakao_login.dart';
 import 'package:simda/KakaoLogin/login_page.dart';
+import 'package:simda/Session.dart';
 import 'package:simda/main_page.dart';
 
 // 달력 한국 시각
@@ -18,21 +19,27 @@ Future<void> main() async {
   KakaoSdk.init(
     nativeAppKey: '57f9375c3d4e8452f5facd24db42ff6b',
   );
-
   // 달력 한국 시각
+
   await initializeDateFormatting();
+  isLogin = await session.checkAccessTokenValidity();
 
   final GoogleMapsFlutterPlatform mapsImplementation =
       GoogleMapsFlutterPlatform.instance;
   if (mapsImplementation is GoogleMapsFlutterAndroid) {
     mapsImplementation.useAndroidViewSurface = true;
   }
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
+    theme: ThemeData(
+      scaffoldBackgroundColor: Colors.white,
+    ),
       debugShowCheckedModeBanner: false,
-      home: MyApp()));
+      home: const MyApp()));
 }
 
 bool isVisible = true;
+bool isLogin = false;
+final Session session = Session();
 const storage = FlutterSecureStorage();
 final viewModel = MainViewModel(KakaoLogin());
 
@@ -52,7 +59,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           canvasColor: Colors.transparent,
         ),
-        home: viewModel.isLoggedIn == 1 ? MainPage(0) : const LoginPage(),
+        home: isLogin ? MainPage(0) : const LoginPage(),
         // home:  MainPage(0),
       ),
     );
