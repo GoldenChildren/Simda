@@ -12,11 +12,6 @@ import 'package:simda/write_page.dart';
 
 import 'models/FeedDto.dart';
 
-// 예시데이터
-// String data =
-//     '[{"feedId": 1,"userDTO": {"userId": 1,"userNick": "qudcks"},"emotion": 1,"lat": 37.5013068,"lng": 127.0396597},{"feedId": 2,"userDTO": {"userId": 1,"userNick": "qudcks"},"emotion": 1,"lat": 37.499154,"lng": 127.039028},{"feedId": 3,"userDTO": {"userId": 1,"userNick": "qudcks"},"emotion": 3,"lat": 37.503365,"lng": 127.039593},{"feedId": 4,"userDTO": {"userId": 1,"userNick": "qudcks"},"emotion": 4,"lat": 37.501170,"lng": 127.045211},{"feedId": 5,"userDTO": {"userId": 1,"userNick": "qudcks"},"emotion": 0,"lat": 37.501887,"lng": 127.037786}]';
-// List list = jsonDecode(data);
-
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
 
@@ -160,7 +155,7 @@ class _MapPageState extends State<MapPage> {
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
           onTap: () {
-            print('---- $cluster');
+            // print('---- $cluster');
             List<FeedDto> clickFeedList = [];
             cluster.items.forEach((p) {
               // 눌렀을 때 나오는 id와 주변 feedId를 비교하여, 일치하는 것만 list를 생성해 담아준다
