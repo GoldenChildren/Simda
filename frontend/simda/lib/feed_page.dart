@@ -181,463 +181,480 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
               ],
             ),
           )
-        // ? const Center(child: Text('게시물이 없습니다.'))
-        : ListView.separated(
-            itemCount: feed.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+        : size == 0
+            ? const Center(child: Text('게시물이 없습니다.'))
+            : ListView.separated(
+                itemCount: feed.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    color: Colors.white,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width /
-                                    100 *
-                                    73,
-                                padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                child: Expanded(
-                                  child: Text(
-                                    feed[index].title,
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(fontSize: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width /
+                                        100 *
+                                        73,
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                    child: Expanded(
+                                      child: Text(
+                                        feed[index].title,
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        feed[index].nickname,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        feed[index].regDate,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.black45),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 5),
                               Row(
                                 children: [
                                   Text(
-                                    feed[index].nickname,
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    feed[index].regDate,
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.black45),
+                                      feed[index].likeCnt > 99
+                                          ? "99+"
+                                          : feed[index].likeCnt.toString(),
+                                      style: const TextStyle(fontSize: 20)),
+                                  const SizedBox(width: 5),
+                                  GestureDetector(
+                                    onTap: () {
+                                      FeedDto feedDto = FeedDto(
+                                          content: feed[index].content,
+                                          emotion: feed[index].emotion,
+                                          feedId: feed[index].feedId,
+                                          img: feed[index].img,
+                                          lat: feed[index].lat,
+                                          likeCnt: feed[index].likeCnt + 1,
+                                          lng: feed[index].lng,
+                                          nickname: feed[index].nickname,
+                                          regDate: feed[index].regDate,
+                                          title: feed[index].title,
+                                          userId: feed[index].userId);
+                                      feedProvider.addLikes(feedDto);
+                                      setState(() {
+                                        feed[index].likeCnt++;
+                                      });
+                                    },
+                                    child: Image(
+                                        image: AssetImage(
+                                            'assets/images/flower${feed[index].emotion}.png'),
+                                        height: 30),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                  feed[index].likeCnt > 99
-                                      ? "99+"
-                                      : feed[index].likeCnt.toString(),
-                                  style: const TextStyle(fontSize: 20)),
-                              const SizedBox(width: 5),
-                              GestureDetector(
-                                onTap: () {
-                                  FeedDto feedDto = FeedDto(
-                                      content: feed[index].content,
-                                      emotion: feed[index].emotion,
-                                      feedId: feed[index].feedId,
-                                      img: feed[index].img,
-                                      lat: feed[index].lat,
-                                      likeCnt: feed[index].likeCnt + 1,
-                                      lng: feed[index].lng,
-                                      nickname: feed[index].nickname,
-                                      regDate: feed[index].regDate,
-                                      title: feed[index].title,
-                                      userId: feed[index].userId);
-                                  feedProvider.addLikes(feedDto);
-                                  setState(() {
-                                    feed[index].likeCnt++;
-                                  });
-                                },
-                                child: Image(
-                                    image: AssetImage(
-                                        'assets/images/flower${feed[index].emotion}.png'),
-                                    height: 30),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                      alignment: Alignment.center,
-                      child: Image(image: NetworkImage(feed[index].img)),
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(width: 20),
-                        Expanded(
-                          child: Text(
-                            feed[index].content,
-                            style: const TextStyle(height: 1.5),
-                          ),
                         ),
-                        const SizedBox(width: 20),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(width: 20),
+                        const SizedBox(height: 15),
                         Container(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: TextButton(
-                            onPressed: () => {
-                              setState(() {
-                                isVisible[index] = !isVisible[index];
-                                if (isVisible[index]) {
-                                  _cur[0] = index;
-                                  _cur[1] = -1;
-                                }
-                              })
-                            },
-                            style: TextButton.styleFrom(
-                              minimumSize: Size.zero,
-                              padding: const EdgeInsets.all(0),
-                            ),
-                            child: Text(
-                                isVisible[index]
-                                    ? "댓글 ${feed[index].comments?.length ?? 0}개 닫기"
-                                    : "댓글 ${feed[index].comments?.length ?? 0}개 보기",
-                                style: const TextStyle(color: Colors.black45)),
-                          ),
+                          alignment: Alignment.center,
+                          child: Image(image: NetworkImage(feed[index].img)),
                         ),
-                        Visibility(
-                          visible: isVisible[index],
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: feed[index].comments?.length ?? 0,
-                                itemBuilder: (context, i) {
-                                  return Column(
-                                    children: [
-                                      Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Column(
+                        const SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Text(
+                                feed[index].content,
+                                style: const TextStyle(height: 1.5),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(width: 20),
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: TextButton(
+                                onPressed: () => {
+                                  setState(() {
+                                    isVisible[index] = !isVisible[index];
+                                    if (isVisible[index]) {
+                                      _cur[0] = index;
+                                      _cur[1] = -1;
+                                    }
+                                  })
+                                },
+                                style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: const EdgeInsets.all(0),
+                                ),
+                                child: Text(
+                                    isVisible[index]
+                                        ? "댓글 ${feed[index].comments?.length ?? 0}개 닫기"
+                                        : "댓글 ${feed[index].comments?.length ?? 0}개 보기",
+                                    style:
+                                        const TextStyle(color: Colors.black45)),
+                              ),
+                            ),
+                            Visibility(
+                              visible: isVisible[index],
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount:
+                                        feed[index].comments?.length ?? 0,
+                                    itemBuilder: (context, i) {
+                                      return Column(
+                                        children: [
+                                          Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                CircleAvatar(
-                                                  backgroundImage: NetworkImage(
-                                                      feed[index]
-                                                          .comments![i]
-                                                          .userDto
-                                                          .profileImg),
-                                                  radius: 25,
+                                                Column(
+                                                  children: [
+                                                    CircleAvatar(
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              feed[index]
+                                                                  .comments![i]
+                                                                  .userDto
+                                                                  .profileImg),
+                                                      radius: 25,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    )
+                                                  ],
                                                 ),
-                                                const SizedBox(
-                                                  height: 20,
-                                                )
-                                              ],
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Flexible(
-                                              flex: 1,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
+                                                const SizedBox(width: 10),
+                                                Flexible(
+                                                  flex: 1,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            feed[index]
+                                                                .comments![i]
+                                                                .userDto
+                                                                .nickname,
+                                                            style: const TextStyle(
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 10),
+                                                          Text(
+                                                              formatDate(feed[
+                                                                      index]
+                                                                  .comments![i]
+                                                                  .regTime),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black45,
+                                                              )),
+                                                        ],
+                                                      ),
                                                       Text(
+                                                        // '짱구가 기분이 좋구나',
                                                         feed[index]
                                                             .comments![i]
-                                                            .userDto
-                                                            .nickname,
+                                                            .content,
                                                         style: const TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                            fontSize: 14),
                                                       ),
-                                                      const SizedBox(width: 10),
-                                                      Text(
-                                                          formatDate(feed[index]
-                                                              .comments![i]
-                                                              .regTime),
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.black45,
-                                                          )),
+                                                      const SizedBox(width: 20),
+                                                      TextButton(
+                                                        onPressed: () => {
+                                                          setState(() {
+                                                            if (_cur[0] ==
+                                                                    index &&
+                                                                _cur[1] == i) {
+                                                              _cur[0] = -1;
+                                                              _cur[1] = -1;
+                                                            } else {
+                                                              _cur[0] = index;
+                                                              _cur[1] = i;
+                                                            }
+                                                          })
+                                                        },
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          minimumSize:
+                                                              Size.zero,
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          tapTargetSize:
+                                                              MaterialTapTargetSize
+                                                                  .shrinkWrap,
+                                                        ),
+                                                        child: const Text(
+                                                          '답글 달기',
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .black45),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 10),
+                                                      // 댓글
+                                                      ListView.builder(
+                                                          shrinkWrap: true,
+                                                          physics:
+                                                              const NeverScrollableScrollPhysics(),
+                                                          itemCount: feed[index]
+                                                                  .comments![i]
+                                                                  .cCommentList
+                                                                  ?.length ??
+                                                              0,
+                                                          itemBuilder:
+                                                              (context, j) {
+                                                            return Column(
+                                                              children: [
+                                                                Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    CircleAvatar(
+                                                                      backgroundImage: NetworkImage(feed[index]
+                                                                          .comments![
+                                                                              i]
+                                                                          .cCommentList![
+                                                                              j]
+                                                                          .userDto
+                                                                          .profileImg),
+                                                                      radius:
+                                                                          25,
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        width:
+                                                                            10),
+                                                                    Flexible(
+                                                                      flex: 1,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Text(
+                                                                                feed[index].comments![i].cCommentList![j].userDto.nickname,
+                                                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              const SizedBox(width: 10),
+                                                                              Text(formatDate(feed[index].comments![i].cCommentList![j].regTime),
+                                                                                  style: const TextStyle(
+                                                                                    fontSize: 12,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: Colors.black45,
+                                                                                  ))
+                                                                            ],
+                                                                          ),
+                                                                          Text(
+                                                                            // '응 좋아 좋아',
+                                                                            feed[index].comments![i].cCommentList![j].content,
+                                                                            style:
+                                                                                const TextStyle(fontSize: 14),
+                                                                          ),
+                                                                          const SizedBox(
+                                                                              height: 10),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 10),
+                                                              ],
+                                                            );
+                                                          }),
+                                                      // 댓글 출력 끝
                                                     ],
                                                   ),
-                                                  Text(
-                                                    // '짱구가 기분이 좋구나',
-                                                    feed[index]
-                                                        .comments![i]
-                                                        .content,
-                                                    style: const TextStyle(
-                                                        fontSize: 14),
-                                                  ),
-                                                  const SizedBox(width: 20),
-                                                  TextButton(
-                                                    onPressed: () => {
-                                                      setState(() {
-                                                        if (_cur[0] == index &&
-                                                            _cur[1] == i) {
-                                                          _cur[0] = -1;
-                                                          _cur[1] = -1;
-                                                        } else {
-                                                          _cur[0] = index;
-                                                          _cur[1] = i;
-                                                        }
-                                                      })
-                                                    },
-                                                    style: TextButton.styleFrom(
-                                                      minimumSize: Size.zero,
-                                                      padding: EdgeInsets.zero,
-                                                      tapTargetSize:
-                                                          MaterialTapTargetSize
-                                                              .shrinkWrap,
-                                                    ),
-                                                    child: const Text(
-                                                      '답글 달기',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Colors.black45),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  // 댓글
-                                                  ListView.builder(
-                                                      shrinkWrap: true,
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      itemCount: feed[index]
-                                                              .comments![i]
-                                                              .cCommentList
-                                                              ?.length ??
-                                                          0,
-                                                      itemBuilder:
-                                                          (context, j) {
-                                                        return Column(
-                                                          children: [
-                                                            Row(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                CircleAvatar(
-                                                                  backgroundImage: NetworkImage(feed[
+                                                ),
+                                              ]),
+                                          Visibility(
+                                            visible: isVisible[index] &&
+                                                _cur[0] == index &&
+                                                _cur[1] == i,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 0, 10),
+                                              child: TextField(
+                                                maxLines: null,
+                                                style: const TextStyle(
+                                                    fontSize: 14.0),
+                                                cursorColor: Colors.black12,
+                                                cursorWidth: 1.0,
+                                                decoration: InputDecoration(
+                                                  contentPadding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          10, 0, 10, 0),
+                                                  suffixIcon: IconButton(
+                                                      icon: const Icon(
+                                                          Icons.send),
+                                                      color: Colors.black54,
+                                                      onPressed: () async {
+                                                        if (_commentContent
+                                                            .isNotEmpty) {
+                                                          CommentDto
+                                                              commentDto =
+                                                              CommentDto(
+                                                                  cCommentList: [],
+                                                                  cmtId: 0,
+                                                                  content:
+                                                                      _commentContent,
+                                                                  feedId: feed[
+                                                                          index]
+                                                                      .feedId,
+                                                                  pcmtId: feed[
                                                                           index]
                                                                       .comments![
                                                                           i]
-                                                                      .cCommentList![
-                                                                          j]
-                                                                      .userDto
-                                                                      .profileImg),
-                                                                  radius: 25,
-                                                                ),
-                                                                const SizedBox(
-                                                                    width: 10),
-                                                                Flexible(
-                                                                  flex: 1,
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Row(
-                                                                        children: [
-                                                                          Text(
-                                                                            feed[index].comments![i].cCommentList![j].userDto.nickname,
-                                                                            style:
-                                                                                const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                                                          ),
-                                                                          const SizedBox(
-                                                                              width: 10),
-                                                                          Text(
-                                                                              formatDate(feed[index].comments![i].cCommentList![j].regTime),
-                                                                              style: const TextStyle(
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.bold,
-                                                                                color: Colors.black45,
-                                                                              ))
-                                                                        ],
-                                                                      ),
-                                                                      Text(
-                                                                        // '응 좋아 좋아',
-                                                                        feed[index]
-                                                                            .comments![i]
-                                                                            .cCommentList![j]
-                                                                            .content,
-                                                                        style: const TextStyle(
-                                                                            fontSize:
-                                                                                14),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                          height:
-                                                                              10),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 10),
-                                                          ],
-                                                        );
+                                                                      .cmtId,
+                                                                  regTime: '',
+                                                                  userDto:
+                                                                      _loginUser!);
+                                                          commentProviders
+                                                              .postComment(
+                                                                  commentDto);
+                                                          await initFeed();
+                                                        }
                                                       }),
-                                                  // 댓글 출력 끝
-                                                ],
+                                                  hintText:
+                                                      '${feed[index].comments![i].userDto.nickname}에게 답글 다는 중',
+                                                  enabledBorder:
+                                                      const OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                    color: Colors.black12,
+                                                    width: 0.0,
+                                                  )),
+                                                  focusedBorder:
+                                                      const OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                    color: Colors.black12,
+                                                    width: 0.0,
+                                                  )),
+                                                  filled: true,
+                                                  fillColor: Colors.black12,
+                                                ),
+                                                onChanged: (text) {
+                                                  _commentContent = text;
+                                                },
                                               ),
                                             ),
-                                          ]),
-                                      Visibility(
-                                        visible: isVisible[index] &&
-                                            _cur[0] == index &&
-                                            _cur[1] == i,
-                                        child: Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 0, 0, 10),
-                                          child: TextField(
-                                            maxLines: null,
-                                            style:
-                                                const TextStyle(fontSize: 14.0),
-                                            cursorColor: Colors.black12,
-                                            cursorWidth: 1.0,
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      10, 0, 10, 0),
-                                              suffixIcon: IconButton(
-                                                  icon: const Icon(Icons.send),
-                                                  color: Colors.black54,
-                                                  onPressed: () async {
-                                                    if (_commentContent
-                                                        .isNotEmpty) {
-                                                      CommentDto commentDto =
-                                                          CommentDto(
-                                                              cCommentList: [],
-                                                              cmtId: 0,
-                                                              content:
-                                                                  _commentContent,
-                                                              feedId:
-                                                                  feed[index]
-                                                                      .feedId,
-                                                              pcmtId: feed[
-                                                                      index]
-                                                                  .comments![i]
-                                                                  .cmtId,
-                                                              regTime: '',
-                                                              userDto:
-                                                                  _loginUser!);
-                                                      commentProviders
-                                                          .postComment(
-                                                              commentDto);
-                                                      await initFeed();
-                                                    }
-                                                  }),
-                                              hintText:
-                                                  '${feed[index].comments![i].userDto.nickname}에게 답글 다는 중',
-                                              enabledBorder:
-                                                  const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                color: Colors.black12,
-                                                width: 0.0,
-                                              )),
-                                              focusedBorder:
-                                                  const OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                color: Colors.black12,
-                                                width: 0.0,
-                                              )),
-                                              filled: true,
-                                              fillColor: Colors.black12,
-                                            ),
-                                            onChanged: (text) {
-                                              _commentContent = text;
-                                            },
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }),
+                                        ],
+                                      );
+                                    }),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Visibility(
+                          visible: isVisible[index],
+                          // && _cur[0] == index && _cur[1] == -1,
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: TextField(
+                              maxLines: null,
+                              style: const TextStyle(fontSize: 14.0),
+                              cursorColor: Colors.black12,
+                              cursorWidth: 1.0,
+                              decoration: InputDecoration(
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                suffixIcon: IconButton(
+                                    icon: const Icon(Icons.send),
+                                    color: Colors.black54,
+                                    onPressed: () async {
+                                      if (_commentContent != null &&
+                                          _commentContent.isNotEmpty) {
+                                        CommentDto commentDto = CommentDto(
+                                            cCommentList: [],
+                                            cmtId: 0,
+                                            content: _commentContent,
+                                            feedId: feed[index].feedId,
+                                            pcmtId: null,
+                                            regTime: '',
+                                            userDto: _loginUser!);
+                                        commentProviders
+                                            .postComment(commentDto);
+                                        await initFeed();
+                                      }
+                                    }),
+                                hintText:
+                                    '${_loginUser?.nickname ?? ''}(으)로 댓글 달기...',
+                                enabledBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.black12,
+                                  width: 0.0,
+                                )),
+                                focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.black12,
+                                  width: 0.0,
+                                )),
+                                filled: true,
+                                fillColor: Colors.black12,
+                              ),
+                              onChanged: (text) {
+                                _commentContent = text;
+                              },
+                            ),
                           ),
                         ),
+                        const SizedBox(height: 15),
                       ],
                     ),
-                    Visibility(
-                      visible: isVisible[index],
-                      // && _cur[0] == index && _cur[1] == -1,
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        child: TextField(
-                          maxLines: null,
-                          style: const TextStyle(fontSize: 14.0),
-                          cursorColor: Colors.black12,
-                          cursorWidth: 1.0,
-                          decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            suffixIcon: IconButton(
-                                icon: const Icon(Icons.send),
-                                color: Colors.black54,
-                                onPressed: () async {
-                                  if (_commentContent != null &&
-                                      _commentContent.isNotEmpty) {
-                                    CommentDto commentDto = CommentDto(
-                                        cCommentList: [],
-                                        cmtId: 0,
-                                        content: _commentContent,
-                                        feedId: feed[index].feedId,
-                                        pcmtId: null,
-                                        regTime: '',
-                                        userDto: _loginUser!);
-                                    commentProviders.postComment(commentDto);
-                                    await initFeed();
-                                  }
-                                }),
-                            hintText:
-                                '${_loginUser?.nickname ?? ''}(으)로 댓글 달기...',
-                            enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.black12,
-                              width: 0.0,
-                            )),
-                            focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                              color: Colors.black12,
-                              width: 0.0,
-                            )),
-                            filled: true,
-                            fillColor: Colors.black12,
-                          ),
-                          onChanged: (text) {
-                            _commentContent = text;
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                  ],
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(
+                  height: 2.0,
+                  color: Colors.black45,
                 ),
               );
-            },
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(
-              height: 2.0,
-              color: Colors.black45,
-            ),
-          );
   }
 }
 
