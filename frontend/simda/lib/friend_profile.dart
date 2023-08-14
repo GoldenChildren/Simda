@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simda/friend_profile_map.dart';
 import 'package:simda/main.dart';
 import 'package:simda/models/ChatUserDto.dart';
 import 'package:simda/models/UserDto.dart';
@@ -261,7 +262,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                   children: [
                     FriendProfileCalendarPage(widget.userDto.userId),
                     FriendProfileFeedPage(widget.userDto.userId),
-                    const ProfileMapPage(),
+                    FriendProfileMapPage(widget.userDto.userId),
                   ],
                 ),
               ),

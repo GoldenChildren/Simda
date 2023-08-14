@@ -11,14 +11,15 @@ import 'package:simda/models/UserDto.dart';
 import 'package:simda/place.dart';
 import 'package:simda/providers/feed_providers.dart';
 
-class ProfileMapPage extends StatefulWidget {
-  const ProfileMapPage({super.key});
+class FriendProfileMapPage extends StatefulWidget {
+  final int userId;
+  const FriendProfileMapPage(this.userId, {Key? key}) : super(key: key);
 
   @override
-  State<ProfileMapPage> createState() => _ProfileMapPage();
+  State<StatefulWidget> createState() => _FriendProfileMapPage();
 }
 
-class _ProfileMapPage extends State<ProfileMapPage> {
+class _FriendProfileMapPage extends State<FriendProfileMapPage> {
   int likes = 0;
   bool isVisible = false;
   bool writeComment = false;
@@ -27,22 +28,7 @@ class _ProfileMapPage extends State<ProfileMapPage> {
   List<FeedDto> feed = [];
   FeedProviders feedProvider = FeedProviders();
 
-  Future<void> getValueFromSecureStorage() async {
-    try {
-      int storeUserId = int.parse((await storage.read(key: "userId"))!);
-      var temp = UserDto(
-          email: (await storage.read(key: 'email'))!,
-          nickname: (await storage.read(key: 'nickname'))!,
-          profileImg: (await storage.read(key: 'profileImg'))!,
-          userId: int.parse((await storage.read(key: 'userId'))!),
-          userRole: int.parse((await storage.read(key: 'userRole'))!));
-      setState(() {
-        _userId = storeUserId;
-      });
-    } catch (e) {
-      print("Error reading from secure storage: $e");
-    }
-  }
+
 
   Future initFeed() async {
     feed = await feedProvider.getUserFeedList(_userId);
@@ -87,12 +73,10 @@ class _ProfileMapPage extends State<ProfileMapPage> {
   @override
   void initState() {
     super.initState();
-    //list에 데이터를 먼저 넣어줌
+    _userId = widget.userId;
     //클러스터 매니저 초기화
     _manager = _initClusterManager();
-    getValueFromSecureStorage().then((value) =>
-        _addMarkersAndInitializeClusterManager()
-    );
+    _addMarkersAndInitializeClusterManager();
   }
 
   void _addMarkersAndInitializeClusterManager() async {
