@@ -155,7 +155,7 @@ class _SignUpState extends State<SignUp> {
                     TextButton(
                           style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                            
+                          
                           ) ,
                       onPressed: () async {
                         if (nicknameController.text.isNotEmpty) {
@@ -173,7 +173,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   // if (nicknameController.text.isNotEmpty)
-                  // Text(
+                  // Text(            Ss
                   //    _nicknameAvailability == true
                   //     ? "사용 가능한 닉네임입니다."
                   //     : _nicknameAvailability == false
@@ -270,9 +270,6 @@ class _SignUpState extends State<SignUp> {
         if (value!.trim().isEmpty) {
           return '닉네임을 입력해주세요';
         }
-        if (value!.trim().isNotEmpty) {
-          return null;
-        }
         if (value.length > maxSize) {
           return '닉네임은 $maxSize자 이하여야 합니다';
         }
@@ -280,7 +277,9 @@ class _SignUpState extends State<SignUp> {
       },
       onChanged: (value) {
         setState(() {
-          _nicknameAvailability = true; // 닉네임이 변경되면 다시 확인 가능하도록
+        if (value.isNotEmpty) {
+                return; // 닉네임이 입력되면 가능한 것으로 표시
+              }
         });
       },
     );
