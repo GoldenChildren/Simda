@@ -442,23 +442,38 @@ class _MapPageState extends State<MapPage> {
     return BitmapDescriptor.fromBytes(bytes);
   }
 
+  void _saveCurrentMapCenter() async {
+    if (mapController != null) {
+      LatLng mapCenter = await mapController!.getLatLng(
+        ScreenCoordinate(
+          x: MediaQuery.of(context).size.width ~/ 2,
+          y: MediaQuery.of(context).size.height ~/ 2,
+        ),
+      );
+
+      // Feed새로 불러오기
+      reloadFeeds(mapCenter);
+      // 여기서 mapCenter의 위도와 경도를 저장하면 됩니다.
+      print("Saved Latitude: ${mapCenter.latitude}");
+      print("Saved Longitude: ${mapCenter.longitude}");
+    }
+  }
+
+  Future<void> reloadFeeds(LatLng newMapCenter) async {
+    markers.clear();
+    items = [];
+    feed.clear(); // 기존 피드 데이터를 지웁니다
+    var reloadedFeeds = await feedProvider.getFeed(newMapCenter.latitude, newMapCenter.longitude);
+    setState(() {
+      feed = reloadedFeeds;
+    });
+    _addMarkers();
+    _manager.setItems(items); // 클러스터 매니저에 아이템을 업데이트합니다.
+    _manager.updateMap(); // 지도를 업데이트합니다.
+  }
+
   @override
   Widget build(BuildContext context) {
-    // var gps = getCurrentLocation();
-    //
-    // //지도의 초기 위치를 담아줄 CameraPosition
-    // CameraPosition startCameraPosition =
-    // CameraPosition(target: LatLng(gps.latitude, gps.longitude), zoom: 17.0);
-
-    // print("675번 실행 : Build");
-    // items = [];
-    // _addMarkers();
-    // print("marker 개수: ${items.length}");
-    // print(currentPosition.longitude);
-    // print(currentPosition.latitude);
-
-    // _manager = _initClusterManager();
-
     return SafeArea(
       child: Stack(alignment: AlignmentDirectional.bottomEnd, children: [
         GoogleMap(
@@ -500,6 +515,14 @@ class _MapPageState extends State<MapPage> {
                   Icons.my_location,
                   color: Colors.black87,
                 ),
+              ),
+            ),
+            Container(
+              child: ElevatedButton(
+                onPressed: () {
+                  _saveCurrentMapCenter();
+                },
+                child: Text('현재 위치에서 검색'),
               ),
             ),
             Container(
