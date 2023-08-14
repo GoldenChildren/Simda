@@ -154,6 +154,34 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                 style: const TextStyle(
                                     fontSize: 12, color: Colors.black45),
                               ),
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          content: const Text('글을 삭제하시겠습니까?'),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  feedProvider.deleteFeed(
+                                                      feed[reversedIndex]
+                                                          .feedId);
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('삭제하기')),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('닫기')),
+                                          ],
+                                        );
+                                      });
+                                },
+                                icon: const Icon(Icons.delete,
+                                    color: Colors.black54),
+                              )
                             ],
                           ),
                         ],
@@ -304,6 +332,29 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                           FontWeight.bold,
                                                       color: Colors.black45,
                                                     )),
+                                                const SizedBox(width: 10),
+                                                feed[reversedIndex]
+                                                            .comments![i]
+                                                            .userDto
+                                                            .userId ==
+                                                        _loginUser?.userId
+                                                    ? IconButton(
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                        constraints:
+                                                            const BoxConstraints(),
+                                                        onPressed: () {
+                                                          commentProviders
+                                                              .deleteComment(feed[
+                                                                      reversedIndex]
+                                                                  .comments![i]
+                                                                  .cmtId);
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.close,
+                                                            color: Colors.red))
+                                                    : const SizedBox(
+                                                        height: 1, width: 1)
                                               ],
                                             ),
                                             Text(
