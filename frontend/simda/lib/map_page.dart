@@ -165,12 +165,13 @@ class _MapPageState extends State<MapPage> {
                 }
               }
             });
-            mapController?.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  target: LatLng(cluster.location.latitude - 0.002,
-                      cluster.location.longitude),
-                  zoom: 17.0),
-            ));
+            // 카메라가 이동하는 부분 제거
+            // mapController?.animateCamera(CameraUpdate.newCameraPosition(
+            //   CameraPosition(
+            //       target: LatLng(cluster.location.latitude - 0.002,
+            //           cluster.location.longitude),
+            //       zoom: 17.0),
+            // ));
             showModalBottomSheet<void>(
               context: context,
               isScrollControlled: true,
