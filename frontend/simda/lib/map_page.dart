@@ -164,8 +164,8 @@ class _MapPageState extends State<MapPage> {
             List<FeedDto> clickFeedList = [];
             cluster.items.forEach((p) {
               // 눌렀을 때 나오는 id와 주변 feedId를 비교하여, 일치하는 것만 list를 생성해 담아준다
-              for(int i = 0; i < feed.length; i++) {
-                if(p.feedId == feed[i].feedId) {
+              for (int i = 0; i < feed.length; i++) {
+                if (p.feedId == feed[i].feedId) {
                   clickFeedList.add(feed[i]);
                 }
               }
@@ -240,12 +240,10 @@ class _MapPageState extends State<MapPage> {
   Widget buildFeedItem(FeedDto feedItem) {
     // Customize this function to build each feed item
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      width: MediaQuery.of(context).size.width,
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        width: MediaQuery.of(context).size.width,
+        color: Colors.white,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
             child: Row(
@@ -286,8 +284,9 @@ class _MapPageState extends State<MapPage> {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
+                StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                  return Row(children: [
                     Text(
                         feedItem.likeCnt > 99
                             ? "99+"
@@ -317,12 +316,14 @@ class _MapPageState extends State<MapPage> {
                           image: AssetImage(
                               'assets/images/flower${feedItem.emotion}.png'),
                           height: 30),
-                    ),
-                  ],
-                ),
+                    )
+                  ]);
+                }),
               ],
             ),
           ),
+          //   ],
+          // ),
           const SizedBox(height: 15),
           Container(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -344,9 +345,7 @@ class _MapPageState extends State<MapPage> {
             ],
           ),
           const SizedBox(height: 15),
-        ],
-      ),
-    );
+        ]));
   }
 
   //이미지를 불러와 우리가 원하는 비트맵으롭 변환
@@ -463,7 +462,8 @@ class _MapPageState extends State<MapPage> {
     markers.clear();
     items = [];
     feed.clear(); // 기존 피드 데이터를 지웁니다
-    var reloadedFeeds = await feedProvider.getFeed(newMapCenter.latitude, newMapCenter.longitude);
+    var reloadedFeeds = await feedProvider.getFeed(
+        newMapCenter.latitude, newMapCenter.longitude);
     setState(() {
       feed = reloadedFeeds;
     });
@@ -521,22 +521,26 @@ class _MapPageState extends State<MapPage> {
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  )
-
-                ),
-
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    )),
                 onPressed: () {
                   _saveCurrentMapCenter();
                 },
                 child: const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.autorenew, color: Colors.black87, size: 17,),
+                    Icon(
+                      Icons.autorenew,
+                      color: Colors.black87,
+                      size: 17,
+                    ),
                     SizedBox(width: 4),
-                    Text('현재 위치에서 검색', style: TextStyle(color: Colors.black87),),
+                    Text(
+                      '현재 위치에서 검색',
+                      style: TextStyle(color: Colors.black87),
+                    ),
                   ],
                 ),
               ),
