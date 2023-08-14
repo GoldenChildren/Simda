@@ -36,7 +36,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   Future<void> getValueFromSecureStorage() async {
     try {
-      String? storeEmail = await storage.read(key: "profileImg");
+      String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");

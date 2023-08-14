@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:simda/models/FollowDto.dart';
@@ -75,8 +76,6 @@ class UserProviders {
         multipartfile = null;
       }
 
-      print(multipartfile?.filename?? '왜 null 임?');
-
       FormData formData = FormData.fromMap({
         'imgfile': multipartfile,
         "bio": userDto.bio,
@@ -86,7 +85,6 @@ class UserProviders {
         "userId": userDto.userId,
         "userRole": userDto.userRole,
       });
-
       var response = await dio.post(
         "$url/modify",
         data: formData,
@@ -96,7 +94,16 @@ class UserProviders {
       if(response != null){
         saveStorage(response.data);
       }
-
+      String? storeUid = await storage.read(key:"userId");
+      String? storeEmail = await storage.read(key: "email");
+      String? storeProfileImg = await storage.read(key: "profileImg");
+      String? storeNickname = await storage.read(key: "nickname");
+      FirebaseDatabase ref = FirebaseDatabase.instance;
+      await ref.ref("users").child(storeUid!).update({
+        "nickname": storeNickname,
+        "userEmail" : storeEmail,
+        "profileImg": storeProfileImg,
+      });
       return UserDto.fromJson(response.data);
     }catch(error){
       print("유저 정보 수정 에러");
