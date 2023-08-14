@@ -68,6 +68,11 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
     size = feed.length;
   }
 
+  Future getFeed() async {
+    var gps = await getCurrentLocation();
+    feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
+  }
+
   String formatDate(String regTime) {
     print(regTime);
     DateTime time = DateTime.parse(regTime);
@@ -608,7 +613,8 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                                           commentProviders
                                                               .postComment(
                                                                   commentDto);
-                                                          await initFeed();
+                                                          await getFeed();
+                                                          isVisible[index] = true;
                                                         }
                                                       }),
                                                   hintText:

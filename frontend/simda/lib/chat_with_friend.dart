@@ -1,5 +1,3 @@
-
-
 import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,8 @@ import 'package:simda/models/ChatDto.dart';
 import 'package:simda/models/ChatRoomDto.dart';
 import 'package:simda/models/ChatUserDto.dart';
 import 'package:simda/providers/chatroom_providers.dart';
+
+import 'main_page.dart';
 
 class ChatWithFriend extends StatefulWidget {
   final ChatUserDto contact;
@@ -122,8 +122,11 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
                     SizedBox(
                       child: IconButton(
                         onPressed: () {
-                          Navigator.pop(context);
-                          isVisible = !isVisible;
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainPage(2)),
+                                  (route) => false);
                         },
                         icon: const Icon(Icons.arrow_back),
                         iconSize: 28,
@@ -133,7 +136,7 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
                       backgroundImage: NetworkImage(widget.contact.profileImg),
                       radius: 13,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 4,
                     ),
                     Text(
@@ -149,15 +152,15 @@ class _ChatWithFriendState extends State<ChatWithFriend> {
                   color: Colors.black12,
                   child: TextField(
                     controller: _controller,
-                    style: const TextStyle(fontSize: 14.0),
+                    style: const TextStyle(fontSize: 15),
                     cursorColor: Colors.black12,
                     cursorWidth: 1.0,
                     decoration: InputDecoration(
                       contentPadding:
-                      EdgeInsets.fromLTRB(20, 0, 10, 0),
+                      const EdgeInsets.fromLTRB(20, 0, 10, 0),
                       suffixIcon:
                         IconButton(
-                          icon: Icon(Icons.send, color: Colors.black54),
+                          icon: const Icon(Icons.send, color: Colors.black54),
                           onPressed: sendMessage,
                         ),
                       enabledBorder: const OutlineInputBorder(
@@ -233,7 +236,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           children: [
                             Text(
                               format,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 10
                               ),
                             ),
@@ -241,9 +244,9 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                 text: thisChat.text,
                                 isSender: true,
                                 color: Colors.blue,
-                                textStyle: TextStyle(
+                                textStyle: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 20
+                                    fontSize: 15
                                 ),
                                 ),
                           ]))
@@ -264,13 +267,13 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         text: thisChat.text,
                                         isSender: false,
                                         color: Colors.grey.shade200,
-                                        textStyle: TextStyle(
+                                        textStyle: const TextStyle(
                                             color: Colors.black,
-                                            fontSize: 20
+                                            fontSize: 15
                                         ),
                                       ),
                                       Text(format,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 10
                                         ),
                                       )

@@ -518,11 +518,27 @@ class _MapPageState extends State<MapPage> {
               ),
             ),
             Container(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  )
+
+                ),
+
                 onPressed: () {
                   _saveCurrentMapCenter();
                 },
-                child: Text('현재 위치에서 검색'),
+                child: const Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.autorenew, color: Colors.black87, size: 17,),
+                    SizedBox(width: 4),
+                    Text('현재 위치에서 검색', style: TextStyle(color: Colors.black87),),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -543,7 +559,7 @@ class _MapPageState extends State<MapPage> {
                     shape: const CircleBorder(),
                     padding: const EdgeInsets.all(15),
                   ),
-                  child: const Icon(Icons.add, color: Colors.black87),
+                  child: const Icon(Icons.edit, color: Colors.black87),
                 )),
           ],
         )
