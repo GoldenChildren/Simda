@@ -41,7 +41,6 @@ class _ProfileMapPage extends State<ProfileMapPage> {
         _userId = storeUserId;
         _loginUser = temp;
       });
-      initFeed();
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
@@ -49,9 +48,7 @@ class _ProfileMapPage extends State<ProfileMapPage> {
 
   Future initFeed() async {
     feed = await feedProvider.getUserFeedList(_userId);
-
     setState(() {
-
     });
   }
 
@@ -67,8 +64,8 @@ class _ProfileMapPage extends State<ProfileMapPage> {
   Set<Marker> markers = Set();
 
   //지도의 초기 위치를 담아줄 CameraPosition
-  final CameraPosition _startCameraPosition =
-  const CameraPosition(target: LatLng(37.5013068, 127.0396597), zoom: 8.0);
+  // final CameraPosition _startCameraPosition =
+  // const CameraPosition(target: LatLng(37.5013068, 127.0396597), zoom: 8.0);
   LatLng currentPosition = const LatLng(37.5013068, 127.0396597); // 이게 역삼인가?
 
   //지도의 표시될 객체들의 리스트
@@ -92,12 +89,12 @@ class _ProfileMapPage extends State<ProfileMapPage> {
   @override
   void initState() {
     super.initState();
-    getValueFromSecureStorage();
     //list에 데이터를 먼저 넣어줌
-    _addMarkers();
     //클러스터 매니저 초기화
     _manager = _initClusterManager();
-    _addMarkersAndInitializeClusterManager();
+    getValueFromSecureStorage().then((value) =>
+        _addMarkersAndInitializeClusterManager()
+    );
   }
 
   void _addMarkersAndInitializeClusterManager() async {
@@ -108,19 +105,17 @@ class _ProfileMapPage extends State<ProfileMapPage> {
 
   //클러스터 매니저 초기화 메서드
   ClusterManager _initClusterManager() {
+    print("108 : initCluster 실행");
     //ClusterManger<지도의 표시할 객체의 형> ("지도의 표시할 형의 리스트","지도에 있는 메서드를
     return ClusterManager<Place>(items, _updateMarkers,
         markerBuilder: _markerBuilder);
   }
 
-//지도가 생성되었을 때 컨트롤러를 받아옴
-//   void _onMapCreated(GoogleMapController controller) {
-//     _controller.complete(controller);
-//   }
-
 //마커 업데이트 메서드
   void _updateMarkers(Set<Marker> markers) {
-    // print('Updated ${markers.length} markers');
+    print("121: updateMarkers 실행");
+    print('Updated ${markers.length} markers');
+    print("아이템의 길이 : ${items.length}");
     setState(() {
       if (mounted) {
         this.markers = markers;
@@ -132,7 +127,8 @@ class _ProfileMapPage extends State<ProfileMapPage> {
   //마커를 만드는 메서드
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
           (cluster) async {
-        // print("132번 실행 : markerBuilder");
+        print("132번 실행 : markerBuilder");
+        print("아이템의 길이 : ${items.length}");
         int emotion = 0;
         if (cluster.isMultiple) {
           List checklist = [0, 0, 0, 0, 0];
@@ -155,7 +151,6 @@ class _ProfileMapPage extends State<ProfileMapPage> {
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
           onTap: () {
-            print('---- $cluster');
             List<FeedDto> clickFeedList = [];
             cluster.items.forEach((p) {
               // 눌렀을 때 나오는 id와 주변 feedId를 비교하여, 일치하는 것만 list를 생성해 담아준다
@@ -169,7 +164,7 @@ class _ProfileMapPage extends State<ProfileMapPage> {
               CameraPosition(
                   target: LatLng(cluster.location.latitude - 0.002,
                       cluster.location.longitude),
-                  zoom: 17.0),
+                  zoom: 8.0),
             ));
             showModalBottomSheet<void>(
               context: context,
@@ -215,7 +210,7 @@ class _ProfileMapPage extends State<ProfileMapPage> {
                           color: Colors.purple,
                         ),
                         // Add the rest of your content here
-                        for (var item in clickFeedList) ...[
+                        for (var item in clickFeedList.reversed) ...[
                           buildFeedItem(item),
                         ],
                       ],
@@ -346,27 +341,28 @@ class _ProfileMapPage extends State<ProfileMapPage> {
   //이미지를 불러와 우리가 원하는 비트맵으롭 변환
   Future<BitmapDescriptor> _getMarkerBitmapFromAsset(int emotion, int size,
       {String? text}) async {
+    // print("584번 실행 : getMarkerBit뭐시기");
     late String assetPath;
     switch (emotion) {
     //행복
       case 0:
-        assetPath = 'assets/images/flowerGreen.png';
+        assetPath = 'assets/images/flower0.png';
         break;
     //기쁨
       case 1:
-        assetPath = 'assets/images/flowerYellow.png';
+        assetPath = 'assets/images/flower1.png';
         break;
     //평온
       case 2:
-        assetPath = 'assets/images/flowerPurple.png';
+        assetPath = 'assets/images/flower2.png';
         break;
     //화남
       case 3:
-        assetPath = 'assets/images/flowerPink.png';
+        assetPath = 'assets/images/flower3.png';
         break;
     //슬픔
       case 4:
-        assetPath = 'assets/images/flowerBlue.png';
+        assetPath = 'assets/images/flower4.png';
         break;
     }
     ByteData data = await rootBundle.load(assetPath);
@@ -392,11 +388,11 @@ class _ProfileMapPage extends State<ProfileMapPage> {
       canvas.drawImage(image, const Offset(0, 0), Paint());
 
       canvas.drawCircle(Offset(markerSize / 1.3, markerSize / 3.7),
-          markerHalfSize / 2.2, circlePaintBlack);
+          markerHalfSize / 2.5, circlePaintBlack);
 
       // 빨간 원 그리기
       canvas.drawCircle(Offset(markerSize / 1.3, markerSize / 3.7),
-          markerHalfSize / 2.7, circlePaint);
+          markerHalfSize / 3.3, circlePaint);
       // 텍스트 그리기
       TextPainter textPainter = TextPainter(
         text: TextSpan(

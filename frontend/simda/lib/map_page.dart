@@ -155,7 +155,7 @@ class _MapPageState extends State<MapPage> {
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
           onTap: () {
-            print('---- $cluster');
+            // print('---- $cluster');
             List<FeedDto> clickFeedList = [];
             cluster.items.forEach((p) {
               // 눌렀을 때 나오는 id와 주변 feedId를 비교하여, 일치하는 것만 list를 생성해 담아준다
