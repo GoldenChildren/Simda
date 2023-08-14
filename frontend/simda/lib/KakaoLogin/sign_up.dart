@@ -95,11 +95,11 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SizedBox(width: 20),
-                      Text(
-                        '회원 설정',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
+                          Text(
+                            '회원 설정',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
                       SizedBox(
                         child: IconButton(
                           color: Colors.transparent,
@@ -108,6 +108,7 @@ class _SignUpState extends State<SignUp> {
                           iconSize: 28,
                         ),
                       ),
+                 
                     ],
                   ),
                   Container(height: 2, color: Colors.purple),
@@ -134,43 +135,57 @@ class _SignUpState extends State<SignUp> {
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: textFormFieldComponent(
-                      false,
-                      TextInputType.text,
-                      TextInputAction.next,
-                      '닉네임을 입력해주세요',
-                      20,
-                      '닉네임은 20자 이하여야 합니다',
-                      nicknameController,
+                    child: Row(
+                      crossAxisAlignment:CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            child: textFormFieldComponent(
+                              false,
+                              TextInputType.text,
+                              TextInputAction.next,
+                              '닉네임을 입력해주세요',
+                              20,
+                              '닉네임은 20자 이하여야 합니다',
+                              nicknameController,
+                            ),
+                          ),
+                        ),
+                         const SizedBox(width: 10),
+                    TextButton(
+                          style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            
+                          ) ,
+                      onPressed: () async {
+                        if (nicknameController.text.isNotEmpty) {
+                          await _checkNicknameAvailability(
+                              nicknameController.text);
+                        } else {
+                          setState(() {
+                            _nicknameAvailability = true;
+                          });
+                        }
+                      },
+                      child: Text("중복 확인", style: TextStyle(color: Colors.purple),),
+                    ),
+                      ],
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (nicknameController.text.isNotEmpty) {
-                        await _checkNicknameAvailability(
-                            nicknameController.text);
-                      } else {
-                        setState(() {
-                          _nicknameAvailability = true;
-                        });
-                      }
-                    },
-                    child: Text("닉네임 중복 확인"),
-                  ),
-                  if (_nicknameAvailability != true)
-                  Text(
-                     _nicknameAvailability == true
-                      ? "사용 가능한 닉네임입니다."
-                      : _nicknameAvailability == false
-                        ? "이미 사용 중인 닉네임입니다."
-                        : "",
-
-                    style: TextStyle(
-                        color:
-                        _nicknameAvailability
-                            ? Colors.green
-                            : Colors.red),
-                  ),
+                  // if (nicknameController.text.isNotEmpty)
+                  // Text(
+                  //    _nicknameAvailability == true
+                  //     ? "사용 가능한 닉네임입니다."
+                  //     : _nicknameAvailability == false
+                  //       ? "이미 사용 중인 닉네임입니다."
+                  //       : "",
+                  //
+                  //   style: TextStyle(
+                  //       color:
+                  //       _nicknameAvailability
+                  //           ? Colors.green
+                  //           : Colors.red),
+                  // ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -178,7 +193,10 @@ class _SignUpState extends State<SignUp> {
                       padding: const EdgeInsetsDirectional.all(15),
                     ),
                     child: const Text("회원가입"),
-                    onPressed: () async {
+                    onPressed:
+                        _profileImage == null || !_nicknameAvailability
+                        ? null
+                        :() async {
                       if (_profileImage == null) {
                         setState(() {
                           _showProfileImageHint = true;
@@ -214,6 +232,7 @@ class _SignUpState extends State<SignUp> {
       String errorMessage,
       TextEditingController controller,) {
     return TextFormField(
+      style: TextStyle(height: 1.0),
       controller: controller,
       maxLength: 20,
       obscureText: obscureText,
@@ -221,12 +240,14 @@ class _SignUpState extends State<SignUp> {
       textInputAction: textInputAction,
       cursorColor: Colors.black45,
       decoration: InputDecoration(
+        isDense: true,
+        contentPadding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
         hintText: hintText,
-        // helperText: !_nicknameAvailability.isEmpty
-        //     ? _nicknameAvailability == false;
-        //     ? '이미 사용 중인 닉네임입니다.'
-        //     : null
-        //     : null,
+        helperText: _nicknameAvailability == true
+            ? '사용 가능한 닉네임입니다.'
+            : _nicknameAvailability == false
+            ? '이미 사용 중인 닉네임입니다.'
+            : '',
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
