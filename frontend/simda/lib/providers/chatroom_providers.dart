@@ -12,15 +12,23 @@ class ChatRoomProviders {
     DateTime dt = DateTime.now();
     int timestamp = dt.millisecondsSinceEpoch;
     DatabaseReference ref = FirebaseDatabase.instance.ref("chats").child(chatroomId);
-
-
-    Map<String, dynamic> newChatroomData = {
+    Map<String, dynamic> newChatData = {
       "userId": userId,
       "text": content,
       "time": timestamp,
     };
+    String? newChatId = ref.push().key;
+    await ref.child(newChatId!).set(newChatData);
 
-    await ref.child(timestamp.toString()).set(newChatroomData);
+    //채팅 목록에 동기화
+    DatabaseReference roomref = FirebaseDatabase.instance.ref("chatrooms").child(chatroomId).child("last_message");
+    Map<String, dynamic> lastMsgData = {
+      "userId": userId,
+      "text": content,
+      "time": timestamp,
+      "read": true,
+    };
+    await roomref.set(lastMsgData);
   }
 
 
@@ -94,7 +102,7 @@ class ChatRoomProviders {
         // 다른 참여자들도 추가 가능
       },
       "last_message": {
-        "sender_id": "",
+        "userId": "",
         "text": "",
         "timestamp": "",
       },

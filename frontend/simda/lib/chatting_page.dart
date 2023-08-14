@@ -1,9 +1,11 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:simda/chat_with_friend.dart';
 import 'package:simda/chatting_search_page.dart';
 import 'package:simda/main.dart';
 import 'package:simda/models/ChatUserDto.dart';
+import 'package:simda/models/LastChatDto.dart';
 import 'package:simda/providers/chatroom_providers.dart';
 
 import 'models/ChatRoomDto.dart';
@@ -37,14 +39,29 @@ class _ChattingPageState extends State<ChattingPage> {
           if (roomData is Map<dynamic, dynamic>) { // Map 타입 확인
             print(roomId is String);
             ChatRoomDto rchatRoom = ChatRoomDto.fromJson(roomData,roomId);
-            chatroom.add(rchatRoom);
+            print("목록 프린트");
+            print(rchatRoom.lastMessage.values.first);
+            if(rchatRoom.lastMessage.values.first !=""){
+              chatroom.add(rchatRoom);
+            }
           }
+        });
+
+        chatroom.sort((a, b) {
+          // Compare timestamps for sorting
+          int aTimestamp = a.lastMessage['time'] ?? 0;
+          int bTimestamp = b.lastMessage['time'] ?? 0;
+          return bTimestamp.compareTo(aTimestamp);
         });
       }
       setState(() {});
     });
   }
-
+  @override
+  void dispose() {
+    // 해제
+    super.dispose();
+  }
   @override
   void initState()  {
     super.initState();
@@ -179,6 +196,20 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
       itemCount: widget.chatroom.length,
       itemBuilder: (BuildContext context, int index) {
         ChatUserDto contact = contacts[index]; // 가져온 데이터 사용
+        ChatRoomDto thischatRoom = widget.chatroom[index];
+        LastChatDto lastChat = LastChatDto.fromJson(thischatRoom.lastMessage);
+        bool shouldShowUnreadIndicator =
+            lastChat.read == true && lastChat.userId == contact.userId;
+
+
+        late var format;
+        if(lastChat.time != null){
+          var date = new DateTime.fromMillisecondsSinceEpoch(int.parse(lastChat.time!));
+          format= new DateFormat('hh:mm').format(date);
+        }else{
+          format=null;
+        }
+
 
         return GestureDetector(
           onTap: () {
@@ -213,7 +244,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            "여기다가 마지막 채팅 내용",
+                              lastChat.text ?? " ",
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -221,18 +252,21 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text("04:23"),
-                            const SizedBox(height: 5),
-                            Container(
-                              height: 15,
-                              width: 15,
-                              decoration: const BoxDecoration(
+                            if (shouldShowUnreadIndicator)
+                              Container(
+                                height: 15,
+                                width: 15,
+                                decoration: const BoxDecoration(
                                   color: Colors.redAccent,
-                                  shape: BoxShape.circle),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                ),
                               ),
-                            )
+                            const SizedBox(height: 5),
+                            Text(format?? " "),
+
                           ]),
                     ],
                   ),
