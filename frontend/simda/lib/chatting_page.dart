@@ -212,6 +212,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
 
 
         return GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () {
             Navigator.push(
               context,

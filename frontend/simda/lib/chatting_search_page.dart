@@ -86,6 +86,7 @@ class _ChattingSearchPageState extends State<ChattingSearchPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          backgroundColor: Colors.white,
           body: Column(
         children: <Widget>[
           Container(

@@ -16,6 +16,7 @@ class UserProviders {
   Dio dio = Dio();
 
   String url = "http://i9a709.p.ssafy.io:8000/user";
+  // String url = "http://70.12.247.215:8000/user";
   // static String ip = "http://70.12.247.165:8000";
 
   // 세션 스토리지에 유저 정보를 저장하는 메소드
