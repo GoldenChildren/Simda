@@ -76,6 +76,7 @@ class _FriendProfileCalendarPageState extends State<FriendProfileCalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: TableCalendar(

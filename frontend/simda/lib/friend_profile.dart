@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:simda/friend_profile_map.dart';
 import 'package:simda/main.dart';
+import 'package:simda/models/ChatUserDto.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_map.dart';
 import 'package:simda/providers/user_providers.dart';
@@ -61,6 +63,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -172,12 +175,20 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                               const SizedBox(width: 10),
                               ElevatedButton(
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ChatWithFriend(2)),
+                                  ChatUserDto contact = ChatUserDto(
+                                      userId: widget.userDto.userId.toString(),
+                                      nickname: widget.userDto.nickname,
+                                      profileImg: widget.userDto.profileImg
                                   );
+
+
+                                  // Navigator.push(
+                                  //   // context,
+                                  //   // MaterialPageRoute(
+                                  //   //     // builder: (context) =>
+                                  //   //          // ChatWithFriend(contact: contact,)
+                                  //   // ),
+                                  // );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Theme.of(context).primaryColor,
@@ -251,7 +262,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                   children: [
                     FriendProfileCalendarPage(widget.userDto.userId),
                     FriendProfileFeedPage(widget.userDto.userId),
-                    const ProfileMapPage(),
+                    FriendProfileMapPage(widget.userDto.userId),
                   ],
                 ),
               ),
