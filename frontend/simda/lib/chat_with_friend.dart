@@ -1,7 +1,9 @@
 
 
+import 'package:chat_bubbles/bubbles/bubble_special_one.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:simda/main.dart';
 import 'package:simda/models/ChatDto.dart';
 import 'package:simda/models/ChatRoomDto.dart';
@@ -203,65 +205,136 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
         itemCount: widget.chatList.length,
         itemBuilder: (BuildContext context, int index) {
           ChatDto thisChat = widget.chatList[index];
-          ChatUserDto thisUser;
-          if(thisChat.userId==widget.me.userId){
-            thisUser= widget.me;
-          }else{
-            thisUser=widget.contact;
-          }
+          bool isCurrentUserMessage = thisChat.userId == widget.me.userId;
+          ChatUserDto thisUser =
+          isCurrentUserMessage ? widget.me : widget.contact;
+          //시간 변경
 
-          return Container(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-            child: Row(children: [
-               Column(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(thisUser.profileImg),
-                    radius: 26,
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                      height: 23,
-                      child: Text(
-                        thisUser.nickname,
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      )),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        decoration: BoxDecoration(
-                          color: Colors.blueGrey.shade200,
-                          borderRadius: const BorderRadius.only(
-                            // topLeft: Radius.circular(5),
-                              topRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                        ),
-                        child: Text(
-                          thisChat.text,
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        thisChat.time,
-                        style: TextStyle(fontSize: 12, color: Colors.black45),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ]),
-          );
+          var date = new DateTime.fromMillisecondsSinceEpoch(int.parse(thisChat.time));
+          var format = new DateFormat('hh:mm').format(date);
+
+
+          return Row(
+              mainAxisAlignment:
+              isCurrentUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+              children: [
+                if (isCurrentUserMessage) ...{
+
+                  Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              format,
+                              style: TextStyle(
+                                fontSize: 10
+                              ),
+                            ),
+                            BubbleSpecialOne(
+                                text: thisChat.text,
+                                isSender: true,
+                                color: Colors.blue,
+                                textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20
+                                ),
+                                ),
+                          ]))
+
+                },
+                if (!isCurrentUserMessage)
+                  Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.only(left: 00),
+                                child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      BubbleSpecialOne(
+                                        text: thisChat.text,
+                                        isSender: false,
+                                        color: Colors.grey.shade200,
+                                        textStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 20
+                                        ),
+                                      ),
+                                      Text(format,
+                                        style: TextStyle(
+                                            fontSize: 10
+                                        ),
+                                      )
+                                    ]))
+                          ]))
+              ]);
+
+
+
+
+
+
+
+
+
+          // return Container(
+          //   padding: const EdgeInsets.symmetric(vertical: 10),
+          //   alignment:
+          //   isCurrentUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+          //   child: Row(
+          //     mainAxisAlignment: isCurrentUserMessage
+          //         ? MainAxisAlignment.end
+          //         : MainAxisAlignment.start,
+          //     children: [
+          //       Column(
+          //         children: [
+          //           CircleAvatar(
+          //             backgroundImage: NetworkImage(thisUser.profileImg),
+          //             radius: 26,
+          //           ),
+          //           SizedBox(height: 10),
+          //         ],
+          //       ),
+          //       const SizedBox(width: 8),
+          //       Column(
+          //         crossAxisAlignment: isCurrentUserMessage
+          //             ? CrossAxisAlignment.end
+          //             : CrossAxisAlignment.start,
+          //         children: [
+          //           SizedBox(
+          //             height: 23,
+          //             child: Text(
+          //               thisUser.nickname,
+          //               style: const TextStyle(
+          //                   fontSize: 15, fontWeight: FontWeight.bold),
+          //             ),
+          //           ),
+          //           Container(
+          //             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+          //             decoration: BoxDecoration(
+          //               color: isCurrentUserMessage
+          //                   ? Colors.blueGrey.shade200
+          //                   : Colors.white,
+          //               borderRadius: BorderRadius.circular(10),
+          //             ),
+          //             child: Text(
+          //               thisChat.text,
+          //               style: const TextStyle(fontSize: 15),
+          //             ),
+          //           ),
+          //           const SizedBox(height: 5),
+          //           Text(
+          //             thisChat.time,
+          //             style: TextStyle(fontSize: 12, color: Colors.black45),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // );
         });
   }
 }
