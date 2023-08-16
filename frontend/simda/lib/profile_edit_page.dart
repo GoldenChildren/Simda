@@ -31,6 +31,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   bool isAvailable = true;
   bool isChanged = false;
 
+  String? _nicknameHelperText;
+
   @override
   void initState() {
     super.initState();
@@ -197,14 +199,15 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                           maxLines: 1,
                           onChanged: (text) {
                             _nickname = text;
+                            _nicknameHelperText = null;
                           },
                           cursorColor: Colors.black45,
                           decoration: InputDecoration(
-                            helperText: _nickname.isNotEmpty
-                                ? _nicknameAvailability == true
-                                ? '사용 가능한 닉네임입니다.'
-                                : '이미 사용 중인 닉네임입니다.'
-                                : '',
+                            helperText: _nicknameHelperText,
+                                // ? _nicknameAvailability == true
+                                // ? '사용 가능한 닉네임입니다.'
+                                // : '이미 사용 중인 닉네임입니다.'
+                                // : '',
                             helperStyle: TextStyle(fontSize: 12.0, color:_nicknameAvailability  ? Colors.purple  : Colors.red  ),
                             enabledBorder:  const UnderlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -243,9 +246,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                           if (_nickname.isNotEmpty) {
                             await _checkNicknameAvailability(
                                 _nickname);
+                            setState(() {
+                              if (_nicknameAvailability == true) {
+                                _nicknameHelperText = '사용 가능한 닉네임입니다.';
+                              } else {
+                                _nicknameHelperText = '이미 사용 중인 닉네임입니다.';
+                              }
+                            });
                           } else {
                             setState(() {
                               _nicknameAvailability = true;
+                              _nicknameHelperText = null;
                             });
                           }
                         },

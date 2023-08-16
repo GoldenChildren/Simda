@@ -27,6 +27,8 @@ class _SignUpState extends State<SignUp> {
   UserProviders userProvider = UserProviders();
   bool _showProfileImageHint = false;
 
+  String? _nicknameHelperText;
+
   // 이미지 선택 메서드
   Future<void> _pickImage(BuildContext context) async {
     final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
@@ -161,9 +163,17 @@ class _SignUpState extends State<SignUp> {
                         if (nicknameController.text.isNotEmpty) {
                           await _checkNicknameAvailability(
                               nicknameController.text);
+                          setState(() {
+                            if (_nicknameAvailability == true) {
+                              _nicknameHelperText = '사용 가능한 닉네임입니다.';
+                            } else {
+                              _nicknameHelperText = '이미 사용 중인 닉네임입니다.';
+                            }
+                          });
                         } else {
                           setState(() {
                             _nicknameAvailability = true;
+                            _nicknameHelperText = null;
                           });
                         }
                       },
@@ -243,11 +253,7 @@ class _SignUpState extends State<SignUp> {
         isDense: true,
         contentPadding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
         hintText: hintText,
-        helperText: nicknameController.text.isNotEmpty
-              ? _nicknameAvailability == true
-              ? '사용 가능한 닉네임입니다.'
-              : '이미 사용 중인 닉네임입니다.'
-            : '',
+        helperText: _nicknameHelperText,
         helperStyle: TextStyle(fontSize: 12.0, color:_nicknameAvailability  ? Colors.purple  : Colors.red  ),
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -276,6 +282,7 @@ class _SignUpState extends State<SignUp> {
       onChanged: (value) {
         setState(() {
         if (value.isNotEmpty) {
+          _nicknameHelperText = null;
                 return; // 닉네임이 입력되면 가능한 것으로 표시
               }
         });
