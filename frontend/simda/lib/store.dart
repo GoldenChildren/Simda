@@ -64,5 +64,6 @@ class Store{
   void logout() {
     storage.delete(key: 'accessToken');
     storage.delete(key: 'expiresAt');
+    storage.deleteAll();
   }
 }
