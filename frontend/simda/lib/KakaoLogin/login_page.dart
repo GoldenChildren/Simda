@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 50),
             // Image.network(
             //     viewModel.user?.kakaoAccount?.profile?.profileImageUrl ?? ''),
-            Text(nickname),
+            // Text(nickname),
             const SizedBox(height: 20),
             GestureDetector(
               onTap: () async {
