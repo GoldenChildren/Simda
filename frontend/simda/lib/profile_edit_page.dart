@@ -27,13 +27,29 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   XFile? _imgFile;
   int _userId = 0;
   final int _userRole = 1;
-
+  bool _nicknameAvailability = true;
+  bool isAvailable = true;
   bool isChanged = false;
 
   @override
   void initState() {
     super.initState();
     getValueFromSecureStorage();
+  }
+  // 닉네임 체크
+  Future<void> _checkNicknameAvailability(String nickname) async {
+    nickname = _nickname;
+    try {
+      isAvailable = await userProvider.checkNickname(nickname);
+
+      setState(() {
+        _nicknameAvailability = isAvailable;
+      });
+    } catch (error) {
+      setState(() {
+        _nicknameAvailability = false;
+      });
+    }
   }
 
   Future<void> getValueFromSecureStorage() async {
@@ -168,41 +184,76 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 //       ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextField(
-                maxLines: 1,
-                onChanged: (text) {
-                  _nickname = text;
-                },
-                cursorColor: Colors.black45,
-                decoration: const InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(color: Colors.transparent),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(color: Colors.transparent),
-                  ),
-                  labelText: '닉네임',
-                  labelStyle: TextStyle(
-                    color: Colors.black45,
-                  ),
-                  // hintText: '닉네임을 입력해주세요',
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(color: Colors.transparent),
-                  ),
+            const SizedBox(height:20),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Row(
+                    crossAxisAlignment:CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Container(
+                        child: TextField(
+                          maxLength: 20,
+                          maxLines: 1,
+                          onChanged: (text) {
+                            _nickname = text;
+                          },
+                          cursorColor: Colors.black45,
+                          decoration: InputDecoration(
+                            helperText: _nickname.isNotEmpty
+                                ? _nicknameAvailability == true
+                                ? '사용 가능한 닉네임입니다.'
+                                : '이미 사용 중인 닉네임입니다.'
+                                : '',
+                            helperStyle: TextStyle(fontSize: 12.0, color:_nicknameAvailability  ? Colors.purple  : Colors.red  ),
+                            enabledBorder:  const UnderlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            focusedBorder: const  UnderlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                            labelText: '닉네임',
+                            labelStyle: const TextStyle(
+                              color: Colors.black45,
+                            ),
+                            // hintText: '닉네임을 입력해주세요',
+                            border: const UnderlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
 
-                  fillColor: Colors.lightGreen,
-                  filled: true,
+                            fillColor: Colors.purple[200],
+                            filled: true,
+                          ),
+                          controller: TextEditingController(text: _nickname)
+                            ..selection = TextSelection.fromPosition(
+                                TextPosition(offset: _nickname.length)),
+                        ),
+                      ),
+    ),
+                      const SizedBox(width: 10,),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+
+                        ) ,
+                        onPressed: () async {
+                          if (_nickname.isNotEmpty) {
+                            await _checkNicknameAvailability(
+                                _nickname);
+                          } else {
+                            setState(() {
+                              _nicknameAvailability = true;
+                            });
+                          }
+                        },
+                        child: Text("중복 확인", style: TextStyle(color: Colors.purple),),
+                      ),
+                    ],
+                  ),
                 ),
-                controller: TextEditingController(text: _nickname)
-                  ..selection = TextSelection.fromPosition(
-                      TextPosition(offset: _nickname.length)),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: TextField(
@@ -210,24 +261,24 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                   _bio = text;
                 },
                 cursorColor: Colors.black45,
-                decoration: const InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
+                decoration:  InputDecoration(
+                  enabledBorder: const UnderlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
-                  focusedBorder: UnderlineInputBorder(
+                  focusedBorder: const UnderlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
                   labelText: '소개',
-                  labelStyle: TextStyle(
+                  labelStyle:const TextStyle(
                     color: Colors.black45,
                   ),
-                  border: UnderlineInputBorder(
+                  border:const UnderlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
-                  fillColor: Colors.lightGreen,
+                  fillColor: Colors.purple[200],
                   filled: true,
                 ),
                 controller: TextEditingController(text: _bio)

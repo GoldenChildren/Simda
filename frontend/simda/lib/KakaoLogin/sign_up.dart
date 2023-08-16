@@ -248,7 +248,7 @@ class _SignUpState extends State<SignUp> {
               ? '사용 가능한 닉네임입니다.'
               : '이미 사용 중인 닉네임입니다.'
             : '',
-        helperStyle: TextStyle(fontSize: 12.0, color:_nicknameAvailability  ? Colors.green  : Colors.red  ),
+        helperStyle: TextStyle(fontSize: 12.0, color:_nicknameAvailability  ? Colors.purple  : Colors.red  ),
         enabledBorder: const UnderlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           borderSide: BorderSide(color: Colors.transparent),
