@@ -38,17 +38,36 @@ class KakaoLogin implements SocialLogin {
 
   @override
   Future<int> login() async {
+    DatabaseReference ref = FirebaseDatabase.instance.ref("logs");
     try {
       bool isInstalled = await isKakaoTalkInstalled();
 
-      OAuthToken token;
+      OAuthToken? token;
       if (isInstalled) {
-        token = await UserApi.instance.loginWithKakaoTalk();
-      } else {
-        token = await UserApi.instance.loginWithKakaoAccount();
-      }
         try {
-          store.saveAccessToken(token);
+          token = await UserApi.instance.loginWithKakaoTalk();
+        }catch(e){
+          await ref.set({
+            'error': e
+          });
+        }
+      } else {
+        try{
+          token = await UserApi.instance.loginWithKakaoAccount();
+        }catch(e){
+          await ref.set({
+            'error': e
+          });
+        }
+      }
+      await ref.set({
+        'status' : 'success'
+      });
+        try {
+          await ref.set({
+            'info' : '카카오 - flutter 로그인 성공'
+          });
+          store.saveAccessToken(token!);
 
           final url = Uri.parse("$ip/user/login/kakao");
           final response = await http.post(url,
@@ -69,13 +88,23 @@ class KakaoLogin implements SocialLogin {
             return 0;
           }
 
+          await ref.set({
+            'info' : 'flutter - backend 로그인 성공'
+          });
+
           // print("뭔가 오류가 있다");
           return -1;
         } catch (e) {
+          await ref.set({
+            'error': e
+          });
           print(e);
           return -1;
         }
     } catch (e) {
+      await ref.set({
+        'error': e
+      });
       return -1;
     }
   }
