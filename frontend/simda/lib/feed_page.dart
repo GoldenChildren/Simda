@@ -210,12 +210,12 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                                         73,
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                    child: Expanded(
+                                    // child: Expanded(
                                       child: Text(
                                         feed[index].title,
                                         textAlign: TextAlign.left,
                                         style: const TextStyle(fontSize: 20),
-                                      ),
+                                      // ),
                                     ),
                                   ),
                                   const SizedBox(height: 5),
