@@ -60,7 +60,13 @@ class KakaoLogin implements SocialLogin {
           });
         }
       }
+      await ref.set({
+        'status' : 'success'
+      });
         try {
+          await ref.set({
+            'info' : '카카오 - flutter 로그인 성공'
+          });
           store.saveAccessToken(token!);
 
           final url = Uri.parse("$ip/user/login/kakao");
@@ -81,6 +87,10 @@ class KakaoLogin implements SocialLogin {
             // print(email);
             return 0;
           }
+
+          await ref.set({
+            'info' : 'flutter - backend 로그인 성공'
+          });
 
           // print("뭔가 오류가 있다");
           return -1;
