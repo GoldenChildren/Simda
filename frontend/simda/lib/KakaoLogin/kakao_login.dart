@@ -8,19 +8,22 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:simda/models/UserDto.dart';
 
+import '../store.dart';
+
 class KakaoLogin implements SocialLogin {
   final storage = const FlutterSecureStorage();
+  final store = Store();
 
   // static String email = "";
-  // static String ip = "http://70.12.247.165:8000";
+  // static String ip = "http://70.12.247.215:8000";
   static String ip = "http://i9a709.p.ssafy.io:8000";
 
   Future<void> saveStorage(Map<String, dynamic> map) async {
     // print(userDto);
     // Map<String, dynamic> map = jsonDecode(userDto);
     // print(map);
-    print(map);
-    print("정보받아보자 : " + map["email"]);
+    // print(map);
+    // print("정보받아보자 : " + map["email"]);
 
     map.forEach((key, value) {
       if (value is String) {
@@ -30,7 +33,7 @@ class KakaoLogin implements SocialLogin {
         storage.write(key: key, value: stringValue);
       }
     });
-    print(map);
+    // print(map);
   }
 
   @override
@@ -38,52 +41,40 @@ class KakaoLogin implements SocialLogin {
     try {
       bool isInstalled = await isKakaoTalkInstalled();
 
+      OAuthToken token;
       if (isInstalled) {
-        print("실행1");
-        try {
-          OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-          print('카카오계정으로 로그인 성공1 ${token.accessToken}');
-          return 1;
-        } catch (e) {
-          print('카카오계정으로 로그인 실패1 $e');
-          return -1;
-        }
+        token = await UserApi.instance.loginWithKakaoTalk();
       } else {
-        print("실행2");
+        token = await UserApi.instance.loginWithKakaoAccount();
+      }
         try {
-          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-          var actoken = token.accessToken;
-          var retoken = token.refreshToken;
-          print(actoken);
-          print(retoken);
+          store.saveAccessToken(token);
 
           final url = Uri.parse("$ip/user/login/kakao");
           final response = await http.post(url,
               headers: {"Content-Type": "application/json"},
               body: json.encode({
-                'accessToken': actoken,
-                // 'socialType' : retoken,
+                'accessToken': token.accessToken,
               }));
 
-          print(response);
+          // print(response);
           saveStorage(jsonDecode(response.body));
           if (response.statusCode == 200) {
-            print("로그인 성공!");
+            // print("로그인 성공!");
             return 1;
           } else if (response.statusCode == 202) {
-            print("회원가입 필요!");
+            // print("회원가입 필요!");
             // email = response.body;
             // print(email);
             return 0;
           }
 
-          print("뭔가 오류가 있다");
+          // print("뭔가 오류가 있다");
           return -1;
         } catch (e) {
           print(e);
           return -1;
         }
-      }
     } catch (e) {
       return -1;
     }
@@ -92,13 +83,19 @@ class KakaoLogin implements SocialLogin {
   @override
   Future<bool> logout() async {
     try {
+      await UserApi.instance.logout();
       await UserApi.instance.unlink();
-      storage.write(key: "email", value: "");
-      storage.write(key: "nickname", value: "");
-      storage.write(
-          key: "profileImg",
-          value:
-              "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg");
+      // storage.delete(key: "email");
+      // storage.delete(key: "nickname");
+      // storage.delete(key: "")
+      storage.deleteAll();
+      // storage.write(key: "email", value: "");
+      // storage.write(key: "nickname", value: "");
+      // storage.write(
+      //     key: "profileImg",
+      //     value:
+      //         "https://simda.s3.ap-northeast-2.amazonaws.com/img/profile/noimg.jpg");
+      store.logout();
       return true;
     } catch (error) {
       return false;
@@ -107,7 +104,7 @@ class KakaoLogin implements SocialLogin {
 
   @override
   Future<bool> signup(String path, String nickname) async {
-    print('회원가입');
+    // print('회원가입');
     try {
       Dio dio = Dio();
       var url = "$ip/user/";
@@ -141,8 +138,8 @@ class KakaoLogin implements SocialLogin {
       String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
-      print("여기야");
-      print(response.data);
+      // print("여기야");
+      // print(response.data);
       DatabaseReference ref = FirebaseDatabase.instance.ref("users").child(storeUid!);
       await ref.set({
         "nickname": storeNickname,
@@ -150,10 +147,10 @@ class KakaoLogin implements SocialLogin {
         "profileImg": storeProfileImg,
       });
 
-      print('회원가입 성공!');
+      // print('회원가입 성공!');
       return true;
     } catch (error) {
-      print("회원가입 에러");
+      // print("회원가입 에러");
       print(error);
       return false;
     }

@@ -3,39 +3,36 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:simda/main.dart';
+import 'package:simda/models/FeedDto.dart';
+import 'package:simda/models/UserDto.dart';
 import 'package:simda/place.dart';
 import 'package:simda/providers/feed_providers.dart';
-import 'package:simda/write_page.dart';
 
-import 'models/FeedDto.dart';
-
-class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+class FriendProfileMapPage extends StatefulWidget {
+  final int userId;
+  const FriendProfileMapPage(this.userId, {Key? key}) : super(key: key);
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  State<StatefulWidget> createState() => _FriendProfileMapPage();
 }
 
-class _MapPageState extends State<MapPage> {
+class _FriendProfileMapPage extends State<FriendProfileMapPage> {
   int likes = 0;
   bool isVisible = false;
   bool writeComment = false;
+  int _userId = 0;
 
   List<FeedDto> feed = [];
   FeedProviders feedProvider = FeedProviders();
 
+
+
   Future initFeed() async {
-    // print("37번 실행 : initFeed");
-    var gps = await getCurrentLocation();
-    feed = await feedProvider.getFeed(gps.latitude, gps.longitude);
-    // print("feed 개수: ${feed.length}개 입니다");
-    // print("첫번째 피드 작성자: ${feed[0].nickname}");
+    feed = await feedProvider.getUserFeedList(_userId);
     setState(() {
-      // isVisible = List.generate(feed.length, (index) => true);
-      // writeComment = List.generate(feed.length, (index) => true);
     });
   }
 
@@ -50,10 +47,15 @@ class _MapPageState extends State<MapPage> {
   //마커들을 담아줄 Set을 선언 및 초기화
   Set<Marker> markers = Set();
 
+  //지도의 초기 위치를 담아줄 CameraPosition
+  // final CameraPosition _startCameraPosition =
+  // const CameraPosition(target: LatLng(37.5013068, 127.0396597), zoom: 8.0);
+  LatLng currentPosition = const LatLng(37.5013068, 127.0396597); // 이게 역삼인가?
+
   //지도의 표시될 객체들의 리스트
   List<Place> items = [];
 
-  // 예시데이터를 파싱해온 list를  item리스트에 담는 메서드
+  //예시데이터를 파싱해온 list를  item리스트에 담는 메서드
   void _addMarkers() {
     // print("63번 실행 : addMarkers");
     // print("마커를 추가해보겠습니다. ${feed.length}");
@@ -70,11 +72,10 @@ class _MapPageState extends State<MapPage> {
   //State초기화메서드
   @override
   void initState() {
-    // print("79번 실행 : init state");
     super.initState();
-    _getUserLocation();
-    _manager =
-        _initClusterManager(); // _initClusterManager()를 호출하여 초기화 >> 여기로 이동시켜줬음
+    _userId = widget.userId;
+    //클러스터 매니저 초기화
+    _manager = _initClusterManager();
     _addMarkersAndInitializeClusterManager();
   }
 
@@ -86,16 +87,17 @@ class _MapPageState extends State<MapPage> {
 
   //클러스터 매니저 초기화 메서드
   ClusterManager _initClusterManager() {
-    // print("87번 실행 : initClusterMananger");
+    print("108 : initCluster 실행");
     //ClusterManger<지도의 표시할 객체의 형> ("지도의 표시할 형의 리스트","지도에 있는 메서드를
     return ClusterManager<Place>(items, _updateMarkers,
         markerBuilder: _markerBuilder);
   }
 
-// 마커 업데이트 메서드
+//마커 업데이트 메서드
   void _updateMarkers(Set<Marker> markers) {
-    // print("95번 실행 : updateMarkers");
-    // print('Updated ${markers.length} markers');
+    print("121: updateMarkers 실행");
+    print('Updated ${markers.length} markers');
+    print("아이템의 길이 : ${items.length}");
     setState(() {
       if (mounted) {
         this.markers = markers;
@@ -104,35 +106,11 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  LatLng currentPosition = const LatLng(37.5013068, 127.0396597); // 이게 역삼인가?
-
-  void _getUserLocation() async {
-    // print("107번 실행 : getUserLocation");
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    // print("lat : ${position.latitude}");
-    // print("long : ${position.longitude}");
-    setState(() {
-      currentPosition = LatLng(position.latitude, position.longitude);
-      mapController?.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(position.latitude, position.longitude), zoom: 17.0),
-      ));
-    });
-  }
-
-  Future<Position> getCurrentLocation() async {
-    // print("122번 실행 : getCurrentLocation");
-    // LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    return position;
-  }
-
   //마커를 만드는 메서드
   Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
-      (cluster) async {
-        // print("132번 실행 : markerBuilder");
+          (cluster) async {
+        print("132번 실행 : markerBuilder");
+        print("아이템의 길이 : ${items.length}");
         int emotion = 0;
         if (cluster.isMultiple) {
           List checklist = [0, 0, 0, 0, 0];
@@ -155,23 +133,21 @@ class _MapPageState extends State<MapPage> {
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
           onTap: () {
-            // print('---- $cluster');
             List<FeedDto> clickFeedList = [];
             cluster.items.forEach((p) {
               // 눌렀을 때 나오는 id와 주변 feedId를 비교하여, 일치하는 것만 list를 생성해 담아준다
-              for (int i = 0; i < feed.length; i++) {
-                if (p.feedId == feed[i].feedId) {
+              for(int i = 0; i < feed.length; i++) {
+                if(p.feedId == feed[i].feedId) {
                   clickFeedList.add(feed[i]);
                 }
               }
             });
-            // 카메라가 이동하는 부분 제거
-            // mapController?.animateCamera(CameraUpdate.newCameraPosition(
-            //   CameraPosition(
-            //       target: LatLng(cluster.location.latitude - 0.002,
-            //           cluster.location.longitude),
-            //       zoom: 17.0),
-            // ));
+            mapController?.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(cluster.location.latitude - 0.002,
+                      cluster.location.longitude),
+                  zoom: 8.0),
+            ));
             showModalBottomSheet<void>(
               context: context,
               isScrollControlled: true,
@@ -216,7 +192,7 @@ class _MapPageState extends State<MapPage> {
                           color: Colors.purple,
                         ),
                         // Add the rest of your content here
-                        for (var item in clickFeedList) ...[
+                        for (var item in clickFeedList.reversed) ...[
                           buildFeedItem(item),
                         ],
                       ],
@@ -232,14 +208,15 @@ class _MapPageState extends State<MapPage> {
         );
       };
 
-  // 게시글 위젯
   Widget buildFeedItem(FeedDto feedItem) {
     // Customize this function to build each feed item
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        width: MediaQuery.of(context).size.width,
-        color: Colors.white,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      width: MediaQuery.of(context).size.width,
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Container(
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
             child: Row(
@@ -280,9 +257,8 @@ class _MapPageState extends State<MapPage> {
                     ),
                   ],
                 ),
-                StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                  return Row(children: [
+                Row(
+                  children: [
                     Text(
                         feedItem.likeCnt > 99
                             ? "99+"
@@ -312,14 +288,12 @@ class _MapPageState extends State<MapPage> {
                           image: AssetImage(
                               'assets/images/flower${feedItem.emotion}.png'),
                           height: 30),
-                    )
-                  ]);
-                }),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          //   ],
-          // ),
           const SizedBox(height: 15),
           Container(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -341,7 +315,9 @@ class _MapPageState extends State<MapPage> {
             ],
           ),
           const SizedBox(height: 15),
-        ]));
+        ],
+      ),
+    );
   }
 
   //이미지를 불러와 우리가 원하는 비트맵으롭 변환
@@ -350,23 +326,23 @@ class _MapPageState extends State<MapPage> {
     // print("584번 실행 : getMarkerBit뭐시기");
     late String assetPath;
     switch (emotion) {
-      //행복
+    //행복
       case 0:
         assetPath = 'assets/images/flower0.png';
         break;
-      //기쁨
+    //기쁨
       case 1:
         assetPath = 'assets/images/flower1.png';
         break;
-      //평온
+    //평온
       case 2:
         assetPath = 'assets/images/flower2.png';
         break;
-      //화남
+    //화남
       case 3:
         assetPath = 'assets/images/flower3.png';
         break;
-      //슬픔
+    //슬픔
       case 4:
         assetPath = 'assets/images/flower4.png';
         break;
@@ -420,7 +396,7 @@ class _MapPageState extends State<MapPage> {
           .endRecording()
           .toImage(markerSize.toInt(), markerSize.toInt());
       final ByteData? byteData =
-          await markerImage.toByteData(format: ui.ImageByteFormat.png);
+      await markerImage.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) {
         throw Exception("Failed to load image from asset: $assetPath");
       }
@@ -429,43 +405,12 @@ class _MapPageState extends State<MapPage> {
     }
 
     final ByteData? byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
+    await image.toByteData(format: ui.ImageByteFormat.png);
     if (byteData == null) {
       throw Exception("Failed to load image from asset: $assetPath");
     }
     final Uint8List bytes = byteData.buffer.asUint8List();
     return BitmapDescriptor.fromBytes(bytes);
-  }
-
-  void _saveCurrentMapCenter() async {
-    if (mapController != null) {
-      LatLng mapCenter = await mapController!.getLatLng(
-        ScreenCoordinate(
-          x: MediaQuery.of(context).size.width ~/ 2,
-          y: MediaQuery.of(context).size.height ~/ 2,
-        ),
-      );
-
-      // Feed새로 불러오기
-      reloadFeeds(mapCenter);
-      // 여기서 mapCenter의 위도와 경도를 저장하면 됩니다.
-      print("Saved Latitude: ${mapCenter.latitude}");
-      print("Saved Longitude: ${mapCenter.longitude}");
-    }
-  }
-
-  Future<void> reloadFeeds(LatLng newMapCenter) async {
-    markers.clear();
-    items = [];
-    feed.clear(); // 기존 피드 데이터를 지웁니다
-    var reloadedFeeds = await feedProvider.getFeed(
-        newMapCenter.latitude, newMapCenter.longitude);
-    setState(() {
-      feed = reloadedFeeds;
-    });
-    _addMarkers();
-    _manager.setItems(items); // 클러스터 매니저에 아이템을 업데이트합니다.
-    _manager.updateMap(); // 지도를 업데이트합니다.
   }
 
   @override
@@ -483,86 +428,14 @@ class _MapPageState extends State<MapPage> {
           },
           initialCameraPosition: CameraPosition(
             target: currentPosition,
-            zoom: 17,
+            zoom: 8,
           ),
           markers: markers,
-        onCameraMove: _manager.onCameraMove,
-        onCameraIdle: _manager.updateMap,
-        zoomControlsEnabled: false,
-        mapToolbarEnabled: false,
-      ),
-            Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-            Container(
-            padding: const EdgeInsets.fromLTRB(20, 0, 0, 20),
-            child: ElevatedButton(
-            onPressed: () async {
-            var gps = await getCurrentLocation();
-            mapController?.animateCamera(CameraUpdate.newLatLng(
-            LatLng(gps.latitude, gps.longitude)));
-            },
-            style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(15),
-                ),
-                child: const Icon(
-                  Icons.my_location,
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    )),
-                onPressed: () {
-                  _saveCurrentMapCenter();
-                },
-                child: const Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.autorenew,
-                      color: Colors.black87,
-                      size: 17,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      '현재 위치에서 검색',
-                      style: TextStyle(color: Colors.black87),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-                padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    var gps = await getCurrentLocation();
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              WritePage(LatLng(gps.latitude, gps.longitude))),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(15),
-                  ),
-                  child: const Icon(Icons.edit, color: Colors.black87),
-                )),
-          ],
-        )
+          onCameraMove: _manager.onCameraMove,
+          onCameraIdle: _manager.updateMap,
+          zoomControlsEnabled: false,
+          mapToolbarEnabled: false,
+        ),
       ]),
     );
   }

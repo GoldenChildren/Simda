@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:simda/main.dart';
+import 'package:simda/main_page.dart';
 import 'package:simda/providers/user_providers.dart';
 
 import 'main.dart';
+import 'main_page.dart';
 import 'models/UserDto.dart';
 
 class ProfileEditPage extends StatefulWidget {
@@ -36,7 +38,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   Future<void> getValueFromSecureStorage() async {
     try {
-      String? storeEmail = await storage.read(key: "profileImg");
+      String? storeEmail = await storage.read(key: "email");
       String? storeProfileImg = await storage.read(key: "profileImg");
       String? storeNickname = await storage.read(key: "nickname");
       String? storeBio = await storage.read(key: "bio");
@@ -91,20 +93,25 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
-                        onPressed: () {
+                        onPressed: () async {
                           print(_bio);
                           print(_nickname);
                           print(_userId);
                           print(_profileImg);
 
-                          userProvider.modifyUser(_imgFile?.path ?? '', UserDto(
+                          await userProvider.modifyUser(_imgFile?.path ?? '', UserDto(
                               bio: _bio,
                               email: _email,
                               userId: _userId,
                               nickname: _nickname,
                               profileImg: _profileImg,
                               userRole: _userRole));
-                          Navigator.pop(context);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MainPage(4)), // 4는 이동하고 싶은 인덱스
+                          );
+
                         },
                         style: ButtonStyle(
                             backgroundColor:
@@ -140,7 +147,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                       : CircleAvatar(
                     radius: imageSize / 2,
                     backgroundColor: Colors.transparent,
-                    backgroundImage: NetworkImage(_profileImg),
+                    backgroundImage: NetworkImage('${_profileImg}?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
                   )
 
                 // Center(

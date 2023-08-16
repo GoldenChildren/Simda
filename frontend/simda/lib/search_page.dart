@@ -77,107 +77,110 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        children: <Widget>[
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 7,
-                  child: TextField(
-                    cursorColor: Colors.black54,
-                    focusNode: focusNode,
-                    style: const TextStyle(fontSize: 15),
-                    autofocus: true,
-                    controller: _filter,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.black12,
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        color: Colors.black45,
-                        size: 28,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: <Widget>[
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 7,
+                    child: TextField(
+                      cursorColor: Colors.black54,
+                      focusNode: focusNode,
+                      style: const TextStyle(fontSize: 15),
+                      autofocus: true,
+                      controller: _filter,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.black12,
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.black45,
+                          size: 28,
+                        ),
+                        suffixIcon: focusNode.hasFocus
+                            ? IconButton(
+                                icon: const Icon(
+                                  Icons.cancel,
+                                  size: 23,
+                                  color: Colors.black45,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _filter.clear();
+                                    _searchText = "";
+                                  });
+                                },
+                              )
+                            : Container(),
+                        hintText: "검색",
+                        labelStyle: const TextStyle(color: Colors.white),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        border: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
                       ),
-                      suffixIcon: focusNode.hasFocus
-                          ? IconButton(
-                              icon: const Icon(
-                                Icons.cancel,
-                                size: 23,
-                                color: Colors.black45,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _filter.clear();
-                                  _searchText = "";
-                                });
-                              },
-                            )
-                          : Container(),
-                      hintText: "검색",
-                      labelStyle: const TextStyle(color: Colors.white),
-                      focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
                     ),
                   ),
-                ),
-                Expanded(flex: 0, child: Container()),
-              ],
+                  Expanded(flex: 0, child: Container()),
+                ],
+              ),
             ),
-          ),
-          // nickname이 비어있지 않으면 결과를 출력
-          _userList.isNotEmpty
-              ? Container(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _userList.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage:
-                                NetworkImage(_userList[index].profileImg),
-                          ),
-                          title: Text(_userList[index].nickname),
-                          onTap: () {
-                            UserDto user = _userList[
-                                index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
+            // nickname이 비어있지 않으면 결과를 출력
+            _userList.isNotEmpty
+                ? Container(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _userList.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundImage:
+                                  NetworkImage(_userList[index].profileImg),
+                            ),
+                            title: Text(_userList[index].nickname),
+                            onTap: () {
+                              UserDto user = _userList[
+                                  index]; // user의 정보들을 넘기지 않고, userDto를 넘기면 될 것 같은데?
 
-                            user.userId == _userId
-                                ? Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MainPage(4)),
-                                    (route) => false)
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FriendProfilePage(
-                                        userDto: user,
+                              user.userId == _userId
+                                  ? Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MainPage(4)),
+                                      (route) => false)
+                                  : Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => FriendProfilePage(
+                                          userDto: user,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                )
-              : Container(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  child: const Text('결과 없음')), // 닉네임이 빈 경우 결과 없음을 출력
-        ],
+                                    );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                : Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    child: const Text('결과 없음')), // 닉네임이 빈 경우 결과 없음을 출력
+          ],
+        ),
       ),
     );
   }

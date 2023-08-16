@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:simda/friend_profile_map.dart';
 import 'package:simda/main.dart';
+import 'package:simda/models/ChatUserDto.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:simda/profile_map.dart';
 import 'package:simda/providers/user_providers.dart';
@@ -23,13 +25,29 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
   List<UserDto> _followerList = [];
   UserProviders userProvider = UserProviders();
   int loginUserId = 0;
+  late ChatUserDto me;
 
   @override
   void initState() {
     super.initState();
     _fetchFollowData();
   }
-
+  Future<void> getValueFromSecureStorage() async {
+    try {
+      int storeUserId = int.parse((await storage.read(key: "userId"))!);
+      String? storeNickname = await storage.read(key: "nickname");
+      String? storeProfileImg = await storage.read(key: "profileImg");
+      setState(() {
+        me = ChatUserDto(
+          userId: storeUserId.toString(),
+          nickname: storeNickname.toString(),
+          profileImg: storeProfileImg.toString(),
+        );
+      });
+    } catch (e) {
+      print("Error reading from secure storage: $e");
+    }
+  }
   Future<void> _fetchFollowData() async {
     try {
       List<UserDto> followingList =
@@ -54,13 +72,14 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
   Widget build(BuildContext context) {
     int followCnt = _followList.length;
     int followerCnt = _followerList.length;
-
+    getValueFromSecureStorage();
     final imageSize = MediaQuery.of(context).size.width / 4;
 
     return SafeArea(
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -77,10 +96,10 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                         iconSize: 28,
                       ),
                     ),
-                    const Text(
-                      '팔로잉 목록',
+                    Text(
+                      widget.userDto.nickname,
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -172,12 +191,31 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                               const SizedBox(width: 10),
                               ElevatedButton(
                                 onPressed: () {
+                                  print("test");
+                                  ChatUserDto contact = ChatUserDto(
+                                      userId: widget.userDto.userId.toString(),
+                                      nickname: widget.userDto.nickname,
+                                      profileImg: widget.userDto.profileImg
+                                  );
+                                  print(me.userId);
+                                  print(me.nickname);
+                                  print(me.profileImg);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ChatWithFriend(2)),
+                                      builder: (context) => ChatWithFriend(
+                                        contact: contact,
+                                        me : me,
+                                      ),
+                                    ),
                                   );
+                                  // Navigator.push(
+                                  //   // context,
+                                  //   // MaterialPageRoute(
+                                  //   //     // builder: (context) =>
+                                  //   //          // ChatWithFriend(contact: contact,)
+                                  //   // ),
+                                  // );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Theme.of(context).primaryColor,
@@ -251,7 +289,7 @@ class _FriendProfilePageState extends State<FriendProfilePage> {
                   children: [
                     FriendProfileCalendarPage(widget.userDto.userId),
                     FriendProfileFeedPage(widget.userDto.userId),
-                    const ProfileMapPage(),
+                    FriendProfileMapPage(widget.userDto.userId),
                   ],
                 ),
               ),

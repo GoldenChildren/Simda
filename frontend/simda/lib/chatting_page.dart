@@ -1,9 +1,11 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:simda/chat_with_friend.dart';
 import 'package:simda/chatting_search_page.dart';
 import 'package:simda/main.dart';
 import 'package:simda/models/ChatUserDto.dart';
+import 'package:simda/models/LastChatDto.dart';
 import 'package:simda/providers/chatroom_providers.dart';
 
 import 'models/ChatRoomDto.dart';
@@ -16,12 +18,12 @@ class ChattingPage extends StatefulWidget {
 }
 
 class _ChattingPageState extends State<ChattingPage> {
-  int userId = 8;
+  int userId = 0;
+  ChatUserDto? me;
   List<ChatRoomDto> chatroom = [];
   ChatRoomProviders chatroomprovider = ChatRoomProviders();
 
   void listenForChatRoomUpdates() {
-
     Query starCountRef =
     FirebaseDatabase.instance.ref('chatrooms')
         .orderByChild("participants/" +userId.toString())
@@ -32,88 +34,102 @@ class _ChattingPageState extends State<ChattingPage> {
       if (data == null) {
         return;
       }
-      print(data);
-
       if(data is Map){
-        print("data가 맵이야!");
         data.forEach((roomId, roomData) {
-          print(roomId);
-          print(roomData is Map<dynamic, dynamic>);
           if (roomData is Map<dynamic, dynamic>) { // Map 타입 확인
-            print("data가 Map<String, dynamic>이야!");
-            ChatRoomDto rchatRoom = ChatRoomDto.fromJson(roomData);
-            print("여기까지 옴");
-            chatroom.add(rchatRoom);
-            print(rchatRoom);
-
-            print("여기까지 못옴");
+            print(roomId is String);
+            ChatRoomDto rchatRoom = ChatRoomDto.fromJson(roomData,roomId);
+            print("목록 프린트");
+            print(rchatRoom.lastMessage.values.first);
+            if(rchatRoom.lastMessage.values.first !=""){
+              chatroom.add(rchatRoom);
+            }
           }
         });
+
+        chatroom.sort((a, b) {
+          // Compare timestamps for sorting
+          int aTimestamp = a.lastMessage['time'] ?? 0;
+          int bTimestamp = b.lastMessage['time'] ?? 0;
+          return bTimestamp.compareTo(aTimestamp);
+        });
       }
-      setState(() {if (mounted) {
-        // 여기서 setState() 호출
-      }});
-      print("끝");
+      setState(() {});
     });
   }
-
   @override
-  void initState() {
-    super.initState();
-    getValueFromSecureStorage();
-    listenForChatRoomUpdates();
+  void dispose() {
+    // 해제
+    super.dispose();
   }
+  @override
+  void initState()  {
+    super.initState();
+    getValueFromSecureStorage().then((value) => listenForChatRoomUpdates());
+  }
+
   Future<void> getValueFromSecureStorage() async {
     try {
       int storeUserId = int.parse((await storage.read(key: "userId"))!);
+      String? storeNickname = await storage.read(key: "nickname");
+      String? storeProfileImg = await storage.read(key: "profileImg");
 
-      setState(() {
         userId = storeUserId;
-        print(storeUserId);
-      });
+        me =  ChatUserDto(
+          userId: storeUserId.toString(),
+          nickname: storeNickname.toString(),
+          profileImg: storeProfileImg.toString(),);
+
+          setState(() {});
     } catch (e) {
       print("Error reading from secure storage: $e");
     }
   }
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: SafeArea(
-          child: Scaffold(
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        '채팅 목록',
-                        style:
+          if(me ==null){
+            return CircularProgressIndicator();
+          }
+          return GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: SafeArea(
+              child: Scaffold(
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            '채팅 목록',
+                            style:
                             TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ChattingSearchPage()),
+                            );
+                          },
+                            icon: const Icon(Icons.add), iconSize: 28,),
+                        ],
                       ),
-                      IconButton(onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const ChattingSearchPage()),
-                        );
-                      },
-                      icon: const Icon(Icons.add), iconSize: 28,),
-                    ],
-                  ),
+                    ),
+                    Container(height: 2, color: Colors.purple),
+                    Expanded(
+                      child: ListViewBuilder(chatroom: chatroom, userId : userId, me:me!),
+                    ),
+                  ],
                 ),
-                Container(height: 2, color: Colors.purple),
-                Expanded(
-                    child: ListViewBuilder(chatroom: chatroom, userId : userId)),
-              ],
+              ),
             ),
-          ),
-        ),
-      );
+          );
+
+
   }
 }
 
@@ -122,8 +138,9 @@ class _ChattingPageState extends State<ChattingPage> {
 class ListViewBuilder extends StatefulWidget {
   List<ChatRoomDto> chatroom;
   int userId;
+  ChatUserDto me;
 
-  ListViewBuilder({required this.chatroom, required this.userId,});
+  ListViewBuilder({super.key, required this.chatroom, required this.userId, required this.me});
   @override
   State<ListViewBuilder> createState() => _ListViewBuilderState();
 }
@@ -134,29 +151,25 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
   @override
   void initState() {
     super.initState();
+    print("${widget.me.nickname} 왔다");
   }
 
   Future<List<ChatUserDto>> fetchContacts() async {
     List<ChatUserDto> updatedContacts = [];
 
-    print("작동 1");
+
     for (int index = 0; index < widget.chatroom.length; index++) {
       ChatRoomDto chatRoom = widget.chatroom[index];
-      String userId1 = chatRoom.participants.keys.first;
-      String userId2 = chatRoom.participants.keys.last;
+      String userId1 = chatRoom.participants.keys.first.toString();
+      String userId2 = chatRoom.participants.keys.last.toString();
       ChatRoomProviders chatRoomProviders = ChatRoomProviders();
       ChatUserDto? contact;
-      print(userId2);
       if (userId2 == widget.userId.toString()) {
         contact = await chatRoomProviders.getChatUser(int.parse(userId1));
-        print("작동 2");
       } else {
         contact = await chatRoomProviders.getChatUser(int.parse(userId2));
-        print("작동 2");
       }
-
       if (contact != null) {
-        print("작동 3");
         updatedContacts.add(contact);
       }
     }
@@ -183,13 +196,28 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
       itemCount: widget.chatroom.length,
       itemBuilder: (BuildContext context, int index) {
         ChatUserDto contact = contacts[index]; // 가져온 데이터 사용
+        ChatRoomDto thischatRoom = widget.chatroom[index];
+        LastChatDto lastChat = LastChatDto.fromJson(thischatRoom.lastMessage);
+        bool shouldShowUnreadIndicator =
+            lastChat.read == true && lastChat.userId == contact.userId;
+
+
+        late var format;
+        if(lastChat.time != null){
+          var date = new DateTime.fromMillisecondsSinceEpoch(int.parse(lastChat.time!));
+          format= new DateFormat('hh:mm').format(date);
+        }else{
+          format=null;
+        }
+
 
         return GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ChatWithFriend(index)),
+                  builder: (context) => ChatWithFriend(contact: contact, me:widget.me)),
             );
           },
           child: Container(
@@ -217,7 +245,7 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            "여기다가 마지막 채팅 내용",
+                              lastChat.text ?? " ",
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -225,18 +253,21 @@ class _ListViewBuilderState extends State<ListViewBuilder> {
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text("04:23"),
-                            const SizedBox(height: 5),
-                            Container(
-                              height: 15,
-                              width: 15,
-                              decoration: const BoxDecoration(
+                            if (shouldShowUnreadIndicator)
+                              Container(
+                                height: 15,
+                                width: 15,
+                                decoration: const BoxDecoration(
                                   color: Colors.redAccent,
-                                  shape: BoxShape.circle),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                ),
                               ),
-                            )
+                            const SizedBox(height: 5),
+                            Text(format?? " "),
+
                           ]),
                     ],
                   ),
