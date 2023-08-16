@@ -22,7 +22,6 @@ Future<void> main() async {
   // 달력 한국 시각
 
   await initializeDateFormatting();
-  isLogin = await store.checkAccessTokenValidity();
 
   final GoogleMapsFlutterPlatform mapsImplementation =
       GoogleMapsFlutterPlatform.instance;
@@ -35,6 +34,8 @@ Future<void> main() async {
     ),
       debugShowCheckedModeBanner: false,
       home: const MyApp()));
+
+  isLogin = await store.checkAccessTokenValidity();
 }
 
 bool isVisible = true;
