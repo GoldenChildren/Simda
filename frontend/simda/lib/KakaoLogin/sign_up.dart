@@ -23,6 +23,7 @@ class _SignUpState extends State<SignUp> {
   final _picker = ImagePicker();
   XFile? _profileImage;
   bool _nicknameAvailability = true; //
+  bool _isNicknameAvailable = false;
   bool isAvailable = true;
   UserProviders userProvider = UserProviders();
   bool _showProfileImageHint = false;
@@ -165,15 +166,17 @@ class _SignUpState extends State<SignUp> {
                               nicknameController.text);
                           setState(() {
                             if (_nicknameAvailability == true) {
+                              _isNicknameAvailable = true;
                               _nicknameHelperText = '사용 가능한 닉네임입니다.';
                             } else {
+                              _isNicknameAvailable = false;
                               _nicknameHelperText = '이미 사용 중인 닉네임입니다.';
                             }
                           });
                         } else {
                           setState(() {
-                            _nicknameAvailability = true;
-                            _nicknameHelperText = null;
+                            _nicknameAvailability = false;
+                            _nicknameHelperText = '닉네임을 입력해주세요';
                           });
                         }
                       },
@@ -203,8 +206,7 @@ class _SignUpState extends State<SignUp> {
                       padding: const EdgeInsetsDirectional.all(15),
                     ),
                     child: const Text("회원가입"),
-                    onPressed:
-                        _profileImage == null || !_nicknameAvailability
+                    onPressed: (_profileImage == null || !_isNicknameAvailable || !_nicknameAvailability ||  nicknameController.text.isEmpty )
                         ? null
                         :() async {
                       if (_profileImage == null) {
@@ -270,19 +272,20 @@ class _SignUpState extends State<SignUp> {
         fillColor: Colors.purple[200],
         filled: true,
       ),
-      validator: (value) {
-        if (value!.trim().isEmpty) {
-          return '닉네임을 입력해주세요';
-        }
-        if (value.length > maxSize) {
-          return '닉네임은 $maxSize자 이하여야 합니다';
-        }
-        return null;
-      },
+      // validator: (value) {
+      //   if (value!.trim().isEmpty) {
+      //     return '닉네임을 입력해주세요';
+      //   }
+      //   if (value.length > maxSize) {
+      //     return '닉네임은 $maxSize자 이하여야 합니다';
+      //   }
+      //   return null;
+      // },
       onChanged: (value) {
         setState(() {
         if (value.isNotEmpty) {
           _nicknameHelperText = null;
+          _isNicknameAvailable = false;
                 return; // 닉네임이 입력되면 가능한 것으로 표시
               }
         });
