@@ -148,8 +148,6 @@ public class UserController {
 //        System.out.println(userDto.getNickname());
 //        System.out.println(userDto.getUserId());
 
-
-
         // userDto 값을 통해 가입했는지, 안했는지 확인
         // 가입 이력 자체가 없다
         if(userDto == null) {
