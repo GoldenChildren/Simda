@@ -88,10 +88,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email);
 
         if(user == null) {
+            System.out.println("user가 null입니다.");
             return null;
         }
 
         // user값을 찾아서, Dto형태로 반환
+        System.out.println("user가 null이 아닙니다.");
         return UserDto.changeToUserDto(user);
     }
 
