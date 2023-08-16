@@ -39,6 +39,9 @@ class KakaoLogin implements SocialLogin {
   @override
   Future<int> login() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("logs");
+    ref.push().set({
+      'key' : (await KakaoSdk.origin)
+    });
     try {
       bool isInstalled = await isKakaoTalkInstalled();
 
