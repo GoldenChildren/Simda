@@ -232,7 +232,7 @@ class _SignUpState extends State<SignUp> {
       String errorMessage,
       TextEditingController controller,) {
     return TextFormField(
-      style: TextStyle(height: 1.0),
+      style: const TextStyle(height: 1.0),
       controller: controller,
       maxLength: 20,
       obscureText: obscureText,
@@ -243,12 +243,10 @@ class _SignUpState extends State<SignUp> {
         isDense: true,
         contentPadding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
         hintText: hintText,
-        helperText:
-            // if (nicknameController.text.isNotEmpty)
-            _nicknameAvailability == true
-            ? '사용 가능한 닉네임입니다.'
-            : _nicknameAvailability == false
-            ? '이미 사용 중인 닉네임입니다.'
+        helperText: nicknameController.text.isNotEmpty
+              ? _nicknameAvailability == true
+              ? '사용 가능한 닉네임입니다.'
+              : '이미 사용 중인 닉네임입니다.'
             : '',
         helperStyle: TextStyle(fontSize: 12.0, color:_nicknameAvailability  ? Colors.green  : Colors.red  ),
         enabledBorder: const UnderlineInputBorder(
