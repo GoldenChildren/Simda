@@ -7,6 +7,8 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.User;
@@ -29,10 +31,12 @@ public class UserServiceImpl implements UserService {
     FeedService feedService;
     @Autowired
     CommentService commentService;
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     // 전체 유저를 조회한다
     @Override
     public List<UserDto> selectAllUser() {
+        logger.info("selectAllUser 메서드 시작");
         // Entity Type의 User List를 하나 가져오고,
         List<User> userList = userRepository.findAll();
 
@@ -51,7 +55,7 @@ public class UserServiceImpl implements UserService {
     // 검색한 닉네임이 포함되는 유저들을 조회한다
     @Override
     public List<UserDto> selectUsers(String nickname) {
-
+        logger.info("selectUsers 메서드 시작: nickname = {}", nickname);
         // 이름이 포함되는 유저를 검색해 온 User Entity 리스트 생성
         List<User> userList = userRepository.findAllByNicknameContaining(nickname);
 
@@ -65,7 +69,7 @@ public class UserServiceImpl implements UserService {
             }
             userDtoList.add(UserDto.changeToUserDto(u));
         }
-        
+
         // User Dto Type의 List 반환
         return userDtoList;
     }
@@ -73,6 +77,7 @@ public class UserServiceImpl implements UserService {
     // 닉네임 중복검사
     @Override
     public boolean selectUserByNickname(String nickname) {
+        logger.info("selectUserByNickname 메서드 시작: nickname = {}", nickname);
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
         User user = userRepository.findByNickname(nickname);
 
@@ -82,24 +87,26 @@ public class UserServiceImpl implements UserService {
     // 로그인시 DB에 Email check과 함께 DB에 저장된 정보를 반환
     @Override
     public UserDto selectUserByEmail(String email) {
-
+        logger.info("selectUserByEmail 메서드 시작: email = {}", email);
         // 이메일이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
         System.out.println("repo "+ email);
         User user = userRepository.findByEmail(email);
 
+
         if(user == null) {
-            System.out.println("user가 null입니다.");
+            logger.info("user is null");
             return null;
         }
+        logger.info("user 정보 = {}",user);
 
         // user값을 찾아서, Dto형태로 반환
-        System.out.println("user가 null이 아닙니다.");
         return UserDto.changeToUserDto(user);
     }
 
     // User정보 수정, 실패와 성공을 반환한다
     @Override
     public boolean updateUser(UserDto userDto) {
+        logger.info("updateUser 메서드 시작");
         try {
             System.out.println("UserServiceImpl updateUser 진입");
             // User Repo에서 id를 통해 해당 User의 Entity를 가져오기
@@ -121,7 +128,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println("UserServiceImpl의 120까지 오나?");
                 nowUser.setUserRole(1);
             }
-            
+
             // userRepo에서 변경된 부분을 저장한다.
             userRepository.save(nowUser);
 
@@ -137,18 +144,20 @@ public class UserServiceImpl implements UserService {
     // 닉네임이 일치하는 한 명의 유저를 조회한다
     @Override
     public UserDto selectOneUser(int userId) {
+        logger.info("selectOneUser 메서드 시작: userId = {}", userId);
         // UserRepo에서 동일한 nickname으로 찾아오기
         User user = userRepository.findByUserId(userId);
-        
+
         // Entity를 Dto로 변환
 
         // User Dto 반환
         return UserDto.changeToUserDto(user);
     }
-    
+
     // 유저 회원 등록
     @Override
     public void createUser(UserDto userDto) {
+        logger.info("createUser 메서드 시작");
         User user = User.changeToUser(userDto);
 
         userRepository.save(user);
@@ -158,7 +167,8 @@ public class UserServiceImpl implements UserService {
     // nickname = "탈퇴한 유저입니다", userRole = 2, profile img = ""
     @Override
     public boolean deleteUser(int userId) {
-        System.out.println("UserService 155 : 유저를 delete 처리합니다.");
+        logger.info("deleteUser 메서드 시작: userId = {}", userId);
+//        System.out.println("UserService 155 : 유저를 delete 처리합니다.");
         // userId로 현재 유저를 조회
         User user = userRepository.findByUserId(userId);
         if(user == null) {
@@ -175,6 +185,7 @@ public class UserServiceImpl implements UserService {
     // userRole을 db에서 가져오기
     @Override
     public int selectRole(String email) {
+        logger.info("selectRole 메서드 시작: email = {}", email);
         return userRepository.findByEmail(email).getUserRole();
     }
 
