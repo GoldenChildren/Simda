@@ -41,12 +41,12 @@ class KakaoLogin implements SocialLogin {
     try {
       bool isInstalled = await isKakaoTalkInstalled();
 
-      OAuthToken token;
-      if (isInstalled) {
-        token = await UserApi.instance.loginWithKakaoTalk();
-      } else {
-        token = await UserApi.instance.loginWithKakaoAccount();
-      }
+      OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+      // if (isInstalled) {
+      //   token = await UserApi.instance.loginWithKakaoTalk();
+      // } else {
+      //   token = await UserApi.instance.loginWithKakaoAccount();
+      // }
         try {
           store.saveAccessToken(token);
 
