@@ -46,27 +46,30 @@ class KakaoLogin implements SocialLogin {
       if (isInstalled) {
         try {
           token = await UserApi.instance.loginWithKakaoTalk();
+          await ref.push().set({
+            'info' : '카카오톡 : 카카오 - flutter 로그인 성공'
+          });
         }catch(e){
-          await ref.set({
-            'error': e
+          await ref.push().set({
+            'error': e.toString()
           });
         }
       } else {
         try{
           token = await UserApi.instance.loginWithKakaoAccount();
+          await ref.push().set({
+            'info' : '카카오 계정 : 카카오 - flutter 로그인 성공'
+          });
         }catch(e){
-          await ref.set({
-            'error': e
+          await ref.push().set({
+            'error': e.toString()
           });
         }
       }
-      await ref.set({
-        'status' : 'success'
-      });
         try {
-          await ref.set({
-            'info' : '카카오 - flutter 로그인 성공'
-          });
+          // await ref.set({
+          //   'info' : '카카오 - flutter 로그인 성공'
+          // });
           store.saveAccessToken(token!);
 
           final url = Uri.parse("$ip/user/login/kakao");
@@ -80,30 +83,31 @@ class KakaoLogin implements SocialLogin {
           saveStorage(jsonDecode(response.body));
           if (response.statusCode == 200) {
             // print("로그인 성공!");
+            await ref.push().set({
+              'info' : 'flutter - backend 로그인 성공',
+              'email' : await storage.read(key:'email'),
+              'nickname' : await storage.read(key: 'nickname')
+            });
             return 1;
           } else if (response.statusCode == 202) {
-            // print("회원가입 필요!");
-            // email = response.body;
-            // print(email);
+            await ref.push().set({
+              'info': 'flutter - backend 통신 성공 회원가입 요청',
+              'email' : await storage.read(key:'email')
+            });
             return 0;
           }
-
-          await ref.set({
-            'info' : 'flutter - backend 로그인 성공'
-          });
-
           // print("뭔가 오류가 있다");
           return -1;
         } catch (e) {
-          await ref.set({
-            'error': e
+          await ref.push().set({
+            'error': e.toString()
           });
           print(e);
           return -1;
         }
     } catch (e) {
-      await ref.set({
-        'error': e
+      await ref.push().set({
+        'error': e.toString()
       });
       return -1;
     }
