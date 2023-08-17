@@ -39,13 +39,17 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
-    public List<FeedDto> selectAroundList(double lat, double lng) {
+    public List<FeedDto> selectAroundList(double lat, double lng, double zoomLevel) {
         log.debug("selectAroundList 메서드 시작: lat = {}, lng = {}", lat, lng);
         long oneDayInMillis = 24 * 60 * 60 * 1000;
         Date oneDayAgo = new Date(System.currentTimeMillis() - oneDayInMillis);
         List<Feed> list = new ArrayList<>();
         try {
-            list = feedRepository.findFeedAroundAndWithinOneDay(lat, lng, oneDayAgo);
+            double len = 0.001;
+            if (zoomLevel < 16){
+                len *= Math.pow(2, 16 - zoomLevel);
+            }
+            list = feedRepository.findFeedAroundAndWithinOneDay(lat, lng, oneDayAgo, len * len);
         } catch(EntityNotFoundException e){
             log.error(e.getMessage(),e);
         }
