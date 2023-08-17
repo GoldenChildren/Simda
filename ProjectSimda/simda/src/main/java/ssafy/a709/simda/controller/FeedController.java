@@ -41,10 +41,10 @@ public class FeedController {
 
    // 내 lat, lng로 주변의 피드목록 가져오기
     @GetMapping("/")
-    public ResponseEntity<FeedList> getFeedListByMyAround(@RequestParam("lat") double lat, @RequestParam("lng") double lng) {
+    public ResponseEntity<FeedList> getFeedListByMyAround(@RequestParam("lat") double lat, @RequestParam("lng") double lng,@RequestParam("zoomLevel") double zoomLevel ) {
         log.debug("method = GET, url = \"/feed\"");
         log.debug("getFeedListByMyAround 메서드 시작: lat = {}, lng = {}", lat, lng);
-        FeedList feedList = FeedList.builder().feedList(feedService.selectAroundList(lat, lng)).build();
+        FeedList feedList = FeedList.builder().feedList(feedService.selectAroundList(lat, lng,zoomLevel)).build();
         return new ResponseEntity<FeedList>(feedList, HttpStatus.OK);
     }
 
