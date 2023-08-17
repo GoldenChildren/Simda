@@ -45,9 +45,9 @@ public class FeedServiceImpl implements FeedService{
         Date oneDayAgo = new Date(System.currentTimeMillis() - oneDayInMillis);
         List<Feed> list = new ArrayList<>();
         try {
-            double len = 0.001;
+            double len = 0.01;
             if (zoomLevel < 16){
-                len *= Math.pow(2, 16 - zoomLevel);
+                len = 0.01 * Math.pow(2, 16 - zoomLevel);
             }
             list = feedRepository.findFeedAroundAndWithinOneDay(lat, lng, oneDayAgo, len * len);
         } catch(EntityNotFoundException e){
