@@ -9,10 +9,10 @@
 23.08.17 목 - Backend + Frontend
 
 ## 폴더
-ProjectSimda : Backend 폴더
-TeamA709 : 스타트 캠프 자료
-exec : 포팅 매뉴얼
-frontend : Frontend 폴더
+ProjectSimda : Backend 폴더 <\br>
+TeamA709 : 스타트 캠프 자료 <\br>
+exec : 포팅 매뉴얼 <\br>
+frontend : Frontend 폴더 
 
 ## 프로젝트 소개
 ![QR코드](/uploads/e9ad3925696d8d81a69e50e56cdd20ef/QR코드.jpg){: width="400" height="500"}
