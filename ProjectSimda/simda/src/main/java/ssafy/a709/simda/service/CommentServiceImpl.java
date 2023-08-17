@@ -1,5 +1,6 @@
 package ssafy.a709.simda.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.Comment;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class CommentServiceImpl implements CommentService{
 
@@ -25,6 +27,7 @@ public class CommentServiceImpl implements CommentService{
     private CommentRepository commentRepository;
     @Override
     public boolean createComment(CommentDto commentDto) {
+        log.debug("createComment 메서드 시작: commentDto = {}", commentDto);
         try {
             Feed nowFeed = feedRepository.findById(commentDto.getFeedId()).get();
             User nowUser = userRepository.findById(commentDto.getUserDto().getUserId()).get();
@@ -33,6 +36,7 @@ public class CommentServiceImpl implements CommentService{
             Comment newComment = Comment.changeToComment(commentDto, nowUser, nowFeed, pComment);
             commentRepository.save(newComment);
         }catch (Exception e){
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;
@@ -40,6 +44,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<CommentDto> selectCommentList(int feedId) {
+        log.debug("selectCommentList 메서드 시작: feedId = {}", feedId);
         List<Comment> list = commentRepository.findByFeed_FeedIdAndByComment_PCntIdIsNull(feedId);
         List<CommentDto> reslist = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -56,6 +61,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public boolean deleteComment(int commentId) {
+        log.debug("deleteComment 메서드 시작: commentId = {}", commentId);
         try{
             List<Comment> list = commentRepository.findByComment_PCommentId(commentId);
             for (int i = 0; i < list.size(); i++) {
@@ -63,7 +69,7 @@ public class CommentServiceImpl implements CommentService{
             }
             commentRepository.deleteById(commentId);
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;
@@ -71,12 +77,14 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public boolean deleteCommentByFeedId(int feedId) {
+        log.debug("deleteCommentByFeedId 메서드 시작: feedId = {}", feedId);
         try{
             List<Comment> list = commentRepository.findByFeed_FeedIdAndByComment_PCntIdIsNull(feedId);
             for (int i = 0; i < list.size(); i++) {
                 deleteComment(list.get(i).getCmtId());
             }
         }catch (Exception e){
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;
@@ -85,6 +93,7 @@ public class CommentServiceImpl implements CommentService{
     // feed로 댓글 리스트를 받아온다
     @Override
     public List<CommentDto> getCommentDtos(Feed feed) {
+        log.debug("getCommentDtos 메서드 시작: feed = {}", feed);
         // comments로 원 댓글 (대댓글이 아닌 댓글) 을 전부 불러온다.
         List<Comment> comments = commentRepository.findByFeed_FeedIdAndByComment_PCntIdIsNull(feed.getFeedId());
         // 댓글을 Dto로 바꿔서 저장할 리스트
@@ -107,6 +116,7 @@ public class CommentServiceImpl implements CommentService{
     // comment로 대댓글 리스트를 받아온다
     @Override
     public List<CommentDto> getSubCommentDtos(Comment comment) {
+        log.debug("getSubcommentDtos 메서드 시작: comment = {}", comment);
         // 대댓글 리스트를 받아온다.
         List<Comment> subComments = commentRepository.findByComment_PCommentId(comment.getCmtId());
         // 대댓글 Dto를 넣어줄 리스트를 생성
@@ -125,9 +135,11 @@ public class CommentServiceImpl implements CommentService{
     // 유저가 작성한 comment 전부 삭제 (userId null 처리)
     @Override
     public boolean deleteUserComment(int userId) {
+        log.debug("deleteUserComment 메서드 시작: userId = {}", userId);
         try{
             commentRepository.deleteUserComment(userId);
         }catch (Exception e){
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;

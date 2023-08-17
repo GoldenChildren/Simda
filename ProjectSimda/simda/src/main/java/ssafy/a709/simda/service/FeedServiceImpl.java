@@ -1,5 +1,6 @@
 package ssafy.a709.simda.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.Comment;
@@ -15,6 +16,8 @@ import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+@Slf4j
 @Service
 public class FeedServiceImpl implements FeedService{
     @Autowired
@@ -26,22 +29,25 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public boolean createFeed(FeedDto feedDto) {
-        if(feedDto.getImg() == null )
+        log.debug("createFeed 메서드 시작: feedDto = {}", feedDto);
+        if(feedDto.getImg() == null ) {
+            log.error("createFeed 메서드 오류: 피드 이미지가 없습니다.");
             return false;
-        System.out.println(feedDto);
+        }
         feedRepository.save(Feed.changeToFeed(feedDto));
         return true;
     }
 
     @Override
     public List<FeedDto> selectAroundList(double lat, double lng) {
+        log.debug("selectAroundList 메서드 시작: lat = {}, lng = {}", lat, lng);
         long oneDayInMillis = 24 * 60 * 60 * 1000;
         Date oneDayAgo = new Date(System.currentTimeMillis() - oneDayInMillis);
         List<Feed> list = new ArrayList<>();
         try {
             list = feedRepository.findFeedAroundAndWithinOneDay(lat, lng, oneDayAgo);
         } catch(EntityNotFoundException e){
-            e.printStackTrace();
+            log.error(e.getMessage(),e);
         }
         List<FeedDto> resList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
@@ -54,12 +60,13 @@ public class FeedServiceImpl implements FeedService{
     }
     @Override
     public List<FeedDto> selectFollowList(int userId) {
+        log.debug("selectFollowList 메서드 시작: userId = {}", userId);
         List<FeedDto> resList = new ArrayList<>();
         List<Feed> list = new ArrayList<>();
         try {
             list = feedRepository.getListByMyId(userId);
         }catch (EntityNotFoundException e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         for (int i = 0; i < list.size(); i++) {
             User feedUser = userRepository.findByUserId(list.get(i).getUser().getUserId());
@@ -71,6 +78,7 @@ public class FeedServiceImpl implements FeedService{
     }
     @Override
     public List<FeedDto> selectMyFeedList(int userId) {
+        log.debug("selectMyFeedList 메서드 시작: userId = {}", userId);
         List<FeedDto> resList = new ArrayList<>();
         List<Feed> list = feedRepository.findAllByUser_UserId(userId);
         for (int i = 0; i < list.size(); i++) {
@@ -84,20 +92,24 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public boolean hitLikePoint(int feedId) {
+        log.debug("hitLikePoint 메서드 시작: feedId = {}", feedId);
         try {
             feedRepository.updateLike(feedId);
         }catch (Exception e){
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;
     }
     @Override
     public boolean updateFeed(FeedDto feedDto) {
+        log.debug("updateFeed 메서드 시작: feedDto = {}", feedDto);
         try{
             Feed feed = feedRepository.findById(feedDto.getFeedId()).get();
             feed.update(feedDto);
             feedRepository.save(feed);
         }catch (Exception e){
+            log.error(e.getMessage(),e);
             return false;
         }
         return true;
@@ -105,9 +117,11 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public boolean deleteUserFeed(int userId) {
+        log.debug("deleteUserFeed 메서드 시작: userId = {}", userId);
         try{
             feedRepository.deleteUserFeed(userId);
         }catch (Exception e){
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;
@@ -115,11 +129,11 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public boolean deleteFeed(int feedId) {
-        System.out.println("deleteFeed");
+        log.debug("deleteFeed 메서드 시작: feedId = {}", feedId);
         try {
             feedRepository.deleteById(feedId);
         }catch (Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return false;
         }
         return true;

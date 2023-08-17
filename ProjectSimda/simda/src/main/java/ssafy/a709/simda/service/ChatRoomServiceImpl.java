@@ -1,9 +1,8 @@
 package ssafy.a709.simda.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ssafy.a709.simda.domain.Chat;
 import ssafy.a709.simda.domain.Chatroom;
 import ssafy.a709.simda.domain.User;
 import ssafy.a709.simda.dto.ChatRoomDto;
@@ -13,6 +12,7 @@ import ssafy.a709.simda.repository.ChatRoomRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ChatRoomServiceImpl implements ChatRoomService{
 
@@ -22,6 +22,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     //채팅방 목록가져오기
     @Override
     public List<ChatRoomDto> selectAllChatRoomList(int userId) {
+        log.debug("selectAllChatRoomList 메서드 시작: userId = {}", userId);
         List<ChatRoomDto> responseList = new ArrayList<>();
         List<Chatroom> resultList = chatRoomRepository.findAllByUser1IdOrUser2Id(userId,userId);
         for (Chatroom chatRoom:resultList) {
@@ -39,12 +40,14 @@ public class ChatRoomServiceImpl implements ChatRoomService{
             }
             responseList.add(chatRoomDto);
         }
+        log.debug("selectAllChatRoomList 메서드 결과 수: {}", responseList.size());
         return responseList;
 
     }
     //채팅방생성
     @Override
     public int createChatRoom(int user1Id, int user2Id) {
+        log.debug("createChatRoom 메서드 시작: user1Id = {}, user2Id = {}", user1Id, user2Id);
         try {
             UserDto user1 = new UserDto();
             user1.setUserId(user1Id);
@@ -59,6 +62,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
             chatRoomRepository.save(newChatroom);
         }catch (Exception e){
             //실패!
+            log.error(e.getMessage(), e);
             return 0;
         }
         //성공

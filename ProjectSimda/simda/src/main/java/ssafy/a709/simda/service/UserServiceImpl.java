@@ -1,26 +1,15 @@
 package ssafy.a709.simda.service;
 
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.firebase.cloud.FirestoreClient;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.a709.simda.domain.User;
 import ssafy.a709.simda.dto.UserDto;
 import ssafy.a709.simda.repository.UserRepository;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -31,12 +20,11 @@ public class UserServiceImpl implements UserService {
     FeedService feedService;
     @Autowired
     CommentService commentService;
-    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     // 전체 유저를 조회한다
     @Override
     public List<UserDto> selectAllUser() {
-        logger.info("selectAllUser 메서드 시작");
+        log.debug("selectAllUser 메서드 시작");
         // Entity Type의 User List를 하나 가져오고,
         List<User> userList = userRepository.findAll();
 
@@ -55,7 +43,7 @@ public class UserServiceImpl implements UserService {
     // 검색한 닉네임이 포함되는 유저들을 조회한다
     @Override
     public List<UserDto> selectUsers(String nickname) {
-        logger.info("selectUsers 메서드 시작: nickname = {}", nickname);
+        log.debug("selectUsers 메서드 시작: nickname = {}", nickname);
         // 이름이 포함되는 유저를 검색해 온 User Entity 리스트 생성
         List<User> userList = userRepository.findAllByNicknameContaining(nickname);
 
@@ -77,9 +65,10 @@ public class UserServiceImpl implements UserService {
     // 닉네임 중복검사
     @Override
     public boolean selectUserByNickname(String nickname) {
-        logger.info("selectUserByNickname 메서드 시작: nickname = {}", nickname);
+        log.debug("selectUserByNickname 메서드 시작: nickname = {}", nickname);
         // 닉네임이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
         User user = userRepository.findByNickname(nickname);
+        log.debug("selectUserByNickname 메서드: user 정보 = {}", user);
 
         return user == null;
     }
@@ -87,17 +76,16 @@ public class UserServiceImpl implements UserService {
     // 로그인시 DB에 Email check과 함께 DB에 저장된 정보를 반환
     @Override
     public UserDto selectUserByEmail(String email) {
-        logger.info("selectUserByEmail 메서드 시작: email = {}", email);
+        log.debug("selectUserByEmail 메서드 시작: email = {}", email);
         // 이메일이 동일한 유저가 있는지 확인해서 있으면 false, 없으면 true를 반환
-        System.out.println("repo "+ email);
         User user = userRepository.findByEmail(email);
 
 
         if(user == null) {
-            logger.info("user is null");
+            log.error("selectUserByEmail 메서드 오류: user를 찾을 수 없습니다.");
             return null;
         }
-        logger.info("user 정보 = {}",user);
+        log.debug("selectUserByEmail 메서드: user 정보 = {}",user);
 
         // user값을 찾아서, Dto형태로 반환
         return UserDto.changeToUserDto(user);
@@ -106,11 +94,10 @@ public class UserServiceImpl implements UserService {
     // User정보 수정, 실패와 성공을 반환한다
     @Override
     public boolean updateUser(UserDto userDto) {
-        logger.info("updateUser 메서드 시작");
+        log.debug("updateUser 메서드 시작: userDto = {}", userDto);
         try {
-            System.out.println("UserServiceImpl updateUser 진입");
             // User Repo에서 id를 통해 해당 User의 Entity를 가져오기
-            System.out.println("현재 유저의 Id를 가져오는가? : "+ userDto.getUserId());
+            log.debug("updateUser 메서드: user 수정 정보 = {}", userDto);
             User nowUser = userRepository.findByUserId(userDto.getUserId());
 
             // 닉네임, 프로필 사진 BIO 수정
@@ -119,22 +106,20 @@ public class UserServiceImpl implements UserService {
             nowUser.setNickname(userDto.getNickname());
             nowUser.setUserRole(userDto.getUserRole());
 
-            System.out.println("UserService에서 eamil을 가져오는가? "+ nowUser.getEmail());
-            System.out.println("그때의 유저 Role은? "+ selectRole(nowUser.getEmail()));
-
             // 유저가 탈퇴된 상황이면 userRole을 1로 변경한다
             if(selectRole(nowUser.getEmail()) == 2) {
+                log.debug("updateUser 메서드: 유저 재가입");
                 nowUser = userRepository.findByEmail(userDto.getEmail());
-                System.out.println("UserServiceImpl의 120까지 오나?");
                 nowUser.setUserRole(1);
             }
+            log.debug("updateUser 메서드 결과: user 수정된 정보 = {}", nowUser);
 
             // userRepo에서 변경된 부분을 저장한다.
             userRepository.save(nowUser);
 
         } catch(Exception e) {
             // 실패를 출력
-            System.out.println("실패");
+            log.error("updateUser 메서드 오류: {}", e.getMessage());
             return false;
         }
 
@@ -144,12 +129,12 @@ public class UserServiceImpl implements UserService {
     // 닉네임이 일치하는 한 명의 유저를 조회한다
     @Override
     public UserDto selectOneUser(int userId) {
-        logger.info("selectOneUser 메서드 시작: userId = {}", userId);
+        log.debug("selectOneUser 메서드 시작: userId = {}", userId);
         // UserRepo에서 동일한 nickname으로 찾아오기
         User user = userRepository.findByUserId(userId);
 
+        log.debug("selectOneUser 메서드: user 정보 = {}", user);
         // Entity를 Dto로 변환
-
         // User Dto 반환
         return UserDto.changeToUserDto(user);
     }
@@ -157,8 +142,9 @@ public class UserServiceImpl implements UserService {
     // 유저 회원 등록
     @Override
     public void createUser(UserDto userDto) {
-        logger.info("createUser 메서드 시작");
+        log.debug("createUser 메서드 시작: userDto = {}", userDto);
         User user = User.changeToUser(userDto);
+        log.debug("createUser 메서드: user 정보 = {}", user);
 
         userRepository.save(user);
     }
@@ -167,16 +153,17 @@ public class UserServiceImpl implements UserService {
     // nickname = "탈퇴한 유저입니다", userRole = 2, profile img = ""
     @Override
     public boolean deleteUser(int userId) {
-        logger.info("deleteUser 메서드 시작: userId = {}", userId);
-//        System.out.println("UserService 155 : 유저를 delete 처리합니다.");
+        log.debug("deleteUser 메서드 시작: userId = {}", userId);
         // userId로 현재 유저를 조회
         User user = userRepository.findByUserId(userId);
         if(user == null) {
+            log.error("deleteUser 메서드 오류: user를 찾을 수 없습니다.");
             return false;
         } else {
             user.setNickname(user.getEmail());
             user.setUserRole(2);
             user.setProfileImg("");
+            log.debug("deleteUser 메서드: user 정보 = {}", user);
             userRepository.save(user);
             return true;
         }
@@ -185,7 +172,7 @@ public class UserServiceImpl implements UserService {
     // userRole을 db에서 가져오기
     @Override
     public int selectRole(String email) {
-        logger.info("selectRole 메서드 시작: email = {}", email);
+        log.debug("selectRole 메서드 시작: email = {}", email);
         return userRepository.findByEmail(email).getUserRole();
     }
 
