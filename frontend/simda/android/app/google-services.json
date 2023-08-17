@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "783723398229",
+    "firebase_url": "https://simdachat-default-rtdb.firebaseio.com",
+    "project_id": "simdachat",
+    "storage_bucket": "simdachat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783723398229:android:9f6744e9d4b91e6c7d40dc",
+        "android_client_info": {
+          "package_name": "com.ssafy.simda.simda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783723398229-01g92bt5mt0hsrutbktse19ua5jnbgpe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.simda.simda",
+            "certificate_hash": "383aa5f6ac1d7bf7ed80d450b5b216b007b0d5aa"
+          }
+        },
+        {
+          "client_id": "783723398229-fel4qf6n9cqcg69vie7fvi7kaqq4dn5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ssafy.simda.simda",
+            "certificate_hash": "fb63c38ce55d776c97568b931369f331ac82b1d5"
+          }
+        },
+        {
+          "client_id": "783723398229-p7olnmpv364gla4rfipinvlm9r9qpsm1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDqTHDjAH6xTyRF1PXMj7WW0uBdNJppFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "783723398229-dlc5d2ttmhq5lq489e3gniit86500ejn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
