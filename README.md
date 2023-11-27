@@ -8,8 +8,8 @@
 
 ![img](/uploads/e5f1f09f57dee9581bd3b75f421d6e8b/img.gif)
 
-### 2. 팀 소개
-![팀원소개](/uploads/87c2fdc542ae21564be6f6ff657dfc85/팀원소개.jpg){: width="400"}
+### 2. 팀원 소개
+<img src = "https://github.com/GoldenChildren/Simda/assets/122460802/259cd89a-9830-4c01-a9c5-4ae888cdc17b" width="450">
 
 ### 3. 폴더구조
 ProjectSimda : Backend 폴더
