@@ -6,7 +6,7 @@
 //
 void main() {
 
-  // const String url = "http://i9a709.p.ssafy.io:8000/";
+  // const String url = "$baseUrl/";
   // final request = Uri.parse("${url}user/search?nickname=alex");
   //
   // Future<dynamic> fetch() async {

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class ChatProviders {
   // Future<List<ChatDto>> getChat(ChatRoomDto chatroom) async {
   //   List<ChatDto> chat = [];
-  //   String uri = "http://i9a709.p.ssafy.io:8000/simda/chat/";
+  //   String uri = "$baseUrl/simda/chat/";
   //   uri += "${chatroom.chatRoomId}";
   //
   //   final response = await http.get(Uri.parse(uri));

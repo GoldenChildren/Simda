@@ -3,23 +3,18 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:simda/models/CommentDto.dart';
 import 'package:simda/models/FeedDto.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+String? baseUrl = dotenv.env['BASE_URL'];
 
 class FeedProviders {
   Dio dio = Dio();
-  String url = "http://i9a709.p.ssafy.io:8000/feed";
-  // String url = "http://70.12.247.215:8000/feed";
-
-
-  // Uri uri = Uri.parse(
-  //     "http://i9a709.p.ssafy.io:8000/feed/?lat=37.5013068&lng=127.0396597");
-
+  String url = "$baseUrl/feed";
 
   // 내 주변, 24시간 이내의 피드를 가져오는 메소드
   Future<List<FeedDto>> getFeed(double lat, double lng) async {
-    // Future<List<Feed>> getFeed(double lat, double lng) async {
     List<FeedDto> feed = [];
 
-    // final response = await http.get(url);
     final response = await dio.get(
         '$url/',
         queryParameters: {
@@ -27,20 +22,14 @@ class FeedProviders {
           'lng' : lng
         });
     if (response.statusCode == 200) {
-      print(response.data);
       feed = response.data['feedList'].map<FeedDto>((feeds) {
         return FeedDto.fromJson(feeds);
       }).toList();
-      print("여기야");
-      print(feed);
     }
 
     for(FeedDto feedDto in feed){
-      print('feedId : ${feedDto.feedId}');
       for(CommentDto commentDto in feedDto.comments??[]){
-        print('cmt id : ${commentDto.cmtId}');
         for(CommentDto cCommentDto in commentDto.cCommentList??[]){
-          print('ccmt id : ${cCommentDto.cmtId} : ${cCommentDto.content}');
         }
       }
     }
@@ -50,9 +39,6 @@ class FeedProviders {
 
   // Feed 감정 분석 받는 메소드
   Future<FeedDto> getEmotion(FeedDto feedDto, String path) async{
-    print('getEmotion');
-    print(feedDto.title);
-    print(feedDto.nickname);
 
     FormData formData = FormData.fromMap({
       'imgfile':
@@ -66,32 +52,17 @@ class FeedProviders {
     });
 
     Response response = await dio.post(
-        'http://i9a709.p.ssafy.io:8000/bard',
+        '$baseUrl/bard',
         data : formData,
         options: Options(headers: {'Content-Type': 'multipart/form-data'})
     );
 
-    // print(jsonDecode(response.data));
-    print(response.statusCode);
-    print(FeedDto.fromJson(response.data));
 
     return FeedDto.fromJson(response.data);
   }
 
   // Feed를 post하는 메소드
   Future<String> postFeed(FeedDto feedDto) async {
-
-    // FormData formData = FormData.fromMap({
-    //   'imgfile':
-    //   await MultipartFile.fromFile(path, filename: 'feed.jpg'),
-    //   'title': feedDto.title,
-    //   'content': feedDto.content,
-    //   'lat': feedDto.lat,
-    //   'lng': feedDto.lng,
-    //   'userDto.userId': feedDto.userId
-    // });
-
-    // Response response = await dio.post('$url/', data: formData, options: Options(headers: {'Content-Type': 'multipart/form-data'}),);
 
     Response response = await dio.post(
       '$url/',
@@ -100,10 +71,6 @@ class FeedProviders {
         headers: {'Content-Type': 'application/json'}, // Content-Type 설정
       ),
     );
-
-    print(response.data);
-    print(response.statusCode);
-
     return response.data;
   }
 
@@ -114,7 +81,6 @@ class FeedProviders {
         data: feedDto
     );
 
-    print('피드 수정 : $response');
   }
 
   Future<void> addLikes(FeedDto feedDto) async {
@@ -133,7 +99,6 @@ class FeedProviders {
       ),
     );
 
-    print('피드 삭제 : ${response.statusCode}');
   }
 
   // userId로 그 유저의 피드 목록을 가져오는 메소드
@@ -147,8 +112,6 @@ class FeedProviders {
         return FeedDto.fromJson(feeds);
       }).toList();
     }
-
-    print('user\'s feedList : $response');
 
     return feed;
   }
@@ -170,7 +133,6 @@ class FeedProviders {
       }).toList();
     }
 
-    print('follower\'s feedList : $response');
 
     return feed;
   }
@@ -184,6 +146,5 @@ class FeedProviders {
           'feedId' : feedId
         });
 
-    print('좋아요 누르기 : $response');
   }
 }

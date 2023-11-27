@@ -6,24 +6,18 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:simda/models/FollowDto.dart';
 import 'package:simda/models/UserDto.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../main.dart';
-
+String? baseUrl = dotenv.env['BASE_URL'];
 
 class UserProviders {
   final storage = const FlutterSecureStorage();
 
   Dio dio = Dio();
 
-  String url = "http://i9a709.p.ssafy.io:8000/user";
-  // String url = "http://70.12.247.215:8000/user";
-  // static String ip = "http://70.12.247.165:8000";
-
+  String url = "$baseUrl/user";
   // 세션 스토리지에 유저 정보를 저장하는 메소드
   Future<void> saveStorage(Map<String, dynamic> map) async {
-    print(map);
-    print("정보받아보자 : " + map["email"]);
-
     map.forEach((key, value) {
       if (value is String) {
         storage.write(key: key, value: value);
@@ -32,7 +26,7 @@ class UserProviders {
         storage.write(key: key, value: stringValue);
       }
     });
-    print(map);
+
   }
 
   // 회원 탈퇴
