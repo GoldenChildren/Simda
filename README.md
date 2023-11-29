@@ -49,9 +49,11 @@ frontend : Frontend 폴더
 + BackEnd
 
 ### 3. 화면 구성
-<img src="https://github.com/GoldenChildren/Simda/assets/90131462/cd4a0061-6322-4f22-ba61-213d2b3d8942" width="200>  
-<img src="https://github.com/GoldenChildren/Simda/assets/90131462/e1e4e11a-5c70-4e0a-9d33-f1886a077b20" width="200>  
-<img src="https://github.com/GoldenChildren/Simda/assets/90131462/38f11258-c0be-476b-a8bc-685a5ee9aabc" width="200>  
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/cd4a0061-6322-4f22-ba61-213d2b3d8942" width="200">  
+<br>
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/e1e4e11a-5c70-4e0a-9d33-f1886a077b20" width="200">  
+<br>
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/38f11258-c0be-476b-a8bc-685a5ee9aabc" width="200">  
 
 
 ### 기타 링크
