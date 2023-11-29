@@ -21,7 +21,7 @@ exec : 포팅 매뉴얼
 frontend : Frontend 폴더 
 
 ## 프로젝트 소개
-![QR코드](/uploads/e9ad3925696d8d81a69e50e56cdd20ef/QR코드.jpg){: width="400"}
+[![simdafigma](https://github.com/GoldenChildren/Simda/assets/122460802/de619e2a-7a0b-43d9-8fe0-07b2676c0c48)](https://www.figma.com/file/igLEfKOzK9Lbuq1UnitkYK/%EC%8B%AC%EB%8B%A4?type=design&node-id=0-1&mode=design)
 
 ### 1. 주요 기능 및 부가 기능
 
