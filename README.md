@@ -54,6 +54,23 @@ frontend : Frontend 폴더
 <img src="https://github.com/GoldenChildren/Simda/assets/90131462/e1e4e11a-5c70-4e0a-9d33-f1886a077b20" width="200">  
 <br>
 <img src="https://github.com/GoldenChildren/Simda/assets/90131462/38f11258-c0be-476b-a8bc-685a5ee9aabc" width="200">  
+<br>
+
+메인 페이지/Home페이지/게시글 작성 페이지  
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/b5ceebda-5ce5-4015-8eef-d79fe0fcf0f6" width="200">
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/2b7837b0-6767-4160-b8d5-73af7497999d" width="200">
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/66c2be6b-871f-4019-a2cb-ea0687bb3bd5" width="200">  
+
+AI 분석 페이지/피드 페이지/채팅 페이지  
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/da670623-fd60-4d46-866d-015a5f735acb" width="200">
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/67e08a7f-091d-4f6c-8cea-88883f5cb22f" width="200">
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/bff6f151-de08-476e-823c-659afd03c18d" width="200">  
+
+프로필 달력 페이지/프로필 피드 페이지/프로필 지도 페이지  
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/6b767ee7-4b9b-4d0b-a1ab-df2257d79379" width="200">
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/ac178608-6758-43e9-9697-2f2d88b7759b" width="200">
+<img src="https://github.com/GoldenChildren/Simda/assets/90131462/a125be99-40fb-4d87-8b67-eb0ed986afb1" width="200">  
+
 
 
 ### 기타 링크
